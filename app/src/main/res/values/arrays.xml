@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 角色（原 majors） -->
+    <string-array name="majors">
+        <item>四字粉</item>
+        <item>路人支持</item>
+        <item>跨粉（其他爱豆粉）</item>
+        <item>工作人员/志愿者</item>
+    </string-array>
+
+    <!-- 应援小组（原 classes） -->
+    <string-array name="classes">
+        <item>舞蹈组</item>
+        <item>物料组</item>
+        <item>控评组</item>
+        <item>摄影组</item>
+    </string-array>
+</resources>

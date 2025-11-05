@@ -1,0 +1,26 @@
+// Top-level build.gradle
+
+buildscript {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/google' }      // 阿里云 Google 镜像
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }     // 阿里云 jcenter 镜像
+        maven { url 'https://dl.google.com/dl/android/maven2/' }       // Google 官方仓库（兜底）
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.3'
+    }
+}
+
+allprojects {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        maven { url 'https://dl.google.com/dl/android/maven2/' }
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

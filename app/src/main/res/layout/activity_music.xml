@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="3"
+    android:background="@drawable/music_bg">
+
+    <!-- 半透明蒙层，让背景更柔和 -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#88000000" />
+
+    <!-- 封面图 -->
+    <ImageView
+        android:id="@+id/img_cover"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:src="@drawable/music_bg"
+        android:scaleType="centerCrop"
+        android:background="@drawable/music_bg"
+        android:elevation="8dp" />
+
+    <!-- 歌曲标题 -->
+    <TextView
+        android:id="@+id/tv_song_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/img_cover"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="正在播放：If You"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:shadowColor="#CC000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="3" />
+
+    <!-- 控制按钮区域 -->
+    <LinearLayout
+        android:id="@+id/control_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_song_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/btn_prev"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/prev"
+            android:background="@null"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:tint="@android:color/white"
+            android:layout_margin="12dp"
+            android:contentDescription="上一首" />
+
+        <ImageButton
+            android:id="@+id/btn_play"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/play"
+            android:background="@null"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:tint="@android:color/white"
+            android:layout_margin="12dp"
+            android:contentDescription="播放" />
+
+        <ImageButton
+            android:id="@+id/btn_stop"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/stop"
+            android:background="@null"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:tint="@android:color/white"
+            android:layout_margin="12dp"
+            android:contentDescription="停止" />
+
+        <ImageButton
+            android:id="@+id/btn_next"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/next"
+            android:background="@null"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:tint="@android:color/white"
+            android:layout_margin="12dp"
+            android:contentDescription="下一首" />
+    </LinearLayout>
+
+</RelativeLayout>
