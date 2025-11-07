@@ -32,4 +32,9 @@
     <string name="pref_vote">打投</string>
     <string name="pref_comment">控评</string>
     <string name="pref_offline">线下应援</string>
+
+    <!-- 商品详情 -->
+    <string name="product_inventory_format">库存：%1$d</string>
+    <string name="product_tags_format">标签：%1$s</string>
+    <string name="product_star_events_format">明星活动：%1$s</string>
 </resources>
