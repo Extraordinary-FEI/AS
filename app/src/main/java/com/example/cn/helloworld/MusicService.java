@@ -1,12 +1,15 @@
 package com.example.cn.helloworld;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
+import android.os.Build;
+import androidx.core.app.NotificationCompat;
 import android.widget.Toast;
 
 public class MusicService extends Service {
@@ -14,6 +17,8 @@ public class MusicService extends Service {
     private MediaPlayer player;
     private MusicReceiver musicReceiver;
     private int currentIndex = 0;
+
+    private static final String CHANNEL_ID = "music_playback";
 
     // 歌曲资源数组（已去掉If You）
     private int[] songs = {
@@ -27,6 +32,7 @@ public class MusicService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        createNotificationChannel();
         initPlayer();
 
         // 注册外部接收器
@@ -117,9 +123,14 @@ public class MusicService extends Service {
 
     private void showNotification(String title, String text) {
         Intent intent = new Intent(this, MusicActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pi = PendingIntent.getActivity(
+                this,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
 
-        Notification notification = new NotificationCompat.Builder(this)
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.logo)
                 .setContentTitle(title)
                 .setContentText(text)
@@ -147,6 +158,22 @@ public class MusicService extends Service {
             player.release();
         }
         super.onDestroy();
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "音乐播放",
+                    NotificationManager.IMPORTANCE_LOW
+            );
+            channel.setDescription("音乐播放状态通知");
+
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            if (manager != null) {
+                manager.createNotificationChannel(channel);
+            }
+        }
     }
 
     @Override
