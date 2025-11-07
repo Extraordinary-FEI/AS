@@ -54,10 +54,13 @@ public class ProductListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_product_list, container, false);
         recyclerView = view.findViewById(R.id.productRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new ProductAdapter(new ArrayList<>(), product -> {
-            Context context = getContext();
-            if (context != null) {
-                ProductDetailActivity.start(context, product.getId());
+        adapter = new ProductAdapter(new ArrayList<>(), new ProductAdapter.OnProductClickListener() {
+            @Override
+            public void onProductClick(Product product) {
+                Context context = getContext();
+                if (context != null) {
+                    ProductDetailActivity.start(context, product.getId());
+                }
             }
         });
         recyclerView.setAdapter(adapter);
@@ -126,9 +129,12 @@ public class ProductListFragment extends Fragment {
                 nameView.setText(product.getName());
                 priceView.setText(String.format("$%.2f", product.getPrice()));
                 imageView.setImageResource(product.getImageResId());
-                itemView.setOnClickListener(v -> {
-                    if (listener != null) {
-                        listener.onProductClick(product);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (listener != null) {
+                            listener.onProductClick(product);
+                        }
                     }
                 });
             }

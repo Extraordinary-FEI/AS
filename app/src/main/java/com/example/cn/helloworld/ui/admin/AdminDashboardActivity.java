@@ -121,7 +121,12 @@ public class AdminDashboardActivity extends AppCompatActivity {
         btnPlaylists.setOnClickListener(featureClickListener);
         btnUsers.setOnClickListener(featureClickListener);
 
-        btnLogout.setOnClickListener(v -> confirmLogout());
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmLogout();
+            }
+        });
     }
 
     /** 退出登录确认框 */
