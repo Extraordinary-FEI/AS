@@ -1,9 +1,21 @@
 <resources>
-        <color name="colorPrimary">#3F51B5</color>
-        <color name="colorPrimaryDark">#303F9F</color>
-        <color name="colorAccent">#FF4081</color>
-        <color name="pageBg">#F5F6F8</color>
-        <color name="cardBg">#FFFFFF</color>
-        <color name="textSecondary">#666666</color>
-        <!--<color name="divider">#1A000000</color>-->
+    <color name="colorPrimary">#2D2E6F</color>
+    <color name="colorPrimaryDark">#1C1E4D</color>
+    <color name="colorAccent">#FF6B8B</color>
+    <color name="colorOnPrimary">#FFFFFFFF</color>
+    <color name="homeBackground">#F5F4FF</color>
+    <color name="homeCardBackground">#FFFFFFFF</color>
+    <color name="homeSecondarySurface">#F0EEFF</color>
+    <color name="homeCategoryBackground">#E5E2FF</color>
+    <color name="homePlaylistPlaceholder">#C8C2FF</color>
+    <color name="homeBannerPlaceholder">#9C95FF</color>
+    <color name="homeTaskBackground">#FCEBFF</color>
+    <color name="homeTextPrimary">#1F1A3D</color>
+    <color name="homeTextSecondary">#5A5576</color>
+    <color name="homeTaskDeadline">#FF8A65</color>
+    <color name="homeBannerColor1">#8A80FF</color>
+    <color name="homeBannerColor2">#FF76A3</color>
+    <color name="homeBannerColor3">#5BC0EB</color>
+    <color name="homePlaylistColor1">#C3E0FF</color>
+    <color name="homePlaylistColor2">#FFD3E0</color>
 </resources>

@@ -34,3 +34,21 @@
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/category_name"
+        style="@style/HomeCategoryChip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Category" />
+
+</LinearLayout>
+
