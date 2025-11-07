@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 基础主色调 -->
     <color name="colorPrimary">#2D2E6F</color>
@@ -5,11 +6,12 @@
     <color name="colorAccent">#FF6B8B</color>
     <color name="colorOnPrimary">#FFFFFFFF</color>
 
-    <!-- 旧版界面仍使用的配色（保留兼容） -->
+    <!-- 兼容旧布局使用的通用配色 -->
     <color name="pageBg">#F5F4FF</color>
     <color name="cardBg">#FFFFFFFF</color>
+    <color name="divider">#FFF1F1F8</color>
+    <color name="textPrimary">#1F1A3D</color>
     <color name="textSecondary">#5A5576</color>
-    <color name="divider">#1A000000</color>
 
     <!-- 首页主题配色 -->
     <color name="homeBackground">#F5F4FF</color>
