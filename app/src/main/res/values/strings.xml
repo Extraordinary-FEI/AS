@@ -34,7 +34,6 @@
     <string name="pref_comment">控评</string>
     <string name="pref_offline">线下应援</string>
 
-
     <!-- 商品详情 -->
     <string name="product_inventory_format">库存：%1$d</string>
     <string name="product_tags_format">标签：%1$s</string>
@@ -55,7 +54,7 @@
     <string name="order_created_template">下单时间：%1$s</string>
     <string name="order_items">商品清单</string>
 
-    <!-- 商品详情 -->
+    <!-- 商品详情文本 -->
     <string name="default_product_name">限量周边</string>
     <string name="default_product_description">%1$s，粉丝应援必备！</string>
     <string name="favorite_added">已收藏</string>
@@ -88,5 +87,4 @@
     <string name="home_playlist_subtitle">为守护他准备的专属旋律</string>
     <string name="home_task_title">应援任务</string>
     <string name="home_task_subtitle">参与行动，为他应援助力</string>
-
 </resources>

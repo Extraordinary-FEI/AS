@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardElevation="2dp"
-    app:cardUseCompatPadding="true">
+    app:cardElevation="3dp"
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="12dp"
+    android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,41 +17,28 @@
         android:orientation="horizontal"
         android:padding="16dp">
 
+        <!-- 分类图标 -->
         <ImageView
             android:id="@+id/categoryIcon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:contentDescription="@string/app_name"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/ic_launcher"
+            android:tint="@color/colorPrimary" />
 
+        <!-- 分类名称（融合 HomeCategoryChip 样式） -->
         <TextView
             android:id="@+id/categoryName"
+            style="@style/HomeCategoryChip"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_weight="1"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:gravity="center_vertical"
             android:textColor="@android:color/black"
-            tools:text="Beverages" />
+            android:textSize="16sp"
+            tools:text="演唱会门票类" />
 
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="8dp">
-
-    <TextView
-        android:id="@+id/category_name"
-        style="@style/HomeCategoryChip"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Category" />
-
-</LinearLayout>
-

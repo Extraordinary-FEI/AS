@@ -48,9 +48,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         TaskViewHolder(View itemView) {
             super(itemView);
-            nameView = itemView.findViewById(R.id.task_name);
-            deadlineView = itemView.findViewById(R.id.task_deadline);
-            descriptionView = itemView.findViewById(R.id.task_description);
+
+            nameView = (TextView) itemView.findViewById(R.id.task_name);
+            deadlineView = (TextView) itemView.findViewById(R.id.task_deadline);
+            descriptionView = (TextView) itemView.findViewById(R.id.task_description);
+
+
         }
     }
 }
