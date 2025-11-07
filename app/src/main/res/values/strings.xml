@@ -34,6 +34,12 @@
     <string name="pref_comment">控评</string>
     <string name="pref_offline">线下应援</string>
 
+
+    <!-- 商品详情 -->
+    <string name="product_inventory_format">库存：%1$d</string>
+    <string name="product_tags_format">标签：%1$s</string>
+    <string name="product_star_events_format">明星活动：%1$s</string>
+
     <!-- 购物车与订单 -->
     <string name="cart_total_template">合计：¥%1$s</string>
     <string name="cart_total_placeholder">合计：¥0.00</string>
@@ -82,4 +88,5 @@
     <string name="home_playlist_subtitle">为守护他准备的专属旋律</string>
     <string name="home_task_title">应援任务</string>
     <string name="home_task_subtitle">参与行动，为他应援助力</string>
+
 </resources>
