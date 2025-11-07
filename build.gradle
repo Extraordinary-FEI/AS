@@ -1,21 +1,39 @@
-// Top-level build.gradle
+// Top-level build.gradle for Android Studio 2.3.2
+// ✅ 兼容 Gradle 3.3 + Plugin 2.3.3，支持国内镜像同步
 
 buildscript {
     repositories {
-        maven { url 'https://maven.aliyun.com/repository/google' } // Google mirror
-        maven { url 'https://maven.aliyun.com/repository/jcenter' } // JCenter mirror
-        maven { url 'https://dl.google.com/dl/android/maven2/' } // Google direct fallback
+        // Android Studio 2.3.2 不支持 google() 写法，改用 Maven 地址
+        jcenter()
+        mavenCentral()
+
+        // 阿里云加速镜像（国内环境推荐）
+        maven { url "https://maven.aliyun.com/repository/google" }
+        maven { url "https://maven.aliyun.com/repository/jcenter" }
+        maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
+
+        // 官方备用
+        maven { url "https://dl.google.com/dl/android/maven2/" }
     }
+
     dependencies {
+        // ✅ Gradle 插件版本需与 Android Studio 2.3.2 匹配
         classpath 'com.android.tools.build:gradle:2.3.3'
     }
 }
 
 allprojects {
     repositories {
-        maven { url 'https://maven.aliyun.com/repository/google' }
-        maven { url 'https://maven.aliyun.com/repository/jcenter' }
-        maven { url 'https://dl.google.com/dl/android/maven2/' }
+        jcenter()
+        mavenCentral()
+
+        // 阿里云镜像（国内可加快构建）
+        maven { url "https://maven.aliyun.com/repository/google" }
+        maven { url "https://maven.aliyun.com/repository/jcenter" }
+        maven { url "https://maven.aliyun.com/repository/public" }
+
+        // 官方备用
+        maven { url "https://dl.google.com/dl/android/maven2/" }
     }
 }
 
