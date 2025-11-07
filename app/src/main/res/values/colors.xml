@@ -1,16 +1,17 @@
 <resources>
+    <!-- 基础主色调 -->
     <color name="colorPrimary">#2D2E6F</color>
     <color name="colorPrimaryDark">#1C1E4D</color>
     <color name="colorAccent">#FF6B8B</color>
     <color name="colorOnPrimary">#FFFFFFFF</color>
 
-    <!-- Legacy color tokens still referenced by existing screens -->
+    <!-- 旧版界面仍使用的配色（保留兼容） -->
     <color name="pageBg">#F5F4FF</color>
     <color name="cardBg">#FFFFFFFF</color>
     <color name="textSecondary">#5A5576</color>
     <color name="divider">#1A000000</color>
 
-    <!-- Home screen theme palette -->
+    <!-- 首页主题配色 -->
     <color name="homeBackground">#F5F4FF</color>
     <color name="homeCardBackground">#FFFFFFFF</color>
     <color name="homeSecondarySurface">#F0EEFF</color>
@@ -21,6 +22,8 @@
     <color name="homeTextPrimary">#1F1A3D</color>
     <color name="homeTextSecondary">#5A5576</color>
     <color name="homeTaskDeadline">#FF8A65</color>
+
+    <!-- 首页 Banner 和 Playlist 渐变色 -->
     <color name="homeBannerColor1">#8A80FF</color>
     <color name="homeBannerColor2">#FF76A3</color>
     <color name="homeBannerColor3">#5BC0EB</color>

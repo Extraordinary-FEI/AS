@@ -1,7 +1,9 @@
 package com.example.cn.helloworld.ui.main;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,16 +45,17 @@ public class BannerAdapter extends PagerAdapter {
         View itemView = inflater.inflate(R.layout.item_banner, container, false);
         HomeModels.BannerItem banner = banners.get(position);
 
-        TextView titleView = (TextView) itemView.findViewById(R.id.banner_title);
-        TextView descriptionView = (TextView) itemView.findViewById(R.id.banner_description);
-        FrameLayout root = (FrameLayout) itemView.findViewById(R.id.banner_root);
+        TextView titleView = itemView.findViewById(R.id.banner_title);
+        TextView descriptionView = itemView.findViewById(R.id.banner_description);
+        FrameLayout root = itemView.findViewById(R.id.banner_root);
 
         titleView.setText(banner.getTitle());
         descriptionView.setText(banner.getDescription());
 
-        if (root.getBackground() instanceof GradientDrawable) {
-            GradientDrawable background = (GradientDrawable) root.getBackground();
-            background.setColor(context.getResources().getColor(banner.getBackgroundColorResId()));
+        Drawable background = root.getBackground();
+        if (background instanceof GradientDrawable) {
+            ((GradientDrawable) background.mutate()).setColor(
+                    ContextCompat.getColor(context, banner.getBackgroundColorResId()));
         }
 
         container.addView(itemView);
