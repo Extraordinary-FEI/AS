@@ -8,13 +8,18 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".RegisterActivity"
-            android:label="@string/app_name">
+            android:name=".ui.main.MainActivity"
+            android:label="@string/title_main">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".RegisterActivity"
+            android:label="@string/app_name" />
 
         <activity
             android:name=".ConfirmActivity"
@@ -22,12 +27,12 @@
             android:parentActivityName=".RegisterActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".RegisterActivity"/>
+                android:value=".RegisterActivity" />
         </activity>
 
         <activity
             android:name=".ListUserActivity"
-            android:label="@string/title_user_list"/>
+            android:label="@string/title_user_list" />
 
         <activity android:name=".MusicActivity" />
         <service
@@ -35,4 +40,5 @@
             android:enabled="true"
             android:exported="true" />
     </application>
+
 </manifest>
