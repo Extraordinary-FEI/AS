@@ -3,6 +3,15 @@
     <color name="colorPrimaryDark">#1C1E4D</color>
     <color name="colorAccent">#FF6B8B</color>
     <color name="colorOnPrimary">#FFFFFFFF</color>
+
+    <!-- 兼容旧布局使用的通用配色 -->
+    <color name="pageBg">#F5F4FF</color>
+    <color name="cardBg">#FFFFFFFF</color>
+    <color name="divider">#FFF1F1F8</color>
+    <color name="textPrimary">#1F1A3D</color>
+    <color name="textSecondary">#5A5576</color>
+
+    <!-- 新首页主题配色 -->
     <color name="homeBackground">#F5F4FF</color>
     <color name="homeCardBackground">#FFFFFFFF</color>
     <color name="homeSecondarySurface">#F0EEFF</color>
