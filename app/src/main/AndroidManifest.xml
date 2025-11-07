@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.cn.helloworld">
 
@@ -7,39 +8,69 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
 
+        <!-- 启动 Activity：登录界面 -->
         <activity
             android:name=".ui.auth.LoginActivity"
             android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <!-- 主界面 -->
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:label="@string/title_main" />
+
+        <!-- 注册页面 -->
         <activity
             android:name=".RegisterActivity"
             android:label="@string/app_name" />
 
+        <!-- 注册确认页面 -->
         <activity
             android:name=".ConfirmActivity"
             android:label="@string/title_confirm"
             android:parentActivityName=".RegisterActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".RegisterActivity"/>
+                android:value=".RegisterActivity" />
         </activity>
 
+        <!-- 用户列表 -->
         <activity
             android:name=".ListUserActivity"
-            android:label="@string/title_user_list"/>
+            android:label="@string/title_user_list" />
 
+        <!-- 音乐播放 -->
         <activity android:name=".MusicActivity" />
+
+        <!-- 商品详情页 -->
         <activity
-            android:name=".ui.admin.AdminDashboardActivity"
-            android:label="管理员控制台" />
+            android:name="com.example.cn.helloworld.ui.product.ProductDetailActivity"
+            android:label="@string/default_product_name" />
+
+        <!-- 订单详情页 -->
+        <activity
+            android:name="com.example.cn.helloworld.ui.order.OrderDetailActivity"
+            android:label="@string/title_order_detail" />
+
+        <!-- 管理员控制台 -->
+        <activity
+            android:name="com.example.cn.helloworld.ui.admin.AdminDashboardActivity"
+            android:label="@string/title_admin_dashboard" />
+
+        <!-- 应援商城详情（新增分类模块） -->
+        <activity
+            android:name=".ui.catalog.ProductDetailActivity"
+            android:label="@string/app_name" />
+
+        <!-- 音乐后台服务 -->
         <service
             android:name=".MusicService"
             android:enabled="true"
             android:exported="true" />
+
     </application>
 </manifest>

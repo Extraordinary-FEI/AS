@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,58 +16,91 @@ import com.example.cn.helloworld.data.repository.AuthRepository;
 import com.example.cn.helloworld.data.session.SessionManager;
 import com.example.cn.helloworld.ui.auth.LoginActivity;
 
+/**
+ * 管理员控制台：融合版本
+ * - 保留登录验证与退出功能
+ * - 增加统计仪表盘展示
+ */
 public class AdminDashboardActivity extends AppCompatActivity {
 
     private SessionManager sessionManager;
     private TextView tvWelcome;
     private TextView tvToken;
+    private TextView summaryText;
     private Button btnProducts;
     private Button btnPlaylists;
     private Button btnUsers;
     private Button btnLogout;
+    private StatsBarView statsBarView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_dashboard);
+        setTitle(R.string.title_admin_dashboard);
 
         sessionManager = new SessionManager(this);
+        // 非管理员直接退出
         if (!AuthRepository.ROLE_ADMIN.equals(sessionManager.getRole())) {
             finish();
             return;
         }
+
         bindViews();
         populateInfo();
+        setupDashboardStats();
         initEvents();
     }
 
     private void bindViews() {
-        tvWelcome = (TextView) findViewById(R.id.tvAdminWelcome);
-        tvToken = (TextView) findViewById(R.id.tvAdminToken);
-        btnProducts = (Button) findViewById(R.id.btnManageProducts);
-        btnPlaylists = (Button) findViewById(R.id.btnManagePlaylists);
-        btnUsers = (Button) findViewById(R.id.btnViewUsers);
-        btnLogout = (Button) findViewById(R.id.btnLogout);
+        tvWelcome = findViewById(R.id.tvAdminWelcome);
+        tvToken = findViewById(R.id.tvAdminToken);
+        summaryText = findViewById(R.id.text_dashboard_summary);
+        btnProducts = findViewById(R.id.btnManageProducts);
+        btnPlaylists = findViewById(R.id.btnManagePlaylists);
+        btnUsers = findViewById(R.id.btnViewUsers);
+        btnLogout = findViewById(R.id.btnLogout);
+        statsBarView = findViewById(R.id.stats_bar_view);
     }
 
+    /** 显示当前登录信息 */
     private void populateInfo() {
         String username = sessionManager.getUsername();
-        if (username == null || username.length() == 0) {
+        if (username == null || username.isEmpty()) {
             username = "管理员";
         }
-        String permissions = sessionManager.getPermissions();
         tvWelcome.setText("管理员控制台 - " + username);
+
         String token = sessionManager.getToken();
-        if (token == null || token.length() == 0) {
-            token = "未获取";
-        }
+        if (token == null || token.isEmpty()) token = "未获取";
+        String permissions = sessionManager.getPermissions();
         String tokenInfo = "Token: " + token;
-        if (permissions != null && permissions.length() > 0) {
+        if (permissions != null && !permissions.isEmpty()) {
             tokenInfo += "\n权限: " + permissions;
         }
         tvToken.setText(tokenInfo);
     }
 
+    /** 初始化仪表盘数据 */
+    private void setupDashboardStats() {
+        if (statsBarView == null) return;
+
+        float[] values = new float[]{120f, 80f, 45f, 30f};
+        String[] labels = new String[]{
+                getString(R.string.stat_label_order),
+                getString(R.string.stat_label_support),
+                getString(R.string.stat_label_new_user),
+                getString(R.string.stat_label_review)
+        };
+        statsBarView.setData(values, labels);
+
+        if (summaryText != null) {
+            summaryText.setText(getString(R.string.dashboard_summary,
+                    (int) values[0], (int) values[1], (int) values[2]));
+        }
+    }
+
+    /** 初始化按钮事件 */
     private void initEvents() {
         View.OnClickListener featureClickListener = new View.OnClickListener() {
             @Override
@@ -87,14 +121,10 @@ public class AdminDashboardActivity extends AppCompatActivity {
         btnPlaylists.setOnClickListener(featureClickListener);
         btnUsers.setOnClickListener(featureClickListener);
 
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                confirmLogout();
-            }
-        });
+        btnLogout.setOnClickListener(v -> confirmLogout());
     }
 
+    /** 退出登录确认框 */
     private void confirmLogout() {
         new AlertDialog.Builder(this)
                 .setTitle("退出登录")

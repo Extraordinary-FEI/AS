@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    tools:context=".ui.admin.AdminDashboardActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- 管理员欢迎信息 -->
         <TextView
             android:id="@+id/tvAdminWelcome"
             android:layout_width="match_parent"
@@ -20,14 +24,66 @@
             android:gravity="center_horizontal"
             android:layout_marginBottom="16dp" />
 
+        <!-- 显示 Token / 权限信息 -->
         <TextView
             android:id="@+id/tvAdminToken"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@android:color/darker_gray"
             android:textSize="12sp"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="12dp"
+            tools:text="Token: 1234567890abcdef\n权限: admin, read_all" />
 
+        <!-- 仪表盘统计卡片 -->
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_stats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:elevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dashboard_stats_title"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textStyle="bold" />
+
+                <com.example.cn.helloworld.ui.admin.StatsBarView
+                    android:id="@+id/stats_bar_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/text_dashboard_summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    tools:text="今日完成 12 个订单，处理 5 个工单，新增 8 位粉丝。" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <!-- 提示 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dashboard_tip"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:layout_marginBottom="16dp" />
+
+        <!-- 管理功能按钮 -->
         <Button
             android:id="@+id/btnManageProducts"
             android:layout_width="match_parent"
@@ -48,6 +104,7 @@
             android:layout_marginTop="12dp"
             android:text="用户管理" />
 
+        <!-- 退出登录 -->
         <Button
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
