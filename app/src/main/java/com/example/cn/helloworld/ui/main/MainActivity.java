@@ -26,16 +26,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
         setTitle(R.string.title_main);
 
         dataSource = new FakeHomeDataSource();
 
-        bannerPager = findViewById(R.id.bannerPager);
-        categoryList = findViewById(R.id.categoryList);
-        playlistList = findViewById(R.id.playlistList);
-        taskList = findViewById(R.id.taskList);
+
+        bannerPager = (ViewPager) findViewById(R.id.bannerPager);
+        categoryList = (RecyclerView) findViewById(R.id.categoryList);
+        playlistList = (RecyclerView) findViewById(R.id.playlistList);
+        taskList = (RecyclerView) findViewById(R.id.taskList);
+
 
         setupBanner();
         setupCategories();
