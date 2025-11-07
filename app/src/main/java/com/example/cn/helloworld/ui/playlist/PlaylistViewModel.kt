@@ -1,9 +1,9 @@
 package com.example.cn.helloworld.ui.playlist
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
 import com.example.cn.helloworld.R
 import com.example.cn.helloworld.data.model.Playlist
 import com.example.cn.helloworld.data.model.Song

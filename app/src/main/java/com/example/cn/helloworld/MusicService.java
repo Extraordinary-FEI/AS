@@ -6,7 +6,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
+import androidx.core.app.NotificationCompat;
 import android.widget.Toast;
 
 public class MusicService extends Service {
@@ -117,7 +117,12 @@ public class MusicService extends Service {
 
     private void showNotification(String title, String text) {
         Intent intent = new Intent(this, MusicActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pi = PendingIntent.getActivity(
+                this,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
 
         Notification notification = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.logo)

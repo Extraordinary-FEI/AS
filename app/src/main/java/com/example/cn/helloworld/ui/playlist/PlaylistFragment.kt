@@ -1,15 +1,12 @@
 package com.example.cn.helloworld.ui.playlist
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.LifecycleRegistry
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,9 +18,7 @@ import com.example.cn.helloworld.data.model.Playlist
 import com.example.cn.helloworld.data.model.Song
 import java.util.Locale
 
-class PlaylistFragment : Fragment(), LifecycleOwner {
-
-    private val lifecycleRegistry = LifecycleRegistry(this)
+class PlaylistFragment : Fragment() {
 
     private lateinit var playlistCover: ImageView
     private lateinit var playlistTitle: TextView
@@ -33,11 +28,6 @@ class PlaylistFragment : Fragment(), LifecycleOwner {
     private lateinit var songsAdapter: PlaylistSongsAdapter
 
     private lateinit var viewModel: PlaylistViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,43 +56,16 @@ class PlaylistFragment : Fragment(), LifecycleOwner {
             setHasFixedSize(true)
         }
 
-        viewModel = ViewModelProviders.of(this).get(PlaylistViewModel::class.java)
-        viewModel.playlist.observe(this, Observer { playlist ->
+        viewModel = ViewModelProvider(this).get(PlaylistViewModel::class.java)
+        viewModel.playlist.observe(viewLifecycleOwner, Observer { playlist ->
             if (playlist != null) {
                 bindPlaylist(playlist)
             }
         })
-        viewModel.songs.observe(this, Observer { songs ->
+        viewModel.songs.observe(viewLifecycleOwner, Observer { songs ->
             songsAdapter.submitList(songs)
         })
     }
-
-    override fun onStart() {
-        super.onStart()
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    }
-
-    override fun onPause() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-        super.onPause()
-    }
-
-    override fun onStop() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-        super.onDestroy()
-    }
-
-    override fun getLifecycle(): Lifecycle = lifecycleRegistry
 
     private fun bindPlaylist(playlist: Playlist) {
         playlistTitle.text = playlist.title
