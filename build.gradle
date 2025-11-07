@@ -1,19 +1,26 @@
-// Top-level build.gradle
+// Top-level build.gradle for Android Studio 2.3.2
 
 buildscript {
     repositories {
+        // 旧版 AS 2.3.2 不支持 google() 语法，因此使用 jcenter + 阿里云镜像
         jcenter()
-        maven { url 'https://maven.google.com' }
+        mavenCentral()
+        maven { url "https://maven.aliyun.com/repository/google" }
+        maven { url "https://maven.aliyun.com/repository/jcenter" }
     }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.2'
+        // 适配 AS 2.3.2 的 Gradle 插件版本
+        classpath 'com.android.tools.build:gradle:2.3.3'
     }
 }
 
 allprojects {
     repositories {
         jcenter()
-        maven { url 'https://maven.google.com' }
+        mavenCentral()
+        maven { url "https://maven.aliyun.com/repository/google" }
+        maven { url "https://maven.aliyun.com/repository/jcenter" }
     }
 }
 
