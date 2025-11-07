@@ -3,6 +3,14 @@
     <color name="colorPrimaryDark">#1C1E4D</color>
     <color name="colorAccent">#FF6B8B</color>
     <color name="colorOnPrimary">#FFFFFFFF</color>
+
+    <!-- Legacy color tokens still referenced by existing screens -->
+    <color name="pageBg">#F5F4FF</color>
+    <color name="cardBg">#FFFFFFFF</color>
+    <color name="textSecondary">#5A5576</color>
+    <color name="divider">#1A000000</color>
+
+    <!-- Home screen theme palette -->
     <color name="homeBackground">#F5F4FF</color>
     <color name="homeCardBackground">#FFFFFFFF</color>
     <color name="homeSecondarySurface">#F0EEFF</color>
