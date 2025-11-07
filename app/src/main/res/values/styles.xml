@@ -3,5 +3,74 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/homeBackground</item>
+        <item name="android:textColorPrimary">@color/homeTextPrimary</item>
+        <item name="android:textColorSecondary">@color/homeTextSecondary</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="HomeToolbarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/colorOnPrimary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="HomeSectionTitle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/homeTextPrimary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="HomeSectionSubtitle" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/homeTextSecondary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="HomeBannerTitle" parent="TextAppearance.AppCompat.Large">
+        <item name="android:textColor">@color/colorOnPrimary</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="HomeBannerSubtitle" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/colorOnPrimary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="HomeCategoryChip" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:background">@drawable/bg_category_chip</item>
+        <item name="android:textColor">@color/homeTextPrimary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="HomePlaylistTitle" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/homeTextPrimary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="HomePlaylistSubtitle" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/homeTextSecondary</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="HomeTaskTitle" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/homeTextPrimary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="HomeTaskDeadline" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/homeTaskDeadline</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="HomeTaskDescription" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/homeTextSecondary</item>
+        <item name="android:textSize">14sp</item>
     </style>
 </resources>
