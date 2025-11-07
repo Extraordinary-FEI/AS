@@ -52,9 +52,12 @@ public class CategoryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_category, container, false);
         recyclerView = view.findViewById(R.id.categoryRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new CategoryAdapter(new ArrayList<>(), category -> {
-            if (listener != null) {
-                listener.onCategorySelected(category);
+        adapter = new CategoryAdapter(new ArrayList<>(), new CategoryAdapter.OnCategoryClickListener() {
+            @Override
+            public void onCategoryClick(Category category) {
+                if (listener != null) {
+                    listener.onCategorySelected(category);
+                }
             }
         });
         recyclerView.setAdapter(adapter);
@@ -118,9 +121,12 @@ public class CategoryFragment extends Fragment {
             void bind(final Category category, final OnCategoryClickListener listener) {
                 nameView.setText(category.getName());
                 iconView.setImageResource(category.getIconResId());
-                itemView.setOnClickListener(v -> {
-                    if (listener != null) {
-                        listener.onCategoryClick(category);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (listener != null) {
+                            listener.onCategoryClick(category);
+                        }
                     }
                 });
             }
