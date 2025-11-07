@@ -3,11 +3,12 @@ package com.example.cn.helloworld.ui.catalog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+
 
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Product;
@@ -39,13 +40,13 @@ public class ProductDetailActivity extends AppCompatActivity {
             return;
         }
 
-        ImageView imageView = findViewById(R.id.detailProductImage);
-        TextView nameView = findViewById(R.id.detailProductName);
-        TextView priceView = findViewById(R.id.detailProductPrice);
-        TextView inventoryView = findViewById(R.id.detailProductInventory);
-        TextView tagsView = findViewById(R.id.detailProductTags);
-        TextView starEventsView = findViewById(R.id.detailProductStarEvents);
-        TextView descriptionView = findViewById(R.id.detailProductDescription);
+        ImageView imageView = (ImageView) findViewById(R.id.detailProductImage);
+        TextView nameView = (TextView) findViewById(R.id.detailProductName);
+        TextView priceView = (TextView) findViewById(R.id.detailProductPrice);
+        TextView inventoryView = (TextView) findViewById(R.id.detailProductInventory);
+        TextView tagsView = (TextView) findViewById(R.id.detailProductTags);
+        TextView starEventsView = (TextView) findViewById(R.id.detailProductStarEvents);
+        TextView descriptionView = (TextView) findViewById(R.id.detailProductDescription);
 
         imageView.setImageResource(product.getImageResId());
         nameView.setText(product.getName());

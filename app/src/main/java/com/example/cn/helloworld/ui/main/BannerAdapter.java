@@ -3,8 +3,8 @@ package com.example.cn.helloworld.ui.main;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.PagerAdapter;
+
+import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,9 +45,9 @@ public class BannerAdapter extends PagerAdapter {
         View itemView = inflater.inflate(R.layout.item_banner, container, false);
         HomeModels.BannerItem banner = banners.get(position);
 
-        TextView titleView = itemView.findViewById(R.id.banner_title);
-        TextView descriptionView = itemView.findViewById(R.id.banner_description);
-        FrameLayout root = itemView.findViewById(R.id.banner_root);
+        TextView titleView = (TextView) itemView.findViewById(R.id.banner_title);
+        TextView descriptionView = (TextView) itemView.findViewById(R.id.banner_description);
+        FrameLayout root = (FrameLayout) itemView.findViewById(R.id.banner_root);
 
         titleView.setText(banner.getTitle());
         descriptionView.setText(banner.getDescription());
