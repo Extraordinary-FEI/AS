@@ -32,4 +32,45 @@
     <string name="pref_vote">打投</string>
     <string name="pref_comment">控评</string>
     <string name="pref_offline">线下应援</string>
+
+    <!-- 购物车与订单 -->
+    <string name="cart_total_template">合计：¥%1$s</string>
+    <string name="cart_total_placeholder">合计：¥0.00</string>
+    <string name="cart_button_checkout">去结算</string>
+    <string name="cart_price_template">单价：¥%1$s</string>
+    <string name="cart_reduce_quantity">减少数量</string>
+    <string name="cart_increase_quantity">增加数量</string>
+    <string name="title_order_detail">订单详情</string>
+    <string name="order_id_template">订单号：%1$s</string>
+    <string name="order_status_template">订单状态：%1$s</string>
+    <string name="order_total_template">订单总额：¥%1$s</string>
+    <string name="order_address_template">收货地址：%1$s</string>
+    <string name="order_created_template">下单时间：%1$s</string>
+    <string name="order_items">商品清单</string>
+
+    <!-- 商品详情 -->
+    <string name="default_product_name">限量周边</string>
+    <string name="default_product_description">%1$s，粉丝应援必备！</string>
+    <string name="favorite_added">已收藏</string>
+    <string name="favorite_removed">收藏</string>
+    <string name="button_view_comments">查看评论</string>
+    <string name="review_prompt">发表你的应援评论</string>
+    <string name="hint_review_content">写下你的应援心得...</string>
+    <string name="button_submit_review">提交评论</string>
+    <string name="dialog_reviews_title">粉丝评论</string>
+    <string name="no_reviews_yet">还没有评论，快来抢沙发！</string>
+    <string name="error_empty_review">请输入评论内容</string>
+    <string name="review_submitted">评论提交成功</string>
+    <string name="review_submit_error">评论提交失败，请稍后再试</string>
+
+    <!-- 管理员面板 -->
+    <string name="title_admin_dashboard">管理控制台</string>
+    <string name="dashboard_stats_title">核心指标</string>
+    <string name="stat_label_order">订单</string>
+    <string name="stat_label_support">工单</string>
+    <string name="stat_label_new_user">新增粉丝</string>
+    <string name="stat_label_review">评论</string>
+    <string name="dashboard_summary">今日完成 %1$d 个订单，处理 %2$d 个客服工单，新增 %3$d 位粉丝。</string>
+    <string name="dashboard_chart_description">管理员统计图，显示订单、工单、粉丝等数据</string>
+    <string name="dashboard_tip">提示：长按卡片可分享数据报表。</string>
 </resources>
