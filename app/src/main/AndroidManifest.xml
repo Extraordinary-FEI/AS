@@ -35,6 +35,15 @@
             android:label="@string/title_user_list" />
 
         <activity android:name=".MusicActivity" />
+        <activity
+            android:name="com.example.cn.helloworld.ui.order.OrderDetailActivity"
+            android:label="@string/title_order_detail" />
+        <activity
+            android:name="com.example.cn.helloworld.ui.product.ProductDetailActivity"
+            android:label="@string/default_product_name" />
+        <activity
+            android:name="com.example.cn.helloworld.ui.admin.AdminDashboardActivity"
+            android:label="@string/title_admin_dashboard" />
         <service
             android:name=".MusicService"
             android:enabled="true"
