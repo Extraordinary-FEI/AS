@@ -1,6 +1,5 @@
 package com.example.cn.helloworld.ui.main;
 
-
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,9 +44,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
         CategoryViewHolder(View itemView) {
             super(itemView);
-            nameView = (TextView) itemView.findViewById(R.id.category_name);
-
-
+            nameView = (TextView) itemView.findViewById(R.id.categoryName);
         }
     }
 }

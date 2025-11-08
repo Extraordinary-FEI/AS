@@ -7,7 +7,10 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 54c08ab2b5a048159174a0026e1d331be437f64c
 
 import com.example.cn.helloworld.R;
 
