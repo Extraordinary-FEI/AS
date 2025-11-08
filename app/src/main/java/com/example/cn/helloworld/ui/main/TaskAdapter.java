@@ -1,6 +1,6 @@
 package com.example.cn.helloworld.ui.main;
 
-import androidx.recyclerview.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,8 +52,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             nameView = (TextView) itemView.findViewById(R.id.task_name);
             deadlineView = (TextView) itemView.findViewById(R.id.task_deadline);
             descriptionView = (TextView) itemView.findViewById(R.id.task_description);
-
-
         }
     }
 }
