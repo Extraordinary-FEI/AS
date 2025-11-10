@@ -1,9 +1,6 @@
 package com.example.cn.helloworld.ui.main;
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 54c08ab2b5a048159174a0026e1d331be437f64c
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;

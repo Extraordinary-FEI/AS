@@ -3,10 +3,7 @@ package com.example.cn.helloworld;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-<<<<<<< HEAD
 
-=======
->>>>>>> 54c08ab2b5a048159174a0026e1d331be437f64c
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -18,6 +15,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
+
 
 import java.util.Calendar;
 
