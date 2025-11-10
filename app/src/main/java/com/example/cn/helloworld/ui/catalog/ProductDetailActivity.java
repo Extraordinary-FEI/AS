@@ -3,16 +3,12 @@ package com.example.cn.helloworld.ui.catalog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 54c08ab2b5a048159174a0026e1d331be437f64c
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Product;
 import com.example.cn.helloworld.data.repository.ProductRepository;

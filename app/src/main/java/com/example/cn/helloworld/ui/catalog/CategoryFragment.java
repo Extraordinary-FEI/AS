@@ -1,10 +1,12 @@
 package com.example.cn.helloworld.ui.catalog;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -22,6 +24,7 @@ import com.example.cn.helloworld.data.repository.ProductRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+@RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
 public class CategoryFragment extends android.app.Fragment {
 
     public interface OnCategorySelectedListener {

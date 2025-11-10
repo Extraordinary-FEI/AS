@@ -5,7 +5,6 @@ import android.content.Context;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Category;
 import com.example.cn.helloworld.data.model.Product;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

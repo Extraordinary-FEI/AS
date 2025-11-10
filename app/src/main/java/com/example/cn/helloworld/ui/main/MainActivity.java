@@ -1,6 +1,8 @@
 package com.example.cn.helloworld.ui.main;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -53,12 +55,14 @@ public class MainActivity extends AppCompatActivity {
         bannerPager.setOffscreenPageLimit(3);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     private void setupCategories() {
         categoryList.setLayoutManager(new GridLayoutManager(this, 3));
         categoryList.setNestedScrollingEnabled(false);
         categoryList.setAdapter(new CategoryAdapter(dataSource.loadCategories()));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     private void setupPlaylists() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         playlistList.setLayoutManager(layoutManager);
@@ -66,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         playlistList.setAdapter(new PlaylistAdapter(dataSource.loadPlaylists()));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     private void setupTasks() {
         taskList.setLayoutManager(new LinearLayoutManager(this));
         taskList.setNestedScrollingEnabled(false);

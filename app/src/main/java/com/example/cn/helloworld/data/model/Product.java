@@ -30,8 +30,8 @@ public class Product {
         this.imageResId = imageResId;
         this.categoryId = categoryId;
         this.inventory = inventory;
-        this.tags = tags == null ? Collections.emptyList() : Collections.unmodifiableList(tags);
-        this.starEvents = starEvents == null ? Collections.emptyList() : Collections.unmodifiableList(starEvents);
+        this.tags = tags == null ? (List<String>) Collections.emptyList() : Collections.unmodifiableList(tags);
+        this.starEvents = starEvents == null ? (List<String>) Collections.emptyList() : Collections.unmodifiableList(starEvents);
     }
 
     public String getId() {
