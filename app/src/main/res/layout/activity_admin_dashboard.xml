@@ -35,7 +35,7 @@
             tools:text="Token: 1234567890abcdef\n权限: admin, read_all" />
 
         <!-- 仪表盘统计卡片 -->
-        <androidx.cardview.widget.CardView
+        <android.support.v7.widget.CardView
             android:id="@+id/card_stats"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
                     tools:text="今日完成 12 个订单，处理 5 个工单，新增 8 位粉丝。" />
 
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </android.support.v7.widget.CardView>
 
         <!-- 提示 -->
         <TextView

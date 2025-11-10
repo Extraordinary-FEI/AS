@@ -1,6 +1,6 @@
 package com.example.cn.helloworld.data.model;
 
-import androidx.annotation.DrawableRes;
+import android.support.annotation.DrawableRes;
 
 /**
  * 简单的歌曲模型，便于歌单与播放器模块复用。
