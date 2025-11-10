@@ -1,6 +1,6 @@
 package com.example.cn.helloworld.data.model;
 
-import android.support.annotation.DrawableRes;
+import androidx.annotation.DrawableRes;
 
 import java.util.ArrayList;
 import java.util.Collections;

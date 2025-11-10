@@ -1,39 +1,18 @@
-// Top-level build.gradle for Android Studio 2.3.2
-// ✅ 兼容 Gradle 3.3 + Plugin 2.3.3，支持国内镜像同步
-
 buildscript {
     repositories {
-        // Android Studio 2.3.2 不支持 google() 写法，改用 Maven 地址
-        jcenter()
+        google()
         mavenCentral()
-
-        // 阿里云加速镜像（国内环境推荐）
-        maven { url "https://maven.aliyun.com/repository/google" }
-        maven { url "https://maven.aliyun.com/repository/jcenter" }
-        maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
-
-        // 官方备用
-        maven { url "https://dl.google.com/dl/android/maven2/" }
     }
 
     dependencies {
-        // ✅ Gradle 插件版本需与 Android Studio 2.3.2 匹配
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:7.4.2'
     }
 }
 
 allprojects {
     repositories {
-        jcenter()
+        google()
         mavenCentral()
-
-        // 阿里云镜像（国内可加快构建）
-        maven { url "https://maven.aliyun.com/repository/google" }
-        maven { url "https://maven.aliyun.com/repository/jcenter" }
-        maven { url "https://maven.aliyun.com/repository/public" }
-
-        // 官方备用
-        maven { url "https://dl.google.com/dl/android/maven2/" }
     }
 }
 
