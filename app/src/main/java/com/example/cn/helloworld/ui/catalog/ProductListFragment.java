@@ -1,6 +1,8 @@
 package com.example.cn.helloworld.ui.catalog;
 
+import android.app.Fragment;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,6 +22,7 @@ import com.example.cn.helloworld.data.repository.ProductRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+@RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
 public class ProductListFragment extends Fragment {
 
     private static final String ARG_CATEGORY_ID = "arg_category_id";
@@ -49,6 +52,8 @@ public class ProductListFragment extends Fragment {
         }
     }
 
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -56,6 +61,7 @@ public class ProductListFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.productRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new ProductAdapter(new ArrayList<Product>(), new ProductAdapter.OnProductClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onProductClick(Product product) {
                 Context context = getContext();
@@ -121,9 +127,9 @@ public class ProductListFragment extends Fragment {
 
             ProductViewHolder(@NonNull View itemView) {
                 super(itemView);
-                imageView = itemView.findViewById(R.id.productImage);
-                nameView = itemView.findViewById(R.id.productName);
-                priceView = itemView.findViewById(R.id.productPrice);
+                imageView = (ImageView) itemView.findViewById(R.id.productImage);
+                nameView = (TextView) itemView.findViewById(R.id.productName);
+                priceView = (TextView) itemView.findViewById(R.id.productPrice);
             }
 
             void bind(final Product product, final OnProductClickListener listener) {

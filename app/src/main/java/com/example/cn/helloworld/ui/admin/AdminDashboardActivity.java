@@ -52,14 +52,14 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void bindViews() {
-        tvWelcome = findViewById(R.id.tvAdminWelcome);
-        tvToken = findViewById(R.id.tvAdminToken);
-        summaryText = findViewById(R.id.text_dashboard_summary);
-        btnProducts = findViewById(R.id.btnManageProducts);
-        btnPlaylists = findViewById(R.id.btnManagePlaylists);
-        btnUsers = findViewById(R.id.btnViewUsers);
-        btnLogout = findViewById(R.id.btnLogout);
-        statsBarView = findViewById(R.id.stats_bar_view);
+        tvWelcome = (TextView) findViewById(R.id.tvAdminWelcome);
+        tvToken = (TextView) findViewById(R.id.tvAdminToken);
+        summaryText = (TextView) findViewById(R.id.text_dashboard_summary);
+        btnProducts = (Button) findViewById(R.id.btnManageProducts);
+        btnPlaylists = (Button) findViewById(R.id.btnManagePlaylists);
+        btnUsers = (Button) findViewById(R.id.btnViewUsers);
+        btnLogout = (Button) findViewById(R.id.btnLogout);
+        statsBarView = (StatsBarView) findViewById(R.id.stats_bar_view);
     }
 
     /** 显示当前登录信息 */

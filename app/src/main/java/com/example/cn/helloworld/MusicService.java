@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
+
 public class MusicService extends Service {
 
     private MediaPlayer player;
@@ -121,7 +122,7 @@ public class MusicService extends Service {
                 this,
                 0,
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                PendingIntent.FLAG_UPDATE_CURRENT
         );
 
         Notification notification = new NotificationCompat.Builder(this)

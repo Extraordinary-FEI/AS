@@ -2,8 +2,10 @@ package com.example.cn.helloworld.ui.order;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.ArrayAdapter;
@@ -56,6 +58,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
     private void bindOrder(Order order) {
         orderIdTextView.setText(getString(R.string.order_id_template, order.getOrderId()));
         statusTextView.setText(getString(R.string.order_status_template, order.getStatus()));

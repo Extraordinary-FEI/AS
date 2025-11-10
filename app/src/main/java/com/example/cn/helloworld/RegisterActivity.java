@@ -15,7 +15,6 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.cn.helloworld.R;
 
 import java.util.Calendar;
 
