@@ -215,4 +215,12 @@
     <string name="task_detail_progress_title">实时进度</string>
     <string name="task_detail_body_placeholder">--</string>
 
+    <!-- 注册错误提示 -->
+    <string name="error_admin_register_hint">管理员账号不能在此处注册，请使用登录入口</string>
+    <string name="error_short_password">密码长度不能少于6位</string>
+    <string name="error_invalid_email">请输入正确的邮箱地址</string>
+    <string name="error_invalid_phone">请输入有效的手机号</string>
+    <string name="error_empty_fans_date">请选择入坑日期</string>
+
+
 </resources>

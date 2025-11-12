@@ -18,6 +18,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+
 import com.example.cn.helloworld.data.repository.AuthRepository;
 
 import java.util.Calendar;
@@ -141,7 +142,7 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (TextUtils.isEmpty(phone) || !phone.matches("^1\\\d{10}$")) {
+                if (TextUtils.isEmpty(phone) || !phone.matches("^1\\d{10}$")) {
                     Toast.makeText(getApplicationContext(), R.string.error_invalid_phone, Toast.LENGTH_SHORT).show();
                     return;
                 }
