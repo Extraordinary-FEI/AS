@@ -30,7 +30,7 @@ public class CategoryFragment extends android.app.Fragment {
         void onCategorySelected(Category category);
     }
 
-    private View recyclerView;
+    private RecyclerView recyclerView;
     private CategoryAdapter adapter;
     private ProductRepository productRepository;
     private OnCategorySelectedListener listener;
