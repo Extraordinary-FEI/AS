@@ -6,15 +6,19 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.cn.helloworld.data.repository.AuthRepository;
 
 import java.util.Calendar;
 
@@ -22,6 +26,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     private EditText etName, etPassword, etEmail, etPhone, etBio, etFansDate;
     private RadioButton rbMale, rbFemale;
+    private RadioGroup rgAccountRole;
+    private RadioButton rbAccountFan, rbAccountAdmin;
     private CheckBox cbSing, cbDance, cbPaint;
     private Spinner spMajor, spClass;
     private Button btnRegister, btnCancel;
@@ -52,6 +58,10 @@ public class RegisterActivity extends AppCompatActivity {
         rbMale = (RadioButton) findViewById(R.id.rbMale);
         rbFemale = (RadioButton) findViewById(R.id.rbFemale);
 
+        rgAccountRole = (RadioGroup) findViewById(R.id.rgAccountRole);
+        rbAccountFan = (RadioButton) findViewById(R.id.rbAccountFan);
+        rbAccountAdmin = (RadioButton) findViewById(R.id.rbAccountAdmin);
+
         cbSing = (CheckBox) findViewById(R.id.cbSing);
         cbDance = (CheckBox) findViewById(R.id.cbDance);
         cbPaint = (CheckBox) findViewById(R.id.cbPaint);
@@ -67,10 +77,18 @@ public class RegisterActivity extends AppCompatActivity {
         // “专业”用 entries="@array/majors"，无需代码绑定
 
         // “班级”用 ArrayAdapter 绑定（确保 import android.widget.ArrayAdapter;）
-        String[] classes = new String[]{"一班", "二班", "三班"};
+        String[] classes = getResources().getStringArray(R.array.classes);
         ArrayAdapter<String> classAdapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_spinner_dropdown_item, classes);
         spClass.setAdapter(classAdapter);
+
+        rbAccountAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), R.string.error_admin_register_hint, Toast.LENGTH_SHORT).show();
+                rbAccountFan.setChecked(true);
+            }
+        });
 
         // 日期选择器
         etFansDate.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +116,12 @@ public class RegisterActivity extends AppCompatActivity {
         // 注册
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
+                if (rbAccountAdmin.isChecked()) {
+                    Toast.makeText(getApplicationContext(), R.string.error_admin_register_hint, Toast.LENGTH_SHORT).show();
+                    rbAccountFan.setChecked(true);
+                    return;
+                }
+
                 String name = textOf(etName);
                 String pwd  = textOf(etPassword);
                 if (name.length()==0 || pwd.length()==0) {
@@ -105,12 +129,31 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
+                if (pwd.length() < 6) {
+                    Toast.makeText(getApplicationContext(), R.string.error_short_password, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 String email = textOf(etEmail);
                 String phone = textOf(etPhone);
+                if (TextUtils.isEmpty(email) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    Toast.makeText(getApplicationContext(), R.string.error_invalid_email, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (TextUtils.isEmpty(phone) || !phone.matches("^1\\\d{10}$")) {
+                    Toast.makeText(getApplicationContext(), R.string.error_invalid_phone, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 String gender = rbMale.isChecked() ? "男" : "女";
                 String major  = itemOf(spMajor);
                 String clazz  = itemOf(spClass);
                 String date   = textOf(etFansDate);
+                if (TextUtils.isEmpty(date)) {
+                    Toast.makeText(getApplicationContext(), R.string.error_empty_fans_date, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String bio    = textOf(etBio);
 
                 StringBuilder hobby = new StringBuilder();
@@ -129,6 +172,7 @@ public class RegisterActivity extends AppCompatActivity {
                 it.putExtra("date",   date);
                 it.putExtra("hobbies", hobby.toString().trim());
                 it.putExtra("bio", bio);
+                it.putExtra("role", AuthRepository.ROLE_USER);
                 startActivity(it);
             }
         });
@@ -139,6 +183,7 @@ public class RegisterActivity extends AppCompatActivity {
                 etName.setText(""); etPassword.setText(""); etEmail.setText("");
                 etPhone.setText(""); etBio.setText(""); etFansDate.setText("");
                 rbMale.setChecked(true);
+                rbAccountFan.setChecked(true);
                 cbSing.setChecked(false); cbDance.setChecked(false); cbPaint.setChecked(false);
                 Toast.makeText(getApplicationContext(),"已清空",Toast.LENGTH_SHORT).show();
             }

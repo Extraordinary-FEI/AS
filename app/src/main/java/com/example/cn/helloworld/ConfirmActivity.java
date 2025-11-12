@@ -11,9 +11,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.cn.helloworld.data.repository.AuthRepository;
+import com.example.cn.helloworld.ui.main.MainActivity;
+
 public class ConfirmActivity extends AppCompatActivity {
 
-    private TextView tvName, tvPwd, tvEmail, tvPhone, tvGender, tvMajor,
+    private TextView tvName, tvRole, tvPwd, tvEmail, tvPhone, tvGender, tvMajor,
             tvClass, tvDate, tvHobbies, tvBio;
     private Button btnBack, btnOk;
 
@@ -36,6 +39,7 @@ public class ConfirmActivity extends AppCompatActivity {
 
         // 2) 绑定视图（id 要和 activity_confirm.xml 完全一致）
         tvName    = (TextView) findViewById(R.id.tvName);
+        tvRole    = (TextView) findViewById(R.id.tvRole);
         tvPwd     = (TextView) findViewById(R.id.tvPwd);
         tvEmail   = (TextView) findViewById(R.id.tvEmail);
         tvPhone   = (TextView) findViewById(R.id.tvPhone);
@@ -61,9 +65,13 @@ public class ConfirmActivity extends AppCompatActivity {
         final String date    = it.getStringExtra("date");
         final String hobbies = it.getStringExtra("hobbies");
         final String bio     = it.getStringExtra("bio");
+        final String role    = it.getStringExtra("role");
 
         // 4) 显示
         tvName.setText(name);
+        String roleDisplay = AuthRepository.ROLE_ADMIN.equals(role) ?
+                getString(R.string.role_admin) : getString(R.string.role_fan);
+        tvRole.setText(roleDisplay);
         tvPwd.setText(pwd);
         tvEmail.setText(email);
         tvPhone.setText(phone);
@@ -126,7 +134,7 @@ public class ConfirmActivity extends AppCompatActivity {
                 Toast.makeText(ConfirmActivity.this, "注册成功！", Toast.LENGTH_SHORT).show();
 
                 // （2）修改跳转目标为 MusicActivity
-                Intent intent = new Intent(ConfirmActivity.this, MusicActivity.class);
+                Intent intent = new Intent(ConfirmActivity.this, MainActivity.class);
                 startActivity(intent);
 
                 // （3）关闭当前页面，防止回退又回到确认页

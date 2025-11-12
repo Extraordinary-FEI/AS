@@ -8,6 +8,15 @@
     <string name="title_confirm">注册信息确认</string>
     <string name="title_user_list">粉丝列表</string>
     <string name="title_main">千玺星球</string>
+    <string name="login_title">欢迎回到千玺星球</string>
+    <string name="login_subtitle">请选择登录身份，进入粉丝社区或管理后台</string>
+    <string name="login_choose_role">请选择登录入口</string>
+    <string name="login_button">立即进入</string>
+    <string name="login_register_button">粉丝注册</string>
+    <string name="login_status_default">请填写完整信息后登录</string>
+    <string name="login_remember_me">记住登录状态</string>
+    <string name="login_security_tip_user">提示：未注册的粉丝可先完成注册再登录。</string>
+    <string name="login_security_tip_admin">管理员需使用短信验证码完成二次验证（演示验证码：246810）。</string>
 
     <!-- 按钮 -->
     <string name="btn_register">注册</string>
@@ -20,12 +29,14 @@
     <string name="hint_pwd">密码</string>
     <string name="hint_email">邮箱</string>
     <string name="hint_phone">联系方式</string>
+    <string name="hint_verification_code">短信验证码</string>
     <string name="label_gender">性别</string>
     <string name="label_major">角色/粉籍</string>
     <string name="label_class">应援小组</string>
     <string name="label_date">入坑日期</string>
     <string name="label_hobby">应援偏好</string>
     <string name="label_bio">个人介绍 / 应援宣言</string>
+    <string name="label_account_role">账号类型</string>
 
     <!-- 选项内容 -->
     <string name="gender_male">男</string>
@@ -33,6 +44,16 @@
     <string name="pref_vote">打投</string>
     <string name="pref_comment">控评</string>
     <string name="pref_offline">线下应援</string>
+    <string name="role_fan">粉丝账号</string>
+    <string name="role_admin">管理员</string>
+    <string name="role_user_login_hint">粉丝入口可直接登录粉丝星球首页</string>
+    <string name="role_admin_login_hint">管理员入口需短信验证码，请确认账号已由后台开通</string>
+    <string name="register_role_hint">管理员账号由后台开通，如需权限请联系统筹。</string>
+    <string name="error_admin_register_hint">管理员账号需由后台开通，请联系统筹管理员。</string>
+    <string name="error_invalid_email">请输入有效的邮箱地址</string>
+    <string name="error_invalid_phone">请输入11位手机号</string>
+    <string name="error_empty_fans_date">请选择入坑日期</string>
+    <string name="error_short_password">密码至少需要6位</string>
 
     <!-- 商品详情 -->
     <string name="product_inventory_format">库存剩余：%1$d 件</string>
