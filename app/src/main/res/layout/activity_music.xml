@@ -18,7 +18,7 @@
         android:layout_height="250dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
-        android:src="@drawable/music_bg"
+        android:src="@drawable/cover_playlist_stage"
         android:scaleType="centerCrop"
         android:background="@drawable/music_bg"
         android:elevation="8dp" />
@@ -31,7 +31,7 @@
         android:layout_below="@id/img_cover"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:text="正在播放：If You"
+        android:text="正在播放：粉雾海"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="#FFFFFF"
