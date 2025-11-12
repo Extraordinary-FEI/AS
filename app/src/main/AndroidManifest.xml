@@ -61,6 +61,22 @@
             android:name="com.example.cn.helloworld.ui.admin.AdminDashboardActivity"
             android:label="@string/title_admin_dashboard" />
 
+        <activity
+            android:name="com.example.cn.helloworld.ui.admin.ProductManagementActivity"
+            android:label="@string/title_admin_manage_products" />
+
+        <activity
+            android:name="com.example.cn.helloworld.ui.admin.PlaylistManagementActivity"
+            android:label="@string/title_admin_manage_playlists" />
+
+        <activity
+            android:name="com.example.cn.helloworld.ui.admin.PlaylistEditorActivity"
+            android:label="@string/title_admin_manage_playlists" />
+
+        <activity
+            android:name="com.example.cn.helloworld.ui.admin.SupportTaskApprovalActivity"
+            android:label="@string/title_admin_support_tasks" />
+
         <!-- 应援商城详情（新增分类模块） -->
         <activity
             android:name=".ui.catalog.ProductDetailActivity"

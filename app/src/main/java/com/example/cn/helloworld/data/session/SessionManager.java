@@ -5,6 +5,11 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.example.cn.helloworld.data.model.LoginResult;
+import com.example.cn.helloworld.data.model.Permission;
+import com.example.cn.helloworld.data.model.UserRole;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 public class SessionManager {
 
@@ -27,8 +32,8 @@ public class SessionManager {
         sharedPreferences.edit()
                 .putString(KEY_USERNAME, result.getUsername())
                 .putString(KEY_TOKEN, result.getToken())
-                .putString(KEY_ROLE, result.getRole())
-                .putString(KEY_PERMISSIONS, result.getPermissions())
+                .putString(KEY_ROLE, result.getRole().name())
+                .putString(KEY_PERMISSIONS, serializePermissions(result.getPermissions()))
                 .apply();
     }
 
@@ -45,15 +50,52 @@ public class SessionManager {
         return sharedPreferences.getString(KEY_TOKEN, "");
     }
 
-    public String getRole() {
-        return sharedPreferences.getString(KEY_ROLE, "");
+    public UserRole getRole() {
+        return UserRole.fromValue(sharedPreferences.getString(KEY_ROLE, null));
     }
 
-    public String getPermissions() {
-        return sharedPreferences.getString(KEY_PERMISSIONS, "");
+    public boolean hasRole(UserRole role) {
+        return getRole() == role;
+    }
+
+    public boolean isAdmin() {
+        return hasRole(UserRole.ADMIN);
+    }
+
+    public Set<Permission> getPermissions() {
+        String stored = sharedPreferences.getString(KEY_PERMISSIONS, "");
+        EnumSet<Permission> permissions = EnumSet.noneOf(Permission.class);
+        if (!TextUtils.isEmpty(stored)) {
+            String[] parts = stored.split(",");
+            for (String part : parts) {
+                Permission permission = Permission.fromValue(part);
+                if (permission != null) {
+                    permissions.add(permission);
+                }
+            }
+        }
+        return permissions;
+    }
+
+    public boolean hasPermission(Permission permission) {
+        return getPermissions().contains(permission);
     }
 
     public void clearSession() {
         sharedPreferences.edit().clear().apply();
+    }
+
+    private String serializePermissions(Set<Permission> permissions) {
+        if (permissions == null || permissions.isEmpty()) {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder();
+        for (Permission permission : permissions) {
+            if (builder.length() > 0) {
+                builder.append(',');
+            }
+            builder.append(permission.name());
+        }
+        return builder.toString();
     }
 }

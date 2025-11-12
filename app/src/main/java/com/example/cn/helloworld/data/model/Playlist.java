@@ -70,4 +70,23 @@ public class Playlist {
     public List<Song> getSongs() {
         return new ArrayList<Song>(songs);
     }
+
+    public Playlist copyWith(String title,
+                             String description,
+                             String playUrl,
+                             String coverUrl,
+                             Integer coverResId,
+                             List<String> tags,
+                             List<Song> songs) {
+        return new Playlist(
+                id,
+                title,
+                description,
+                playUrl,
+                coverUrl,
+                coverResId,
+                tags,
+                songs
+        );
+    }
 }
