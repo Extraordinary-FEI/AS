@@ -4,40 +4,73 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardElevation="3dp"
-    app:cardUseCompatPadding="true"
-    app:cardCornerRadius="12dp"
-    android:foreground="?attr/selectableItemBackground">
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="12dp"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/cardBg"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:padding="20dp">
 
-        <!-- 分类图标 -->
-        <ImageView
-            android:id="@+id/categoryIcon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:contentDescription="@string/app_name"
-            android:src="@mipmap/ic_launcher"
-            android:tint="@color/colorPrimary" />
+        <FrameLayout
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_category_icon_circle"
+            android:gravity="center">
 
-        <!-- 分类名称（融合 HomeCategoryChip 样式） -->
-        <TextView
-            android:id="@+id/categoryName"
-            style="@style/HomeCategoryChip"
+            <ImageView
+                android:id="@+id/categoryIcon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:contentDescription="@string/app_name"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_category_ticket"
+                tools:ignore="ContentDescription" />
+        </FrameLayout>
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="16dp"
             android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            tools:text="演唱会门票类" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/categoryName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textPrimary"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                tools:text="演出纪念票" />
+
+            <TextView
+                android:id="@+id/categorySubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/textSecondary"
+                android:textSize="13sp"
+                android:text="@string/category_default_subtitle"
+                tools:text="实名购票·限定序列号" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:contentDescription="@null"
+            android:src="@drawable/next"
+            android:tint="@color/textSecondary"
+            tools:ignore="ContentDescription" />
 
     </LinearLayout>
 

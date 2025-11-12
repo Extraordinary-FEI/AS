@@ -33,4 +33,9 @@
     <color name="homePlaylistColor2">#FFD3E0</color>
     <color name="homePlaylistColor3">#FFE0B2</color>
     <color name="homePlaylistColor4">#D1C4E9</color>
+
+    <!-- 状态配色 -->
+    <color name="taskStatusOngoing">#FF6B8B</color>
+    <color name="taskStatusUpcoming">#5BC0EB</color>
+    <color name="taskStatusCompleted">#B5B1C7</color>
 </resources>

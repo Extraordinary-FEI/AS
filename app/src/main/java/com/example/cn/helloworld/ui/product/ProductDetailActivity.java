@@ -161,7 +161,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             return;
         }
         float rating = ratingBar.getRating();
-        ProductReview review = new ProductReview(productId, "匿名粉丝", content, rating);
+        ProductReview review = new ProductReview(productId, "千纸鹤小分队", content, rating);
         reviewRepository.submitReview(review, new ReviewSubmitCallback() {
             @Override
             public void onSuccess(ProductReview review) {
