@@ -84,4 +84,30 @@ public class Playlist {
     public long getFavoriteCount() {
         return favoriteCount;
     }
+
+    /**
+     * 创建一个新的 Playlist 实例，可在保留 ID 的同时修改部分字段。
+     */
+    public Playlist copyWith(String title,
+                             String description,
+                             String playUrl,
+                             String coverUrl,
+                             Integer coverResId,
+                             List<String> tags,
+                             List<Song> songs,
+                             long playCount,
+                             long favoriteCount) {
+        return new Playlist(
+                id,
+                title != null ? title : this.title,
+                description != null ? description : this.description,
+                playUrl != null ? playUrl : this.playUrl,
+                coverUrl != null ? coverUrl : this.coverUrl,
+                coverResId != null ? coverResId : this.coverResId,
+                tags != null ? tags : this.tags,
+                songs != null ? songs : this.songs,
+                playCount,
+                favoriteCount
+        );
+    }
 }

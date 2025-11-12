@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.RegisterActivity;
 import com.example.cn.helloworld.data.model.LoginResult;
+import com.example.cn.helloworld.data.model.UserRole;
 import com.example.cn.helloworld.data.repository.AuthRepository;
 import com.example.cn.helloworld.data.session.SessionManager;
 import com.example.cn.helloworld.ui.admin.AdminDashboardActivity;
@@ -134,8 +135,8 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void navigateByRole(String role) {
-        if (AuthRepository.ROLE_ADMIN.equals(role)) {
+    private void navigateByRole(UserRole role) {
+        if (role == UserRole.ADMIN) {
             Intent adminIntent = new Intent(this, AdminDashboardActivity.class);
             startActivity(adminIntent);
         } else {

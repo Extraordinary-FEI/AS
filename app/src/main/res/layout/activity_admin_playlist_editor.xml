@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/editPlaylistTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_playlist_title" />
+
+                <EditText
+                    android:id="@+id/editPlaylistDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/hint_playlist_description"
+                    android:inputType="textMultiLine"
+                    android:minLines="2" />
+
+                <EditText
+                    android:id="@+id/editPlaylistPlayUrl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/hint_playlist_url"
+                    android:inputType="textUri" />
+
+                <TextView
+                    android:id="@+id/textPlaylistCoverHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:text="@string/hint_playlist_cover" />
+
+                <ImageView
+                    android:id="@+id/imagePlaylistCoverPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:layout_marginTop="8dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/bg_playlist_cover" />
+
+                <Button
+                    android:id="@+id/buttonChangeCover"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/playlist_action_change_cover" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@string/playlist_song_section"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textStyle="bold" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerPlaylistSongs"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:clipToPadding="false" />
+
+        <Button
+            android:id="@+id/buttonSavePlaylist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/playlist_action_save" />
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAddSong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/ic_input_add"
+        app:layout_anchor="@id/recyclerPlaylistSongs"
+        app:layout_anchorGravity="bottom|end" />
+
+</android.support.design.widget.CoordinatorLayout>

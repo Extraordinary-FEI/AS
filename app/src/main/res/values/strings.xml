@@ -8,15 +8,6 @@
     <string name="title_confirm">注册信息确认</string>
     <string name="title_user_list">粉丝列表</string>
     <string name="title_main">千玺星球</string>
-    <string name="login_title">欢迎回到千玺星球</string>
-    <string name="login_subtitle">请选择登录身份，进入粉丝社区或管理后台</string>
-    <string name="login_choose_role">请选择登录入口</string>
-    <string name="login_button">立即进入</string>
-    <string name="login_register_button">粉丝注册</string>
-    <string name="login_status_default">请填写完整信息后登录</string>
-    <string name="login_remember_me">记住登录状态</string>
-    <string name="login_security_tip_user">提示：未注册的粉丝可先完成注册再登录。</string>
-    <string name="login_security_tip_admin">管理员需使用短信验证码完成二次验证（演示验证码：246810）。</string>
 
     <!-- 按钮 -->
     <string name="btn_register">注册</string>
@@ -29,14 +20,12 @@
     <string name="hint_pwd">密码</string>
     <string name="hint_email">邮箱</string>
     <string name="hint_phone">联系方式</string>
-    <string name="hint_verification_code">短信验证码</string>
     <string name="label_gender">性别</string>
     <string name="label_major">角色/粉籍</string>
     <string name="label_class">应援小组</string>
     <string name="label_date">入坑日期</string>
     <string name="label_hobby">应援偏好</string>
     <string name="label_bio">个人介绍 / 应援宣言</string>
-    <string name="label_account_role">账号类型</string>
 
     <!-- 选项内容 -->
     <string name="gender_male">男</string>
@@ -44,16 +33,6 @@
     <string name="pref_vote">打投</string>
     <string name="pref_comment">控评</string>
     <string name="pref_offline">线下应援</string>
-    <string name="role_fan">粉丝账号</string>
-    <string name="role_admin">管理员</string>
-    <string name="role_user_login_hint">粉丝入口可直接登录粉丝星球首页</string>
-    <string name="role_admin_login_hint">管理员入口需短信验证码，请确认账号已由后台开通</string>
-    <string name="register_role_hint">管理员账号由后台开通，如需权限请联系统筹。</string>
-    <string name="error_admin_register_hint">管理员账号需由后台开通，请联系统筹管理员。</string>
-    <string name="error_invalid_email">请输入有效的邮箱地址</string>
-    <string name="error_invalid_phone">请输入11位手机号</string>
-    <string name="error_empty_fans_date">请选择入坑日期</string>
-    <string name="error_short_password">密码至少需要6位</string>
 
     <!-- 商品详情 -->
     <string name="product_inventory_format">库存剩余：%1$d 件</string>
@@ -95,14 +74,77 @@
 
     <!-- 管理员面板 -->
     <string name="title_admin_dashboard">管理控制台</string>
+    <string name="title_admin_manage_products">商品管理</string>
+    <string name="title_admin_manage_playlists">歌单管理</string>
+    <string name="title_admin_support_tasks">应援任务审批</string>
     <string name="dashboard_stats_title">核心指标</string>
     <string name="stat_label_order">订单</string>
-    <string name="stat_label_support">工单</string>
-    <string name="stat_label_new_user">新增粉丝</string>
-    <string name="stat_label_review">评论</string>
-    <string name="dashboard_summary">今日完成 %1$d 个订单，处理 %2$d 个客服工单，新增 %3$d 位粉丝。</string>
-    <string name="dashboard_chart_description">管理员统计图，显示订单、工单、粉丝等数据</string>
-    <string name="dashboard_tip">提示：关注千玺生日月任务进度，及时同步线下应援数据。</string>
+    <string name="stat_label_support">待审批任务</string>
+    <string name="stat_label_new_user">新报名</string>
+    <string name="stat_label_active">活跃粉丝</string>
+    <string name="dashboard_summary">今日完成 %1$d 个订单，仍有 %2$d 个任务待审批，新增 %3$d 位粉丝加入。</string>
+    <string name="dashboard_chart_description">管理员统计图，显示订单、任务、粉丝等数据</string>
+    <string name="dashboard_tip">及时关注任务审批状态，确保应援计划顺利推进。</string>
+    <string name="admin_access_denied">仅管理员可访问后台功能</string>
+
+    <!-- 商品管理表单 -->
+    <string name="hint_product_name">商品名称</string>
+    <string name="hint_product_price">商品售价</string>
+    <string name="hint_product_inventory">库存数量</string>
+    <string name="hint_product_description">商品简介</string>
+    <string name="hint_product_active">立即上架</string>
+    <string name="product_category_default">默认分类</string>
+    <string name="dialog_title_add_product">新增商品</string>
+    <string name="dialog_title_edit_product">编辑商品</string>
+    <string name="error_product_name_required">请输入商品名称</string>
+    <string name="error_product_price_invalid">请输入正确的价格</string>
+    <string name="error_product_inventory_invalid">请输入正确的库存数量</string>
+    <string name="product_status_online">已上架</string>
+    <string name="product_status_offline">已下架</string>
+    <string name="product_action_edit">编辑</string>
+    <string name="product_action_online">上架</string>
+    <string name="product_action_offline">下架</string>
+
+    <!-- 歌单管理 -->
+    <string name="playlist_action_manage">管理歌单</string>
+    <string name="default_new_playlist_title">新建歌单</string>
+    <string name="default_new_playlist_description">完善介绍，让粉丝更了解这份歌单</string>
+    <string name="hint_playlist_title">歌单名称</string>
+    <string name="hint_playlist_description">歌单描述</string>
+    <string name="hint_playlist_url">播放链接</string>
+    <string name="hint_playlist_cover">当前封面：未选择</string>
+    <string name="playlist_action_change_cover">更换封面</string>
+    <string name="playlist_song_section">曲目列表</string>
+    <string name="playlist_action_save">保存歌单</string>
+    <string name="playlist_action_edit_song">编辑</string>
+    <string name="playlist_action_delete_song">移除</string>
+    <string name="playlist_song_duration_format">%1$s · %2$d 秒</string>
+    <string name="playlist_track_count_format">共 %1$d 首曲目</string>
+    <string name="playlist_action_edit">编辑歌单</string>
+    <string name="playlist_pick_cover">选择歌单封面</string>
+    <string name="hint_song_title">曲目名称</string>
+    <string name="hint_song_artist">演唱者</string>
+    <string name="hint_song_duration">时长（秒）</string>
+    <string name="hint_song_stream">流媒体链接</string>
+    <string name="dialog_title_add_song">新增曲目</string>
+    <string name="dialog_title_edit_song">编辑曲目</string>
+    <string name="dialog_title_delete_song">删除曲目</string>
+    <string name="dialog_message_delete_song">确定移除《%1$s》吗？</string>
+    <string name="error_song_title_required">请输入曲目名称</string>
+    <string name="error_song_duration_invalid">请输入正确的时长（秒）</string>
+    <string name="error_song_stream_required">请输入有效的播放链接</string>
+    <string name="error_playlist_title_required">请输入歌单名称</string>
+    <string name="toast_playlist_saved">歌单已保存</string>
+
+    <!-- 应援任务审批 -->
+    <string name="support_task_action_approve">通过</string>
+    <string name="support_task_action_reject">驳回</string>
+    <string name="support_task_status_format">状态：%1$s</string>
+    <string name="support_task_unassigned">未分配审批人</string>
+    <string name="support_task_assigned_format">审批人：%1$s</string>
+    <string name="support_task_status_pending">待审批</string>
+    <string name="support_task_status_approved">已通过</string>
+    <string name="support_task_status_rejected">已驳回</string>
 
     <!-- 首页 -->
     <string name="home_category_title">快速入口</string>
@@ -116,7 +158,6 @@
     <string name="playlist_not_found_description">歌单链接暂不可用，请稍后重试。</string>
     <string name="playlist_not_found_toast">歌单暂时找不到了</string>
     <string name="home_task_title">应援任务</string>
-
     <string name="home_task_subtitle">参与行动，为千玺蓄力应援能量</string>
 
     <!-- 首页任务 -->

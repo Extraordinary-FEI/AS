@@ -11,7 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cn.helloworld.R;
-import com.example.cn.helloworld.data.repository.AuthRepository;
+import com.example.cn.helloworld.data.model.AdminMetrics;
+import com.example.cn.helloworld.data.model.Permission;
+import com.example.cn.helloworld.data.repository.AdminMetricsRepository;
+import com.example.cn.helloworld.data.repository.SupportTaskRepository;
 import com.example.cn.helloworld.data.session.SessionManager;
 import com.example.cn.helloworld.ui.auth.LoginActivity;
 
@@ -23,6 +26,8 @@ import com.example.cn.helloworld.ui.auth.LoginActivity;
 public class AdminDashboardActivity extends AppCompatActivity {
 
     private SessionManager sessionManager;
+    private AdminMetricsRepository metricsRepository;
+    private SupportTaskRepository supportTaskRepository;
     private TextView tvWelcome;
     private TextView tvToken;
     private TextView summaryText;
@@ -39,11 +44,14 @@ public class AdminDashboardActivity extends AppCompatActivity {
         setTitle(R.string.title_admin_dashboard);
 
         sessionManager = new SessionManager(this);
-        // 非管理员直接退出
-        if (!AuthRepository.ROLE_ADMIN.equals(sessionManager.getRole())) {
+        if (!sessionManager.isAdmin()) {
+            Toast.makeText(this, R.string.admin_access_denied, Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
+
+        supportTaskRepository = new SupportTaskRepository();
+        metricsRepository = new AdminMetricsRepository(supportTaskRepository);
 
         bindViews();
         populateInfo();
@@ -72,10 +80,10 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
         String token = sessionManager.getToken();
         if (token == null || token.isEmpty()) token = "未获取";
-        String permissions = sessionManager.getPermissions();
         String tokenInfo = "Token: " + token;
-        if (permissions != null && !permissions.isEmpty()) {
-            tokenInfo += "\n权限: " + permissions;
+        String permissionsText = buildPermissionSummary();
+        if (!permissionsText.isEmpty()) {
+            tokenInfo += "\n权限: " + permissionsText;
         }
         tvToken.setText(tokenInfo);
     }
@@ -83,42 +91,49 @@ public class AdminDashboardActivity extends AppCompatActivity {
     /** 初始化仪表盘数据 */
     private void setupDashboardStats() {
         if (statsBarView == null) return;
-
-        float[] values = new float[]{120f, 80f, 45f, 30f};
+        AdminMetrics metrics = metricsRepository.loadMetrics();
+        float[] values = new float[]{
+                metrics.getOrderCount(),
+                metrics.getPendingTasks(),
+                metrics.getNewRegistrations(),
+                metrics.getActiveUsers()
+        };
         String[] labels = new String[]{
                 getString(R.string.stat_label_order),
                 getString(R.string.stat_label_support),
                 getString(R.string.stat_label_new_user),
-                getString(R.string.stat_label_review)
+                getString(R.string.stat_label_active)
         };
         statsBarView.setData(values, labels);
 
         if (summaryText != null) {
             summaryText.setText(getString(R.string.dashboard_summary,
-                    (int) values[0], (int) values[1], (int) values[2]));
+                    metrics.getOrderCount(),
+                    metrics.getPendingTasks(),
+                    metrics.getNewRegistrations()));
         }
     }
 
     /** 初始化按钮事件 */
     private void initEvents() {
-        View.OnClickListener featureClickListener = new View.OnClickListener() {
+        btnProducts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String message;
-                if (v == btnProducts) {
-                    message = "进入商品管理（演示）";
-                } else if (v == btnPlaylists) {
-                    message = "进入歌单管理（演示）";
-                } else {
-                    message = "进入用户管理（演示）";
-                }
-                Toast.makeText(AdminDashboardActivity.this, message, Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(AdminDashboardActivity.this, ProductManagementActivity.class));
             }
-        };
-
-        btnProducts.setOnClickListener(featureClickListener);
-        btnPlaylists.setOnClickListener(featureClickListener);
-        btnUsers.setOnClickListener(featureClickListener);
+        });
+        btnPlaylists.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AdminDashboardActivity.this, PlaylistManagementActivity.class));
+            }
+        });
+        btnUsers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AdminDashboardActivity.this, SupportTaskApprovalActivity.class));
+            }
+        });
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,6 +141,25 @@ public class AdminDashboardActivity extends AppCompatActivity {
                 confirmLogout();
             }
         });
+    }
+
+    private String buildPermissionSummary() {
+        StringBuilder builder = new StringBuilder();
+        for (Permission permission : sessionManager.getPermissions()) {
+            if (builder.length() > 0) {
+                builder.append(',');
+            }
+            builder.append(permission.name());
+        }
+        return builder.toString();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (sessionManager != null && sessionManager.isAdmin()) {
+            setupDashboardStats();
+        }
     }
 
     /** 退出登录确认框 */
