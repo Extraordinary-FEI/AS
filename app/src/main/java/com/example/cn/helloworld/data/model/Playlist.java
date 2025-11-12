@@ -19,6 +19,8 @@ public class Playlist {
     private final Integer coverResId;
     private final List<String> tags;
     private final List<Song> songs;
+    private final long playCount;
+    private final long favoriteCount;
 
     public Playlist(String id,
                     String title,
@@ -27,7 +29,9 @@ public class Playlist {
                     String coverUrl,
                     @DrawableRes Integer coverResId,
                     List<String> tags,
-                    List<Song> songs) {
+                    List<Song> songs,
+                    long playCount,
+                    long favoriteCount) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -36,6 +40,8 @@ public class Playlist {
         this.coverResId = coverResId;
         this.tags = tags == null ? Collections.<String>emptyList() : new ArrayList<String>(tags);
         this.songs = songs == null ? Collections.<Song>emptyList() : new ArrayList<Song>(songs);
+        this.playCount = playCount;
+        this.favoriteCount = favoriteCount;
     }
 
     public String getId() {
@@ -69,5 +75,13 @@ public class Playlist {
 
     public List<Song> getSongs() {
         return new ArrayList<Song>(songs);
+    }
+
+    public long getPlayCount() {
+        return playCount;
+    }
+
+    public long getFavoriteCount() {
+        return favoriteCount;
     }
 }

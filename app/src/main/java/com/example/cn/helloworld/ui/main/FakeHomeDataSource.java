@@ -1,6 +1,7 @@
 package com.example.cn.helloworld.ui.main;
 
 import com.example.cn.helloworld.R;
+import com.example.cn.helloworld.data.playlist.PlaylistRepository;
 import com.example.cn.helloworld.data.repository.support.SupportTaskRepository;
 
 import java.util.Arrays;
@@ -11,11 +12,8 @@ import java.util.List;
  */
 public class FakeHomeDataSource implements HomeDataSource {
 
-    private final SupportTaskRepository supportTaskRepository;
-
-    public FakeHomeDataSource() {
-        supportTaskRepository = new SupportTaskRepository();
-    }
+    private final PlaylistRepository playlistRepository = PlaylistRepository.getInstance();
+    private final SupportTaskRepository supportTaskRepository = new SupportTaskRepository();
 
     @Override
     public List<HomeModels.BannerItem> loadBanners() {
@@ -33,18 +31,14 @@ public class FakeHomeDataSource implements HomeDataSource {
                 new HomeModels.HomeCategory("数据站"),
                 new HomeModels.HomeCategory("打卡墙"),
                 new HomeModels.HomeCategory("应援商城"),
-                new HomeModels.HomeCategory("日程表"),
-                new HomeModels.HomeCategory("更多")
+                new HomeModels.HomeCategory("易烊千玺歌单"),
+                new HomeModels.HomeCategory("日程表")
         );
     }
 
     @Override
     public List<HomeModels.Playlist> loadPlaylists() {
-        return Arrays.asList(
-                new HomeModels.Playlist("舞台热力", "高燃舞台循环不止", R.color.homePlaylistPlaceholder),
-                new HomeModels.Playlist("治愈轻声", "收藏他的温柔呢喃", R.color.homePlaylistColor1),
-                new HomeModels.Playlist("巡演现场", "沉浸式回放应援瞬间", R.color.homePlaylistColor2)
-        );
+        return playlistRepository.getHomeSummaries();
     }
 
     @Override
