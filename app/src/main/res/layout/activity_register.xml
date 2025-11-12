@@ -57,6 +57,41 @@
                         android:scaleType="fitCenter"
                         android:src="@drawable/logo"/>
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_account_role"
+                        android:textColor="@color/textSecondary"/>
+
+                    <RadioGroup
+                        android:id="@+id/rgAccountRole"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp">
+                        <RadioButton
+                            android:id="@+id/rbAccountFan"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:text="@string/role_fan"/>
+                        <RadioButton
+                            android:id="@+id/rbAccountAdmin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/section_gap"
+                            android:text="@string/role_admin"/>
+                    </RadioGroup>
+
+                    <TextView
+                        android:id="@+id/tvAccountRoleHint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/card_margin"
+                        android:text="@string/register_role_hint"
+                        android:textColor="@color/textSecondary"
+                        android:textSize="12sp"/>
+
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
