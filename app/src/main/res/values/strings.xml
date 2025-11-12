@@ -35,9 +35,12 @@
     <string name="pref_offline">线下应援</string>
 
     <!-- 商品详情 -->
-    <string name="product_inventory_format">库存：%1$d</string>
-    <string name="product_tags_format">标签：%1$s</string>
-    <string name="product_star_events_format">明星活动：%1$s</string>
+    <string name="product_inventory_format">库存剩余：%1$d 件</string>
+    <string name="product_tags_format">亮点：%1$s</string>
+    <string name="product_star_events_format">应援福利：%1$s</string>
+    <string name="product_release_time_format">发售时间：%1$s</string>
+    <string name="product_limit_format">限定数量：%1$s</string>
+    <string name="product_attributes_format">品类特性：\u000A%1$s</string>
 
     <!-- 购物车与订单 -->
     <string name="cart_total_template">合计：¥%1$s</string>
@@ -55,18 +58,18 @@
     <string name="order_items">商品清单</string>
 
     <!-- 商品详情文本 -->
-    <string name="default_product_name">限量周边</string>
-    <string name="default_product_description">%1$s，粉丝应援必备！</string>
-    <string name="favorite_added">已收藏</string>
-    <string name="favorite_removed">收藏</string>
-    <string name="button_view_comments">查看评论</string>
-    <string name="review_prompt">发表你的应援评论</string>
-    <string name="hint_review_content">写下你的应援心得...</string>
+    <string name="default_product_name">易烊千玺特别周边</string>
+    <string name="default_product_description">%1$s，点亮千纸鹤的收藏柜！</string>
+    <string name="favorite_added">已加入心愿单</string>
+    <string name="favorite_removed">加入心愿单</string>
+    <string name="button_view_comments">查看应援口碑</string>
+    <string name="review_prompt">留下你的应援碎碎念</string>
+    <string name="hint_review_content">分享抢购心得或应援攻略...</string>
     <string name="button_submit_review">提交评论</string>
-    <string name="dialog_reviews_title">粉丝评论</string>
-    <string name="no_reviews_yet">还没有评论，快来抢沙发！</string>
-    <string name="error_empty_review">请输入评论内容</string>
-    <string name="review_submitted">评论提交成功</string>
+    <string name="dialog_reviews_title">千纸鹤评论墙</string>
+    <string name="no_reviews_yet">还没有千纸鹤留言，快来首发应援！</string>
+    <string name="error_empty_review">请写下至少一句话噢</string>
+    <string name="review_submitted">应援评论发送成功</string>
     <string name="review_submit_error">评论提交失败，请稍后再试</string>
 
     <!-- 管理员面板 -->
@@ -87,4 +90,10 @@
     <string name="home_playlist_subtitle">为守护他准备的专属旋律</string>
     <string name="home_task_title">应援任务</string>
     <string name="home_task_subtitle">参与行动，为他应援助力</string>
+    <string name="category_header_title">千玺周边品类</string>
+    <string name="category_header_subtitle">挑选票面、周边、签名照等千纸鹤心头好</string>
+    <string name="category_default_subtitle">限量发售·珍藏纪念</string>
+    <string name="category_subtitle_ticket">实名购票 · 限定序列号</string>
+    <string name="category_subtitle_merch">巡演主视觉 · 官方正品</string>
+    <string name="category_subtitle_signed">亲笔签名 · 抽选福利</string>
 </resources>

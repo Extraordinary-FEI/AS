@@ -40,6 +40,28 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             tools:text="¥4.99" />
 
+        <!-- 发售时间 -->
+        <TextView
+            android:id="@+id/detailProductReleaseTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/textSecondary"
+            android:visibility="gone"
+            tools:text="发售时间：2024-07-20 10:00" />
+
+        <!-- 限定数量 -->
+        <TextView
+            android:id="@+id/detailProductLimited"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/textSecondary"
+            android:visibility="gone"
+            tools:text="限定数量：限量 999 套" />
+
         <!-- 库存信息 -->
         <TextView
             android:id="@+id/detailProductInventory"
@@ -66,6 +88,17 @@
             android:layout_marginTop="8dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             tools:text="应援活动：夏季粉丝专场" />
+
+        <!-- 分类特性 -->
+        <TextView
+            android:id="@+id/detailProductAttributes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/textSecondary"
+            android:visibility="gone"
+            tools:text="品类特性：场次：上海站\n应援兑换：凭票领取灯牌" />
 
         <!-- 商品描述 -->
         <TextView

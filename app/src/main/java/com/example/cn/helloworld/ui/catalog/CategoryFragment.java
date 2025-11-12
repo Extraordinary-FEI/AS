@@ -116,17 +116,22 @@ public class CategoryFragment extends android.app.Fragment {
 
         static class CategoryViewHolder extends RecyclerView.ViewHolder {
             private final TextView nameView;
+            private final TextView subtitleView;
             private final ImageView iconView;
 
             CategoryViewHolder(@NonNull View itemView) {
                 super(itemView);
                 nameView = itemView.findViewById(R.id.categoryName);
+                subtitleView = itemView.findViewById(R.id.categorySubtitle);
                 iconView = itemView.findViewById(R.id.categoryIcon);
             }
 
             void bind(final Category category, final OnCategoryClickListener listener) {
                 nameView.setText(category.getName());
                 iconView.setImageResource(category.getIconResId());
+                if (subtitleView != null) {
+                    subtitleView.setText(getSubtitleForCategory(category.getId()));
+                }
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -135,6 +140,22 @@ public class CategoryFragment extends android.app.Fragment {
                         }
                     }
                 });
+            }
+            private String getSubtitleForCategory(String categoryId) {
+                Context context = itemView.getContext();
+                if (context == null) {
+                    return "";
+                }
+                switch (categoryId) {
+                    case "qianxi_ticket":
+                        return context.getString(R.string.category_subtitle_ticket);
+                    case "qianxi_merch":
+                        return context.getString(R.string.category_subtitle_merch);
+                    case "qianxi_signed":
+                        return context.getString(R.string.category_subtitle_signed);
+                    default:
+                        return context.getString(R.string.category_default_subtitle);
+                }
             }
         }
     }
