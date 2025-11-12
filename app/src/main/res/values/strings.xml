@@ -163,9 +163,9 @@
     <string name="support_task_status_rejected">已驳回</string>
 
     <!-- 分类 -->
-    <string name="category_header_title">精选分类</string>
-    <string name="category_header_subtitle">探索你感兴趣的应援主题</string>
-    <string name="category_default_subtitle">即将上线，敬请期待</string>
+    <string name="category_header_title">千玺应援好物</string>
+    <string name="category_header_subtitle">挑选巡演门票、限定周边与签名纪念</string>
+    <string name="category_default_subtitle">更多精选内容</string>
 
     <!-- 首页 -->
     <string name="home_category_title">快速入口</string>
@@ -182,12 +182,9 @@
     <string name="home_task_subtitle">参与行动，为千玺蓄力应援能量</string>
 
     <!-- 分类页 -->
-    <string name="category_header_title">千玺应援好物</string>
-    <string name="category_header_subtitle">挑选巡演门票、限定周边与签名纪念</string>
     <string name="category_subtitle_ticket">巡演限定纪念票</string>
     <string name="category_subtitle_merch">官方应援周边</string>
     <string name="category_subtitle_signed">签名照与拍立得</string>
-    <string name="category_default_subtitle">更多精选内容</string>
 
     <!-- 首页任务 -->
     <string name="task_type_format">类型：%1$s</string>
