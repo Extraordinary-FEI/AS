@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,76 +26,128 @@ public class ProductRepository {
     }
 
     private void seedCategories() {
-        int defaultIcon = appContext.getResources().getIdentifier(
-                "ic_launcher",
-                "mipmap",
-                appContext.getPackageName());
-        if (defaultIcon == 0) {
-            defaultIcon = R.mipmap.ic_launcher;
-        }
+        categories.clear();
 
-        Category coffee = new Category("coffee", "Coffee", defaultIcon);
-        Category tea = new Category("tea", "Tea", defaultIcon);
-        Category bakery = new Category("bakery", "Bakery", defaultIcon);
+        Category ticket = new Category("qianxi_ticket", "演出纪念票", R.drawable.ic_category_ticket);
+        Category merch = new Category("qianxi_merch", "官方周边", R.drawable.ic_category_merch);
+        Category signed = new Category("qianxi_signed", "签名照 & 拍立得", R.drawable.ic_category_signed);
 
-        categories.put(coffee.getId(), coffee);
-        categories.put(tea.getId(), tea);
-        categories.put(bakery.getId(), bakery);
+        categories.put(ticket.getId(), ticket);
+        categories.put(merch.getId(), merch);
+        categories.put(signed.getId(), signed);
     }
 
     private void seedProducts() {
-        List<Product> coffeeProducts = Arrays.asList(
-                new Product(
-                        "coffee_1",
-                        "Signature Latte",
-                        "A rich espresso with silky steamed milk and a hint of vanilla.",
-                        4.99,
-                        R.mipmap.ic_launcher,
-                        "coffee",
-                        24,
-                        Arrays.asList("Hot", "Seasonal"),
-                        Arrays.asList("Spring Launch")),
-                new Product(
-                        "coffee_2",
-                        "Cold Brew",
-                        "Slow-steeped cold brew with smooth chocolate notes.",
-                        3.49,
-                        R.mipmap.ic_launcher,
-                        "coffee",
-                        18,
-                        Arrays.asList("Cold", "House Favorite"),
-                        Collections.singletonList("Summer Specials"))
-        );
+        productsByCategory.clear();
 
-        List<Product> teaProducts = Collections.singletonList(
-                new Product(
-                        "tea_1",
-                        "Matcha Frappe",
-                        "Vibrant matcha blended with milk and ice for a refreshing treat.",
-                        4.59,
-                        R.mipmap.ic_launcher,
-                        "tea",
-                        30,
-                        Arrays.asList("Iced", "Limited"),
-                        Arrays.asList("Matcha Month", "Green Goodness"))
-        );
+        List<Product> ticketProducts = new ArrayList<>();
+        Map<String, String> ticketAttributesOne = new LinkedHashMap<>();
+        ticketAttributesOne.put("场次", "上海 · 8 月 18 日 19:30");
+        ticketAttributesOne.put("应援兑换", "凭票背面序列号领取限定灯牌");
+        ticketProducts.add(new Product(
+                "ticket_001",
+                "2024『风与少年』巡演纪念票",
+                "金属浮雕票面搭配千玺手写问候卡，收藏与观演两相宜。",
+                299.0,
+                R.drawable.cover_baobei,
+                "qianxi_ticket",
+                188,
+                Arrays.asList("实名绑定", "金属浮雕"),
+                Arrays.asList("见面会优先购", "现场应援打卡"),
+                "2024-08-08 12:00",
+                "限量 2000 套",
+                ticketAttributesOne));
 
-        List<Product> bakeryProducts = Collections.singletonList(
-                new Product(
-                        "bakery_1",
-                        "Blueberry Muffin",
-                        "Soft muffin with fresh blueberries and crunchy crumble topping.",
-                        2.79,
-                        R.mipmap.ic_launcher,
-                        "bakery",
-                        12,
-                        Collections.singletonList("Breakfast"),
-                        Collections.singletonList("Bakery Stars"))
-        );
+        Map<String, String> ticketAttributesTwo = new LinkedHashMap<>();
+        ticketAttributesTwo.put("场次", "广州 · 9 月 7 日 19:30");
+        ticketAttributesTwo.put("场馆福利", "持票可换专属场馆明信片");
+        ticketProducts.add(new Product(
+                "ticket_002",
+                "「夏日见面会」VIP 纪念票",
+                "附赠独家电子导览与后台应援小卡，背面印制专属编号。",
+                520.0,
+                R.drawable.cover_nishuo,
+                "qianxi_ticket",
+                99,
+                Arrays.asList("独立编号", "电子导览"),
+                Arrays.asList("彩排侧拍放送", "应援横幅共创"),
+                "2024-07-20 10:00",
+                "限量 999 套",
+                ticketAttributesTwo));
 
-        productsByCategory.put("coffee", coffeeProducts);
-        productsByCategory.put("tea", teaProducts);
-        productsByCategory.put("bakery", bakeryProducts);
+        List<Product> merchProducts = new ArrayList<>();
+        Map<String, String> merchAttributesOne = new LinkedHashMap<>();
+        merchAttributesOne.put("材质", "植绒绣线 · 夜光涂层");
+        merchAttributesOne.put("套装内容", "围巾、徽章、同款手幅");
+        merchProducts.add(new Product(
+                "merch_001",
+                "「光影纪」应援套装",
+                "以巡演主视觉延伸设计，夜光材质点亮应援现场。",
+                268.0,
+                R.drawable.cover_lisao,
+                "qianxi_merch",
+                520,
+                Arrays.asList("夜光材质", "全套周边"),
+                Arrays.asList("直播房入场券", "官博晒图应援"),
+                "2024-07-01 20:00",
+                "限量 1314 套",
+                merchAttributesOne));
+
+        Map<String, String> merchAttributesTwo = new LinkedHashMap<>();
+        merchAttributesTwo.put("尺寸", "自由调节 54-60cm");
+        merchAttributesTwo.put("设计亮点", "云雾渐变与亲笔签名织标");
+        merchProducts.add(new Product(
+                "merch_002",
+                "「少年出发」巡演棒球帽",
+                "帽檐内侧暗藏巡演城市坐标，细节满分。",
+                199.0,
+                R.drawable.logo,
+                "qianxi_merch",
+                800,
+                Arrays.asList("巡演限定", "亲笔签名织标"),
+                Arrays.asList("线下快闪优先购", "数字专辑折扣码"),
+                "2024-06-25 18:00",
+                "限量 3000 顶",
+                merchAttributesTwo));
+
+        List<Product> signedProducts = new ArrayList<>();
+        Map<String, String> signedAttributesOne = new LinkedHashMap<>();
+        signedAttributesOne.put("抽选规则", "下单即获编号，直播抽取 100 名");
+        signedAttributesOne.put("照片规格", "3R 手写祝福拍立得");
+        signedProducts.add(new Product(
+                "signed_001",
+                "千玺 TO 签拍立得",
+                "每张皆由千玺亲笔签名并附手写日期，收藏纪念意义满分。",
+                666.0,
+                R.drawable.music_bg,
+                "qianxi_signed",
+                50,
+                Arrays.asList("亲笔签名", "直播抽选"),
+                Arrays.asList("抽选现场直播", "粉丝后援群通行证"),
+                "2024-07-05 21:00",
+                "限量 100 套",
+                signedAttributesOne));
+
+        Map<String, String> signedAttributesTwo = new LinkedHashMap<>();
+        signedAttributesTwo.put("收藏编号", "每套附带金属铭牌");
+        signedAttributesTwo.put("权益", "附赠高清电子图 + 语音问候");
+        signedProducts.add(new Product(
+                "signed_002",
+                "「四叶草」典藏签名照组",
+                "三张主题照搭配限定语音问候卡，背板采用镜面质感。",
+                488.0,
+                R.drawable.bg_banner_foreground,
+                "qianxi_signed",
+                120,
+                Arrays.asList("典藏套组", "语音问候"),
+                Arrays.asList("生日会优先预约", "粉丝邮寄惊喜"),
+                "2024-08-15 19:00",
+                "限量 520 套",
+                signedAttributesTwo));
+
+        productsByCategory.put("qianxi_ticket", ticketProducts);
+        productsByCategory.put("qianxi_merch", merchProducts);
+        productsByCategory.put("qianxi_signed", signedProducts);
     }
 
     public List<Category> getCategories() {
