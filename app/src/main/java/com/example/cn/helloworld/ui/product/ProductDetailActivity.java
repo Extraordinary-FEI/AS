@@ -16,7 +16,6 @@ import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.ProductReview;
 import com.example.cn.helloworld.data.repository.InMemoryReviewRepository;
