@@ -47,8 +47,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
 
-        productNameTextView = (TextView) findViewById(R.id.text_product_name);
-        productDescriptionTextView = (TextView) findViewById(R.id.text_product_description);
+        productNameTextView = (TextView) findViewById(R.id.detailProductName);
+        productDescriptionTextView = (TextView) findViewById(R.id.detailProductDescription);
         favoriteButton = (ImageButton) findViewById(R.id.button_favorite);
         commentEntryButton = (Button) findViewById(R.id.button_open_comments);
         submitButton = (Button) findViewById(R.id.button_submit_comment);
