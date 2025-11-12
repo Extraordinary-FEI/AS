@@ -69,27 +69,135 @@ public final class HomeModels {
         }
     }
 
-    public static class SupportTask {
-        private final String name;
-        private final String deadline;
-        private final String description;
+    public static class SupportTask implements java.io.Serializable {
 
-        public SupportTask(String name, String deadline, String description) {
+        private static final long serialVersionUID = 1L;
+
+        public enum TaskStatus {
+            UPCOMING,
+            ONGOING,
+            COMPLETED
+        }
+
+        public enum RegistrationStatus {
+            NOT_OPEN,
+            OPEN,
+            FULL,
+            CHECK_IN,
+            CLOSED
+        }
+
+        private final String id;
+        private final String name;
+        private final String taskType;
+        private final String timeRange;
+        private final String location;
+        private final String description;
+        private final String guide;
+        private final String contact;
+        private final String progressNote;
+        private final int maxParticipants;
+        private final int enrolledCount;
+        private final TaskStatus status;
+        private final RegistrationStatus registrationStatus;
+
+        public SupportTask(String id,
+                           String name,
+                           String taskType,
+                           String timeRange,
+                           String location,
+                           String description,
+                           String guide,
+                           String contact,
+                           String progressNote,
+                           int maxParticipants,
+                           int enrolledCount,
+                           TaskStatus status,
+                           RegistrationStatus registrationStatus) {
+            this.id = id;
             this.name = name;
-            this.deadline = deadline;
+            this.taskType = taskType;
+            this.timeRange = timeRange;
+            this.location = location;
             this.description = description;
+            this.guide = guide;
+            this.contact = contact;
+            this.progressNote = progressNote;
+            this.maxParticipants = maxParticipants;
+            this.enrolledCount = enrolledCount;
+            this.status = status;
+            this.registrationStatus = registrationStatus;
+        }
+
+        public String getId() {
+            return id;
         }
 
         public String getName() {
             return name;
         }
 
-        public String getDeadline() {
-            return deadline;
+        public String getTaskType() {
+            return taskType;
+        }
+
+        public String getTimeRange() {
+            return timeRange;
+        }
+
+        public String getLocation() {
+            return location;
         }
 
         public String getDescription() {
             return description;
+        }
+
+        public String getGuide() {
+            return guide;
+        }
+
+        public String getContact() {
+            return contact;
+        }
+
+        public String getProgressNote() {
+            return progressNote;
+        }
+
+        public int getMaxParticipants() {
+            return maxParticipants;
+        }
+
+        public int getEnrolledCount() {
+            return enrolledCount;
+        }
+
+        public TaskStatus getStatus() {
+            return status;
+        }
+
+        public RegistrationStatus getRegistrationStatus() {
+            return registrationStatus;
+        }
+
+        public int getProgressPercent() {
+            if (maxParticipants <= 0) {
+                return 0;
+            }
+            return (int) Math.min(100, Math.round((enrolledCount * 100f) / maxParticipants));
+        }
+
+        public boolean isRegistrationOpen() {
+            return registrationStatus == RegistrationStatus.OPEN;
+        }
+
+        public boolean isCheckInAvailable() {
+            return registrationStatus == RegistrationStatus.CHECK_IN;
+        }
+
+        public boolean isActionEnabled() {
+            return status != TaskStatus.COMPLETED && (isRegistrationOpen() || isCheckInAvailable());
         }
     }
 }

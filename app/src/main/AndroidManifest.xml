@@ -23,6 +23,11 @@
             android:name=".ui.main.MainActivity"
             android:label="@string/title_main" />
 
+        <!-- 应援任务详情 -->
+        <activity
+            android:name=".ui.main.SupportTaskDetailActivity"
+            android:parentActivityName=".ui.main.MainActivity" />
+
         <!-- 注册页面 -->
         <activity
             android:name=".RegisterActivity"
