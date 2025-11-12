@@ -16,8 +16,10 @@ import android.widget.Toast;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.data.model.Song;
+import com.example.cn.helloworld.data.playlist.PlaylistRepository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,12 +28,27 @@ import java.util.Locale;
  */
 public class PlaylistFragment extends Fragment {
 
+    private static final String ARG_PLAYLIST_ID = "arg_playlist_id";
+
     private ImageView playlistCover;
     private TextView playlistTitle;
     private TextView playlistDescription;
+    private TextView playlistTags;
     private TextView playlistMeta;
     private RecyclerView songsRecyclerView;
     private SongsAdapter songsAdapter;
+    private PlaylistRepository playlistRepository;
+    private String playlistId;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        playlistRepository = PlaylistRepository.getInstance();
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            playlistId = arguments.getString(ARG_PLAYLIST_ID);
+        }
+    }
 
     @Nullable
     @Override
@@ -46,6 +63,7 @@ public class PlaylistFragment extends Fragment {
         playlistCover = (ImageView) view.findViewById(R.id.image_playlist_cover);
         playlistTitle = (TextView) view.findViewById(R.id.text_playlist_title);
         playlistDescription = (TextView) view.findViewById(R.id.text_playlist_description);
+        playlistTags = (TextView) view.findViewById(R.id.text_playlist_tags);
         playlistMeta = (TextView) view.findViewById(R.id.text_playlist_meta);
         songsRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_playlist_songs);
 
@@ -59,7 +77,22 @@ public class PlaylistFragment extends Fragment {
         songsRecyclerView.setHasFixedSize(true);
         songsRecyclerView.setAdapter(songsAdapter);
 
-        Playlist playlist = buildMockPlaylist();
+        loadPlaylist();
+    }
+
+    private void loadPlaylist() {
+        Playlist playlist = playlistRepository.findById(playlistId);
+        if (playlist == null) {
+            playlistTitle.setText(R.string.playlist_not_found);
+            playlistDescription.setText(R.string.playlist_not_found_description);
+            playlistTags.setText("");
+            playlistTags.setVisibility(View.GONE);
+            playlistMeta.setText("");
+            songsAdapter.setSongs(Collections.<Song>emptyList());
+            Toast.makeText(getContext(), R.string.playlist_not_found_toast, Toast.LENGTH_SHORT).show();
+            playlistCover.setImageResource(R.drawable.cover_playlist_placeholder);
+            return;
+        }
         bindPlaylist(playlist);
         songsAdapter.setSongs(playlist.getSongs());
     }
@@ -67,13 +100,24 @@ public class PlaylistFragment extends Fragment {
     private void bindPlaylist(Playlist playlist) {
         playlistTitle.setText(playlist.getTitle());
         playlistDescription.setText(playlist.getDescription());
+        bindTags(playlist.getTags());
         playlistMeta.setText(buildMeta(playlist));
 
         Integer coverResId = playlist.getCoverResId();
         if (coverResId != null) {
             playlistCover.setImageResource(coverResId.intValue());
         } else {
-            playlistCover.setImageResource(R.drawable.cover_lisao);
+            playlistCover.setImageResource(R.drawable.cover_playlist_placeholder);
+        }
+    }
+
+    private void bindTags(List<String> tags) {
+        if (tags == null || tags.isEmpty()) {
+            playlistTags.setVisibility(View.GONE);
+            playlistTags.setText("");
+        } else {
+            playlistTags.setVisibility(View.VISIBLE);
+            playlistTags.setText(joinTags(tags));
         }
     }
 
@@ -85,12 +129,11 @@ public class PlaylistFragment extends Fragment {
             totalDurationMs += songs.get(i).getDurationMs();
         }
         int totalMinutes = (int) (totalDurationMs / 1000 / 60);
-        List<String> tags = playlist.getTags();
-        if (!tags.isEmpty()) {
-            return String.format(Locale.getDefault(), "共 %d 首 · %d 分钟 · %s",
-                    count, totalMinutes, joinTags(tags));
-        }
-        return String.format(Locale.getDefault(), "共 %d 首 · %d 分钟", count, totalMinutes);
+        String durationPart = String.format(Locale.getDefault(), "共 %d 首 · %d 分钟", count, totalMinutes);
+        return String.format(Locale.getDefault(), "%s · %s 次播放 · %s 人收藏",
+                durationPart,
+                formatCount(playlist.getPlayCount()),
+                formatCount(playlist.getFavoriteCount()));
     }
 
     private String joinTags(List<String> tags) {
@@ -104,58 +147,16 @@ public class PlaylistFragment extends Fragment {
         return builder.toString();
     }
 
-    private Playlist buildMockPlaylist() {
-        List<Song> songs = new ArrayList<Song>();
-        songs.add(new Song(
-                "song-lisao",
-                "离骚",
-                "许嵩",
-                245000L,
-                "https://example.com/audio/li_sao.mp3",
-                "沉静悠扬的钢琴旋律，适合夜晚放松",
-                null,
-                Integer.valueOf(R.drawable.cover_lisao)
-        ));
-        songs.add(new Song(
-                "song-nishuo",
-                "你说",
-                "林俊杰",
-                214000L,
-                "https://example.com/audio/ni_shuo.mp3",
-                "温柔治愈系，诉说心底的故事",
-                null,
-                Integer.valueOf(R.drawable.cover_nishuo)
-        ));
-        songs.add(new Song(
-                "song-baobei",
-                "宝贝",
-                "张悬",
-                198000L,
-                "https://example.com/audio/bao_bei.mp3",
-                "轻快民谣，伴你醒来迎接阳光",
-                null,
-                Integer.valueOf(R.drawable.cover_baobei)
-        ));
-
-        List<String> tags = new ArrayList<String>();
-        tags.add("华语");
-        tags.add("治愈");
-        tags.add("安静");
-
-        return new Playlist(
-                "playlist-classic",
-                "轻听华语 · 治愈精选",
-                "精选 2000 年后治愈系华语歌曲，适合午后阅读或夜晚放松聆听。",
-                "https://example.com/playlist/classic-heal",
-                null,
-                Integer.valueOf(R.drawable.cover_lisao),
-                tags,
-                songs
-        );
+    private String formatCount(long count) {
+        return String.format(Locale.getDefault(), "%,d", count);
     }
 
-    public static PlaylistFragment newInstance() {
-        return new PlaylistFragment();
+    public static PlaylistFragment newInstance(String playlistId) {
+        PlaylistFragment fragment = new PlaylistFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PLAYLIST_ID, playlistId);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     private static class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHolder> {
@@ -233,7 +234,7 @@ public class PlaylistFragment extends Fragment {
                 if (coverRes != null) {
                     coverView.setImageResource(coverRes.intValue());
                 } else {
-                    coverView.setImageResource(R.drawable.cover_baobei);
+                    coverView.setImageResource(R.drawable.cover_playlist_placeholder);
                 }
 
                 itemView.setOnClickListener(new View.OnClickListener() {

@@ -31,4 +31,6 @@
     <color name="homeBannerColor3">#5BC0EB</color>
     <color name="homePlaylistColor1">#C3E0FF</color>
     <color name="homePlaylistColor2">#FFD3E0</color>
+    <color name="homePlaylistColor3">#FFE0B2</color>
+    <color name="homePlaylistColor4">#D1C4E9</color>
 </resources>

@@ -22,9 +22,9 @@ public class MusicActivity extends Activity {
 
     // 封面图资源数组
     private int[] coverRes = {
-            R.drawable.cover_lisao,
-            R.drawable.cover_nishuo,
-            R.drawable.cover_baobei
+            R.drawable.cover_playlist_stage,
+            R.drawable.cover_playlist_healing,
+            R.drawable.cover_playlist_city
     };
 
     private BroadcastReceiver uiUpdateReceiver;

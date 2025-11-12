@@ -1,6 +1,7 @@
 package com.example.cn.helloworld.ui.main;
 
 import com.example.cn.helloworld.R;
+import com.example.cn.helloworld.data.playlist.PlaylistRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.List;
  * 暂时使用的假数据实现，便于后续替换为真实服务。
  */
 public class FakeHomeDataSource implements HomeDataSource {
+
+    private final PlaylistRepository playlistRepository = PlaylistRepository.getInstance();
 
     @Override
     public List<HomeModels.BannerItem> loadBanners() {
@@ -33,11 +36,7 @@ public class FakeHomeDataSource implements HomeDataSource {
 
     @Override
     public List<HomeModels.Playlist> loadPlaylists() {
-        return Arrays.asList(
-                new HomeModels.Playlist("舞台热力", "高燃舞台循环不止", R.color.homePlaylistPlaceholder),
-                new HomeModels.Playlist("治愈轻声", "收藏他的温柔呢喃", R.color.homePlaylistColor1),
-                new HomeModels.Playlist("巡演现场", "沉浸式回放应援瞬间", R.color.homePlaylistColor2)
-        );
+        return playlistRepository.getHomeSummaries();
     }
 
     @Override

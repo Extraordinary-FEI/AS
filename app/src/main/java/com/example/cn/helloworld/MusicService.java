@@ -16,14 +16,14 @@ public class MusicService extends Service {
     private MusicReceiver musicReceiver;
     private int currentIndex = 0;
 
-    // 歌曲资源数组（已去掉If You）
+    // 歌曲资源数组
     private int[] songs = {
-            R.raw.yyqx_lisao,
-            R.raw.yyqx_nishuo,
-            R.raw.yyqx_baobei
+            R.raw.yyqx_fenwuhai,
+            R.raw.yyqx_myfriend,
+            R.raw.yyqx_unpredictable
     };
 
-    private String[] titles = {"离骚", "你说", "宝贝"};
+    private String[] titles = {"粉雾海", "我的朋友", "Unpredictable"};
 
     @Override
     public void onCreate() {

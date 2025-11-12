@@ -1,5 +1,9 @@
 package com.example.cn.helloworld.ui.main;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * 轻量模型定义，便于首页模块之间共享。
  */
@@ -46,14 +50,35 @@ public final class HomeModels {
     }
 
     public static class Playlist {
+        private final String id;
         private final String name;
         private final String description;
         private final int coverColorResId;
+        private final List<String> tags;
+        private final long playCount;
+        private final long favoriteCount;
+        private final int trackCount;
 
-        public Playlist(String name, String description, int coverColorResId) {
+        public Playlist(String id,
+                        String name,
+                        String description,
+                        int coverColorResId,
+                        List<String> tags,
+                        long playCount,
+                        long favoriteCount,
+                        int trackCount) {
+            this.id = id;
             this.name = name;
             this.description = description;
             this.coverColorResId = coverColorResId;
+            this.tags = tags == null ? Collections.<String>emptyList() : new ArrayList<String>(tags);
+            this.playCount = playCount;
+            this.favoriteCount = favoriteCount;
+            this.trackCount = trackCount;
+        }
+
+        public String getId() {
+            return id;
         }
 
         public String getName() {
@@ -66,6 +91,22 @@ public final class HomeModels {
 
         public int getCoverColorResId() {
             return coverColorResId;
+        }
+
+        public List<String> getTags() {
+            return new ArrayList<String>(tags);
+        }
+
+        public long getPlayCount() {
+            return playCount;
+        }
+
+        public long getFavoriteCount() {
+            return favoriteCount;
+        }
+
+        public int getTrackCount() {
+            return trackCount;
         }
     }
 
