@@ -162,9 +162,12 @@
     <string name="support_task_status_approved">已通过</string>
     <string name="support_task_status_rejected">已驳回</string>
 
-    <!-- 分类 -->
+    <!-- 分类页 -->
     <string name="category_header_title">千玺应援好物</string>
     <string name="category_header_subtitle">挑选巡演门票、限定周边与签名纪念</string>
+    <string name="category_subtitle_ticket">巡演限定纪念票</string>
+    <string name="category_subtitle_merch">官方应援周边</string>
+    <string name="category_subtitle_signed">签名照与拍立得</string>
     <string name="category_default_subtitle">更多精选内容</string>
 
     <!-- 首页 -->
@@ -180,11 +183,6 @@
     <string name="playlist_not_found_toast">歌单暂时找不到了</string>
     <string name="home_task_title">应援任务</string>
     <string name="home_task_subtitle">参与行动，为千玺蓄力应援能量</string>
-
-    <!-- 分类页 -->
-    <string name="category_subtitle_ticket">巡演限定纪念票</string>
-    <string name="category_subtitle_merch">官方应援周边</string>
-    <string name="category_subtitle_signed">签名照与拍立得</string>
 
     <!-- 首页任务 -->
     <string name="task_type_format">类型：%1$s</string>
