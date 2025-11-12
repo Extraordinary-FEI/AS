@@ -12,7 +12,7 @@
         android:layout_alignParentStart="true"
         android:contentDescription="@string/app_name"
         android:scaleType="centerCrop"
-        android:src="@drawable/cover_baobei" />
+        android:src="@drawable/cover_playlist_placeholder" />
 
     <TextView
         android:id="@+id/text_song_title"

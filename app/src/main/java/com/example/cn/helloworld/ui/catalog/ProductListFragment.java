@@ -21,6 +21,7 @@ import com.example.cn.helloworld.data.repository.ProductRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
 public class ProductListFragment extends Fragment {
@@ -134,7 +135,7 @@ public class ProductListFragment extends Fragment {
 
             void bind(final Product product, final OnProductClickListener listener) {
                 nameView.setText(product.getName());
-                priceView.setText(String.format("$%.2f", product.getPrice()));
+                priceView.setText(String.format(Locale.getDefault(), "¥%.2f", product.getPrice()));
                 imageView.setImageResource(product.getImageResId());
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
