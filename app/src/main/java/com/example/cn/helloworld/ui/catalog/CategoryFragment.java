@@ -38,7 +38,7 @@ public class CategoryFragment extends android.app.Fragment {
         if (context instanceof OnCategorySelectedListener) {
             listener = (OnCategorySelectedListener) context;
         }
-        productRepository = new ProductRepository(context);
+        productRepository = new ProductRepository((ProductDetailActivity) context);
     }
 
     @Override

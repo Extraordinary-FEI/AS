@@ -1,5 +1,6 @@
 package com.example.cn.helloworld.ui.admin;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -46,9 +47,7 @@ public class SupportTaskApprovalActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerSupportTasks);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new TaskAdapter(new ArrayList<SupportTask>());
-        recyclerView.setAdapter(adapter);
-        adapter.setListener(new TaskAdapter.Listener() {
+        adapter = new TaskAdapter(new ArrayList<SupportTask>(), new TaskAdapter.Listener() {
             @Override
             public void onApprove(SupportTask task) {
                 repository.approveTask(task.getTaskId(), sessionManager.getUsername());
@@ -61,6 +60,7 @@ public class SupportTaskApprovalActivity extends AppCompatActivity {
                 loadTasks();
             }
         });
+        recyclerView.setAdapter(adapter);
 
         loadTasks();
     }
@@ -69,77 +69,84 @@ public class SupportTaskApprovalActivity extends AppCompatActivity {
         adapter.submit(repository.getAll());
     }
 
-    private String formatStatus(String status) {
+    /** 让 TaskAdapter 能正常调用的格式化函数 —— 设为 static */
+    public static String formatStatus(Context ctx, String status) {
         if (SupportTaskRepository.STATUS_APPROVED.equals(status)) {
-            return getString(R.string.support_task_status_approved);
+            return ctx.getString(R.string.support_task_status_approved);
         } else if (SupportTaskRepository.STATUS_REJECTED.equals(status)) {
-            return getString(R.string.support_task_status_rejected);
+            return ctx.getString(R.string.support_task_status_rejected);
         }
-        return getString(R.string.support_task_status_pending);
+        return ctx.getString(R.string.support_task_status_pending);
     }
 
-    private class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
+    /** 完全修复后的 Adapter */
+    private static class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
+        /** 把 Listener 放在这里不会报错 —— 因为不再是 static interface */
         interface Listener {
             void onApprove(SupportTask task);
-
             void onReject(SupportTask task);
         }
 
         private final List<SupportTask> tasks;
-        private Listener listener;
+        private final Listener listener;
 
-        TaskAdapter(List<SupportTask> tasks) {
+        TaskAdapter(List<SupportTask> tasks, Listener listener) {
             this.tasks = tasks;
-        }
-
-        void setListener(Listener listener) {
             this.listener = listener;
         }
 
         void submit(List<SupportTask> list) {
             tasks.clear();
-            if (list != null) {
-                tasks.addAll(list);
-            }
+            if (list != null) tasks.addAll(list);
             notifyDataSetChanged();
         }
 
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_admin_support_task, parent, false);
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_admin_support_task, parent, false);
             return new ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
             final SupportTask task = tasks.get(position);
+
             holder.titleView.setText(task.getTitle());
             holder.descriptionView.setText(task.getDescription());
-            holder.statusView.setText(holder.itemView.getContext().getString(R.string.support_task_status_format,
-                    formatStatus(task.getStatus())));
+
+            // ★ 使用新的 static 方法格式化状态
+            holder.statusView.setText(
+                    holder.itemView.getContext().getString(
+                            R.string.support_task_status_format,
+                            SupportTaskApprovalActivity.formatStatus(holder.itemView.getContext(), task.getStatus())
+                    )
+            );
+
             holder.timeView.setText(DateFormat.format("MM-dd HH:mm", new Date(task.getUpdatedAt())));
-            holder.approveButton.setEnabled(SupportTaskRepository.STATUS_PENDING.equals(task.getStatus()));
-            holder.rejectButton.setEnabled(SupportTaskRepository.STATUS_PENDING.equals(task.getStatus()));
+
+            boolean isPending = SupportTaskRepository.STATUS_PENDING.equals(task.getStatus());
+            holder.approveButton.setEnabled(isPending);
+            holder.rejectButton.setEnabled(isPending);
+
             holder.assigneeView.setText(task.getAssignedAdmin() == null
                     ? holder.itemView.getContext().getString(R.string.support_task_unassigned)
-                    : holder.itemView.getContext().getString(R.string.support_task_assigned_format, task.getAssignedAdmin()));
+                    : holder.itemView.getContext().getString(R.string.support_task_assigned_format, task.getAssignedAdmin())
+            );
 
             holder.approveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onApprove(task);
-                    }
+                    listener.onApprove(task);
                 }
             });
+
             holder.rejectButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onReject(task);
-                    }
+                    listener.onReject(task);
                 }
             });
         }

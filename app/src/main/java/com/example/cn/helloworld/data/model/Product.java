@@ -1,156 +1,172 @@
 package com.example.cn.helloworld.data.model;
 
-import java.util.Collections;
-import java.util.HashMap;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * 商品模型：用于描述应援商品、门票、签名照等。
- * 兼容后台管理（active状态）与前台展示（releaseTime、limitedQuantity）。
- */
-public class Product {
-    private final String id;
-    private final String name;
-    private final String description;
-    private final double price;
-    private final int imageResId;
-    private final String categoryId;
-    private final int inventory;
-    private final List<String> tags;
-    private final List<String> starEvents;
+public class Product implements Serializable {
 
-    // 管理功能字段
-    private final boolean active;
+    private String id;
+    private String name;
+    private String description;
+    private double price;
+    private int inventory;
+    private String category;
 
-    // 展示功能字段
-    private final String releaseTime;
-    private final String limitedQuantity;
-    private final Map<String, String> categoryAttributes;
+    private int rating;
+    private List<String> tags;
+    private List<String> starEvents;
 
-    public Product(String id,
-                   String name,
-                   String description,
-                   double price,
-                   int imageResId,
-                   String categoryId,
-                   int inventory,
-                   List<String> tags,
-                   List<String> starEvents) {
-        this(id, name, description, price, imageResId, categoryId, inventory,
-                tags, starEvents, true, "", "", Collections.<String, String>emptyMap());
+    private boolean active;
+    private String coverUrl;
+    private String releaseTime;
+    private Map<String, String> attributes;
+
+    // 供详情页使用的扩展字段
+    private int imageResId;                       // 图片资源
+    private String limitedQuantity = "";          // 限购/限量信息
+    private Map<String, String> categoryAttributes; // 分类属性（例如颜色、尺寸等）
+
+    public Product(String productId, String name, String description,
+                   double price, int icLauncher,
+                   String resolvedCategoryId, int inventory,
+                   List<String> strings, List<String> stringList, boolean active) {
+        this.tags = new ArrayList<String>();
+        this.starEvents = new ArrayList<String>();
     }
 
-    public Product(String id,
-                   String name,
-                   String description,
-                   double price,
-                   int imageResId,
-                   String categoryId,
-                   int inventory,
-                   List<String> tags,
-                   List<String> starEvents,
-                   boolean active,
-                   String releaseTime,
-                   String limitedQuantity,
-                   Map<String, String> categoryAttributes) {
+    // 简化版构造器
+    public Product(
+            String id,
+            String name,
+            String description,
+            double price,
+            int inventory,
+            String category,
+            int rating,
+            List<String> tags,
+            List<String> starEvents
+    ) {
+        this(id, name, description, price, inventory, category, rating,
+                tags, starEvents, true, null, null, null, 0, "", null);
+    }
+
+    // 完整构造器（仓库里在用）
+    public Product(
+            String id,
+            String name,
+            String description,
+            double price,
+            int inventory,
+            String category,
+            int rating,
+            List<String> tags,
+            List<String> starEvents,
+            boolean active,
+            String coverUrl,
+            String releaseTime,
+            Map<String, String> attributes
+    ) {
+        this(id, name, description, price, inventory, category, rating,
+                tags, starEvents, active, coverUrl, releaseTime, attributes,
+                0, "", null);
+    }
+
+    // 最终大构造器
+    public Product(
+            String id,
+            String name,
+            String description,
+            double price,
+            int inventory,
+            String category,
+            int rating,
+            List<String> tags,
+            List<String> starEvents,
+            boolean active,
+            String coverUrl,
+            String releaseTime,
+            Map<String, String> attributes,
+            int imageResId,
+            String limitedQuantity,
+            Map<String, String> categoryAttributes
+    ) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.imageResId = imageResId;
-        this.categoryId = categoryId;
         this.inventory = inventory;
-        this.tags = tags == null ? (List<String>) Collections.emptyList() : Collections.unmodifiableList(tags);
-        this.starEvents = starEvents == null ? (List<String>) Collections.emptyList() : Collections.unmodifiableList(starEvents);
+        this.category = category;
+        this.rating = rating;
+
+        this.tags = tags != null ? tags : new ArrayList<String>();
+        this.starEvents = starEvents != null ? starEvents : new ArrayList<String>();
+
         this.active = active;
-        this.releaseTime = releaseTime == null ? "" : releaseTime;
-        this.limitedQuantity = limitedQuantity == null ? "" : limitedQuantity;
-        if (categoryAttributes == null || categoryAttributes.isEmpty()) {
-            this.categoryAttributes = Collections.emptyMap();
-        } else {
-            this.categoryAttributes = Collections.unmodifiableMap(new HashMap<>(categoryAttributes));
-        }
+        this.coverUrl = coverUrl;
+        this.releaseTime = releaseTime;
+        this.attributes = attributes;
+
+        this.imageResId = imageResId;
+        this.limitedQuantity = limitedQuantity != null ? limitedQuantity : "";
+        this.categoryAttributes = categoryAttributes;
     }
 
-    public String getId() {
-        return id;
+    // ---------- getter / setter ----------
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public double getPrice() { return price; }
+    public void setPrice(double price) { this.price = price; }
+
+    public int getInventory() { return inventory; }
+    public void setInventory(int inventory) { this.inventory = inventory; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+
+    public int getRating() { return rating; }
+    public void setRating(int rating) { this.rating = rating; }
+
+    public List<String> getTags() { return tags; }
+    public void setTags(List<String> tags) {
+        this.tags = tags != null ? tags : new ArrayList<String>();
     }
 
-    public String getName() {
-        return name;
+    public List<String> getStarEvents() { return starEvents; }
+    public void setStarEvents(List<String> starEvents) {
+        this.starEvents = starEvents != null ? starEvents : new ArrayList<String>();
     }
 
-    public String getDescription() {
-        return description;
-    }
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 
-    public double getPrice() {
-        return price;
-    }
+    public String getCoverUrl() { return coverUrl; }
+    public void setCoverUrl(String coverUrl) { this.coverUrl = coverUrl; }
 
-    public int getImageResId() {
-        return imageResId;
-    }
+    public String getReleaseTime() { return releaseTime; }
+    public void setReleaseTime(String releaseTime) { this.releaseTime = releaseTime; }
 
-    public String getCategoryId() {
-        return categoryId;
-    }
+    public Map<String, String> getAttributes() { return attributes; }
+    public void setAttributes(Map<String, String> attributes) { this.attributes = attributes; }
 
-    public int getInventory() {
-        return inventory;
-    }
+    public String getCategoryId() { return category; }
 
-    public List<String> getTags() {
-        return tags;
-    }
+    public int getImageResId() { return imageResId; }
+    public void setImageResId(int imageResId) { this.imageResId = imageResId; }
 
-    public List<String> getStarEvents() {
-        return starEvents;
-    }
+    public String getLimitedQuantity() { return limitedQuantity; }
+    public void setLimitedQuantity(String limitedQuantity) { this.limitedQuantity = limitedQuantity; }
 
-    public boolean isActive() {
-        return active;
-    }
-
-    public String getReleaseTime() {
-        return releaseTime;
-    }
-
-    public String getLimitedQuantity() {
-        return limitedQuantity;
-    }
-
-    public Map<String, String> getCategoryAttributes() {
-        return categoryAttributes;
-    }
-
-    /**
-     * 创建一个修改版副本，用于后台编辑更新商品信息。
-     */
-    public Product copyWith(String name,
-                            String description,
-                            double price,
-                            int inventory,
-                            boolean active,
-                            String categoryId,
-                            String releaseTime,
-                            String limitedQuantity,
-                            Map<String, String> categoryAttributes) {
-        return new Product(
-                id,
-                name != null ? name : this.name,
-                description != null ? description : this.description,
-                price,
-                imageResId,
-                categoryId != null ? categoryId : this.categoryId,
-                inventory,
-                tags,
-                starEvents,
-                active,
-                releaseTime != null ? releaseTime : this.releaseTime,
-                limitedQuantity != null ? limitedQuantity : this.limitedQuantity,
-                categoryAttributes != null ? categoryAttributes : this.categoryAttributes
-        );
+    public Map<String, String> getCategoryAttributes() { return categoryAttributes; }
+    public void setCategoryAttributes(Map<String, String> categoryAttributes) {
+        this.categoryAttributes = categoryAttributes;
     }
 }

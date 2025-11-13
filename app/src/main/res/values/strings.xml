@@ -32,12 +32,12 @@
     <string name="register_role_hint">请选择你的应援角色</string>
 
     <!-- 注册校验 -->
-    <string name="error_admin_register_hint">仅粉丝账号支持在此注册</string>
-    <string name="error_short_password">密码至少需要 6 位字符</string>
-    <string name="error_invalid_email">请输入有效的邮箱地址</string>
-    <string name="error_invalid_phone">请输入 11 位国内手机号</string>
+    <!-- 注册错误提示 -->
+    <string name="error_admin_register_hint">管理员账号不能在此处注册，请使用登录入口</string>
+    <string name="error_short_password">密码长度不能少于6位</string>
+    <string name="error_invalid_email">请输入正确的邮箱地址</string>
+    <string name="error_invalid_phone">请输入有效的手机号</string>
     <string name="error_empty_fans_date">请选择入坑日期</string>
-
     <!-- 表单字段 -->
     <string name="hint_name">昵称</string>
     <string name="hint_pwd">密码</string>
@@ -168,10 +168,8 @@
     <string name="support_task_status_pending">待审批</string>
     <string name="support_task_status_approved">已通过</string>
     <string name="support_task_status_rejected">已驳回</string>
-
     <string name="category_header_title">千玺应援好物</string>
     <string name="category_header_subtitle">挑选巡演门票、限定周边与签名纪念</string>
-
     <string name="category_default_subtitle">更多精选内容</string>
 
     <!-- 首页 -->
@@ -187,8 +185,6 @@
     <string name="playlist_not_found_toast">歌单暂时找不到了</string>
     <string name="home_task_title">应援任务</string>
     <string name="home_task_subtitle">参与行动，为千玺蓄力应援能量</string>
-
-
     <string name="category_subtitle_ticket">巡演限定纪念票</string>
     <string name="category_subtitle_merch">官方应援周边</string>
     <string name="category_subtitle_signed">签名照与拍立得</string>
@@ -225,12 +221,10 @@
     <string name="task_detail_progress_title">实时进度</string>
     <string name="task_detail_body_placeholder">--</string>
 
-    <!-- 注册错误提示 -->
-    <string name="error_admin_register_hint">管理员账号不能在此处注册，请使用登录入口</string>
-    <string name="error_short_password">密码长度不能少于6位</string>
-    <string name="error_invalid_email">请输入正确的邮箱地址</string>
-    <string name="error_invalid_phone">请输入有效的手机号</string>
-    <string name="error_empty_fans_date">请选择入坑日期</string>
+
+    <string name="role_admin_login_hint">管理员登录用于管理应援商品和歌单</string>
+    <string name="login_security_tip_admin">提示：管理员账号请勿泄露。</string>
+
 
 
 </resources>

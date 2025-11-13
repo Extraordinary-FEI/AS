@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- 分类 -->
-    <string name="category_header_title">精选分类</string>
-    <string name="category_header_subtitle">探索你感兴趣的应援主题</string>
-    <string name="category_default_subtitle">即将上线，敬请期待</string>
-</resources>

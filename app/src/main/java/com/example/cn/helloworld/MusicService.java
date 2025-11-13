@@ -18,9 +18,9 @@ public class MusicService extends Service {
 
     // 歌曲资源数组
     private int[] songs = {
-            R.raw.yyqx_fenwuhai,
-            R.raw.yyqx_myfriend,
-            R.raw.yyqx_unpredictable
+            R.raw.yyqx_lisao,
+            R.raw.yyqx_nishuo,
+            R.raw.yyqx_baobei
     };
 
     private String[] titles = {"粉雾海", "我的朋友", "Unpredictable"};

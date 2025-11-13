@@ -75,19 +75,42 @@ public class PlaylistManagementActivity extends AppCompatActivity {
     }
 
     private void createNewPlaylist() {
-        String newId = playlistRepository.generatePlaylistId();
-        Playlist playlist = new Playlist(newId,
-                getString(R.string.default_new_playlist_title),
-                getString(R.string.default_new_playlist_description),
-                "",
-                null,
-                null,
-                new ArrayList<String>(),
-                new ArrayList<Song>());
+        String id = String.valueOf(System.currentTimeMillis());
+        String title = "新建歌单";
+        String description = "完善介绍，让粉丝更了解这份歌单";
+        String playUrl = "";
+        String coverUrl = "";
+        Integer coverResId = null;
+
+        List<String> tags = new ArrayList<>();
+        List<Song> songs = new ArrayList<>();
+
+        long playCount = 0;
+        long favoriteCount = 0;
+
+        Playlist playlist = new Playlist(
+                id,
+                title,
+                description,
+                playUrl,
+                coverUrl,
+                coverResId,
+                tags,
+                songs,
+                playCount,
+                favoriteCount
+        );
+
+        // ⭐ 正确行为：保存到 Repository
         playlistRepository.savePlaylist(playlist);
+
+        // ⭐ 刷新列表
         loadPlaylists();
-        openPlaylistEditor(newId);
+
+        Toast.makeText(this, "已创建新歌单", Toast.LENGTH_SHORT).show();
     }
+
+
 
     private void openPlaylistEditor(String playlistId) {
         Intent intent = new Intent(this, PlaylistEditorActivity.class);

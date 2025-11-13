@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="3"
-    android:background="@drawable/music_bg">
+    android:background="@drawable/song_cover">
 
     <!-- 半透明蒙层，让背景更柔和 -->
     <View
@@ -20,7 +20,7 @@
         android:layout_marginTop="60dp"
         android:src="@drawable/cover_playlist_stage"
         android:scaleType="centerCrop"
-        android:background="@drawable/music_bg"
+        android:background="@drawable/song_cover"
         android:elevation="8dp" />
 
     <!-- 歌曲标题 -->

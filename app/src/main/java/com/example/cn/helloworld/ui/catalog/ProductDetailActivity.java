@@ -73,7 +73,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         if (product.getCategoryAttributes().isEmpty()) {
             attributesView.setVisibility(View.GONE);
         } else {
-            attributesView.setText(getString(R.string.product_attributes_format, formatAttributes(product.getCategoryAttributes())));
+            attributesView.setText(getString(R.string.product_attributes_format, formatAttributes((Map<String, String>) product.getCategoryAttributes())));
             attributesView.setVisibility(View.VISIBLE);
         }
         descriptionView.setText(product.getDescription());

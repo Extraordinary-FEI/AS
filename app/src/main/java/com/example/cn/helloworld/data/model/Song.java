@@ -2,37 +2,42 @@ package com.example.cn.helloworld.data.model;
 
 import android.support.annotation.DrawableRes;
 
-/**
- * 简单的歌曲模型，便于歌单与播放器模块复用。
- */
-public class Song {
+import java.io.Serializable;
 
-    private final String id;
-    private final String title;
-    private final String artist;
-    private final long durationMs;
-    private final String streamUrl;
-    private final String description;
-    private final String coverUrl;
-    private final Integer coverResId;
+public class Song implements Serializable {
+
+    private String id;
+    private String title;
+    private String artist;
+    private String description;
+    private long durationMs;
+
+    private String streamUrl;
+
+    private String coverUrl;
+    @DrawableRes
+    private Integer coverResId;
 
     public Song(String id,
                 String title,
                 String artist,
+                String description,
                 long durationMs,
                 String streamUrl,
-                String description,
                 String coverUrl,
-                @DrawableRes Integer coverResId) {
+                Integer coverResId) {
+
         this.id = id;
         this.title = title;
         this.artist = artist;
+        this.description = description;
         this.durationMs = durationMs;
         this.streamUrl = streamUrl;
-        this.description = description;
         this.coverUrl = coverUrl;
         this.coverResId = coverResId;
     }
+
+    // -------- getter / setter ---------
 
     public String getId() {
         return id;
@@ -46,6 +51,10 @@ public class Song {
         return artist;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public long getDurationMs() {
         return durationMs;
     }
@@ -54,16 +63,19 @@ public class Song {
         return streamUrl;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public String getCoverUrl() {
         return coverUrl;
     }
 
-    @DrawableRes
     public Integer getCoverResId() {
         return coverResId;
+    }
+
+    public void setCoverResId(Integer coverResId) {
+        this.coverResId = coverResId;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
     }
 }
