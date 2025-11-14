@@ -1,5 +1,7 @@
 package com.example.cn.helloworld.ui.main;
 
+import com.example.cn.helloworld.data.model.Playlist;
+
 import java.util.List;
 
 /**
@@ -11,7 +13,7 @@ public interface HomeDataSource {
 
     List<HomeModels.HomeCategory> loadCategories();
 
-    List<HomeModels.Playlist> loadPlaylists();
+    List<Playlist> loadPlaylists();
 
     List<HomeModels.SupportTask> loadSupportTasks();
 }

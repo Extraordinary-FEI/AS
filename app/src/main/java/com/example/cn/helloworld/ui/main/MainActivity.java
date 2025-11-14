@@ -13,8 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.example.cn.helloworld.R;
+import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.ui.playlist.PlaylistDetailActivity;
 import com.example.cn.helloworld.ui.playlist.PlaylistOverviewActivity;
+
 
 /**
  * 首页入口，负责拼装轮播、分类、歌单和应援任务模块。
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         setupCategories();
         setupPlaylists();
         setupTasks();
+        setupUserFab();
     }
 
     private void setupBanner() {
@@ -69,19 +72,40 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     private void setupPlaylists() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager =
+                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         playlistList.setLayoutManager(layoutManager);
         playlistList.setNestedScrollingEnabled(false);
-        playlistList.setAdapter(new PlaylistAdapter(dataSource.loadPlaylists(), new PlaylistAdapter.OnPlaylistClickListener() {
-            @Override
-            public void onPlaylistClick(HomeModels.Playlist playlist) {
-                startActivity(PlaylistDetailActivity.createIntent(MainActivity.this, playlist.getId()));
-            }
-        }));
+
+        playlistList.setAdapter(new PlaylistAdapter(
+                dataSource.loadPlaylists(),
+                new PlaylistAdapter.OnPlaylistClickListener() {
+                    @Override
+                    public void onPlaylistClick(Playlist playlist) {
+                        startActivity(PlaylistDetailActivity.createIntent(
+                                MainActivity.this,
+                                playlist.getId()
+                        ));
+                    }
+                }));
         viewAllPlaylistsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, PlaylistOverviewActivity.class));
+            }
+        });
+    }
+
+
+    private void setupUserFab() {
+        android.support.design.widget.FloatingActionButton fabProfile =
+                (android.support.design.widget.FloatingActionButton) findViewById(R.id.fab_profile);
+
+        fabProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, com.example.cn.helloworld.ui.user.UserProfileActivity.class);
+                startActivity(intent);
             }
         });
     }

@@ -1,6 +1,7 @@
 package com.example.cn.helloworld.ui.main;
 
 import com.example.cn.helloworld.R;
+import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.data.playlist.PlaylistRepository;
 import com.example.cn.helloworld.data.repository.support.SupportTaskRepository;
 
@@ -36,9 +37,12 @@ public class FakeHomeDataSource implements HomeDataSource {
         );
     }
 
+    /**
+     * 修复点：使用 getAllPlaylists()（你新的 PlaylistRepository 中唯一合法的获取方法）
+     */
     @Override
-    public List<HomeModels.Playlist> loadPlaylists() {
-        return playlistRepository.getHomeSummaries();
+    public List<Playlist> loadPlaylists() {
+        return playlistRepository.getAllPlaylists();
     }
 
     @Override

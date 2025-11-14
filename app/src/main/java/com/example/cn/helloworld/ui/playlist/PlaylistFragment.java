@@ -16,8 +16,8 @@ import android.widget.TextView;
 
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
+import com.example.cn.helloworld.data.playlist.PlaylistRepository;
 import com.example.cn.helloworld.data.model.Song;
-import com.example.cn.helloworld.data.repository.PlaylistRepository;
 
 import java.util.List;
 
@@ -42,7 +42,9 @@ public class PlaylistFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        playlistRepository = new PlaylistRepository(getContext());
+
+        // ★★ 使用你的单例仓库，而不是 new
+        playlistRepository = PlaylistRepository.getInstance();
 
         if (getArguments() != null) {
             playlistId = getArguments().getString(ARG_PLAYLIST_ID);
@@ -55,7 +57,8 @@ public class PlaylistFragment extends Fragment {
     ) {
         View root = inflater.inflate(R.layout.fragment_playlist, container, false);
 
-        Playlist playlist = playlistRepository.getById(playlistId);
+        // ★★ 改成 findById()
+        Playlist playlist = playlistRepository.findById(playlistId);
         if (playlist != null) {
             bindHeader(root, playlist);
             bindSongList(root, playlist.getSongs());
@@ -84,7 +87,7 @@ public class PlaylistFragment extends Fragment {
             tags.setText("无标签");
         }
 
-        // 播放统计信息（如果你的 Playlist 内没有统计字段，可手动写）
+        // 播放统计信息
         meta.setText(String.format(
                 "共 %d 首 · %d 次播放 · %d 人收藏",
                 playlist.getSongs().size(),
@@ -92,14 +95,9 @@ public class PlaylistFragment extends Fragment {
                 playlist.getFavoriteCount()
         ));
 
-        // 加载封面：支持本地 resId 或 URL
-        Integer resId = playlist.getCoverResId();
-        String url = playlist.getCoverUrl();
-
-        if (resId != null) {
-            cover.setImageResource(resId);
-        } else if (!TextUtils.isEmpty(url)) {
-            Glide.with(getContext()).load(url).into(cover);
+        // 封面（本地 resId）
+        if (playlist.getCoverResId() != null) {
+            cover.setImageResource(playlist.getCoverResId());
         } else {
             cover.setImageResource(R.drawable.cover_playlist_placeholder);
         }
@@ -142,7 +140,7 @@ public class PlaylistFragment extends Fragment {
             holder.artist.setText(song.getArtist());
             holder.duration.setText(formatDuration(song.getDurationMs()));
 
-            // 描述（允许为空）
+            // 描述
             if (TextUtils.isEmpty(song.getDescription())) {
                 holder.description.setVisibility(View.GONE);
             } else {
@@ -150,19 +148,8 @@ public class PlaylistFragment extends Fragment {
                 holder.description.setText(song.getDescription());
             }
 
-            // 封面
-            Integer coverRes = song.getCoverResId();
-            String coverUrl = song.getCoverUrl();
-
-            if (coverRes != null) {
-                holder.cover.setImageResource(coverRes);
-            } else if (!TextUtils.isEmpty(coverUrl)) {
-                Glide.with(holder.itemView.getContext())
-                        .load(coverUrl)
-                        .into(holder.cover);
-            } else {
-                holder.cover.setImageResource(R.drawable.cover_playlist_placeholder);
-            }
+            // ★★ 封面：本地 coverResId
+            holder.cover.setImageResource(song.getCoverResId());
         }
 
         @Override
@@ -170,9 +157,7 @@ public class PlaylistFragment extends Fragment {
             return songs == null ? 0 : songs.size();
         }
 
-        /**
-         * ViewHolder：对应 item_song.xml
-         */
+        /** ViewHolder：对应 item_song.xml */
         static class ViewHolder extends RecyclerView.ViewHolder {
             ImageView cover;
             TextView title;

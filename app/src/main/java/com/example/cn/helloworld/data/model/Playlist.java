@@ -23,6 +23,33 @@ public class Playlist implements Serializable {
 
     private final long playCount;
     private final long favoriteCount;
+    /**
+     * 生成一个新的 Playlist，用于更新部分字段
+     */
+    public Playlist copyWith(
+            String title,
+            String description,
+            String playUrl,
+            String coverUrl,
+            Integer coverResId,
+            List<String> tags,
+            List<Song> songs,
+            long playCount,
+            long favoriteCount
+    ) {
+        return new Playlist(
+                this.id,
+                title != null ? title : this.title,
+                description != null ? description : this.description,
+                playUrl != null ? playUrl : this.playUrl,
+                coverUrl != null ? coverUrl : this.coverUrl,
+                coverResId != null ? coverResId : this.coverResId,
+                tags != null ? tags : this.tags,
+                songs != null ? songs : this.songs,
+                playCount,
+                favoriteCount
+        );
+    }
 
     public Playlist(String id,
                     String title,
@@ -88,4 +115,5 @@ public class Playlist implements Serializable {
     public long getFavoriteCount() {
         return favoriteCount;
     }
+
 }

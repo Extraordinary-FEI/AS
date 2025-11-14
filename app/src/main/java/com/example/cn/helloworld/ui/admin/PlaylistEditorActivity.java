@@ -25,8 +25,8 @@ import android.widget.Toast;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.data.model.Song;
-import com.example.cn.helloworld.data.repository.PlaylistRepository;
 import com.example.cn.helloworld.data.session.SessionManager;
+import com.example.cn.helloworld.data.playlist.PlaylistRepository;
 
 import java.util.ArrayList;
 import java.util.List;

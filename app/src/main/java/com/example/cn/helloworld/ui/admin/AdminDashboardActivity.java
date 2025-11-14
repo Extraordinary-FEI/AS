@@ -17,6 +17,8 @@ import com.example.cn.helloworld.data.repository.AdminMetricsRepository;
 import com.example.cn.helloworld.data.repository.SupportTaskRepository;
 import com.example.cn.helloworld.data.session.SessionManager;
 import com.example.cn.helloworld.ui.auth.LoginActivity;
+import com.example.cn.helloworld.data.playlist.PlaylistRepository;
+
 
 /**
  * 管理员控制台：融合版本

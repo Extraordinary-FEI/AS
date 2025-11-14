@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.example.cn.helloworld.R;
+import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.data.playlist.PlaylistRepository;
 import com.example.cn.helloworld.ui.main.HomeModels;
 import com.example.cn.helloworld.ui.main.PlaylistAdapter;
@@ -43,8 +44,13 @@ public class PlaylistOverviewActivity extends AppCompatActivity {
         playlistRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         playlistRecyclerView.setHasFixedSize(true);
 
-        List<HomeModels.Playlist> playlists = PlaylistRepository.getInstance().getHomeSummaries();
+        List<Playlist> playlists = PlaylistRepository.getInstance().getHomeSummaries();
         playlistRecyclerView.setAdapter(new PlaylistAdapter(playlists, new PlaylistAdapter.OnPlaylistClickListener() {
+            @Override
+            public void onPlaylistClick(Playlist playlist) {
+
+            }
+
             @Override
             public void onPlaylistClick(HomeModels.Playlist playlist) {
                 startActivity(PlaylistDetailActivity.createIntent(PlaylistOverviewActivity.this, playlist.getId()));
