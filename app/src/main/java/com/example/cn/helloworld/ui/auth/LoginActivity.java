@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // 自动登录
         if (sessionManager.isLoggedIn() && sessionManager.shouldRemember()) {
-            navigateByRole(sessionManager.getRole());   // UserRole ✔
+            navigateByRole(sessionManager.getRole());
             finish();
             return;
         }
@@ -100,7 +100,6 @@ public class LoginActivity extends AppCompatActivity {
         btnGoRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (rgRole.getCheckedRadioButtonId() == R.id.rbAdmin) {
                     Toast.makeText(LoginActivity.this,
                             R.string.error_admin_register_hint,
@@ -114,14 +113,16 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void performLogin() {
-        String username = etUsername.getText() == null ? "" : etUsername.getText().toString().trim();
-        String password = etPassword.getText() == null ? "" : etPassword.getText().toString().trim();
-        String verification = etVerificationCode.getText() == null ? "" : etVerificationCode.getText().toString().trim();
+        String username = etUsername.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
+        String verification = etVerificationCode.getText().toString().trim();
+
         boolean adminEntrance = rgRole.getCheckedRadioButtonId() == R.id.rbAdmin;
 
         String requestedRole = adminEntrance ?
                 AuthRepository.ROLE_ADMIN : AuthRepository.ROLE_USER;
 
+        // 保存记住我设置
         sessionManager.updateLoginPreference(username, requestedRole, cbRememberLogin.isChecked());
 
         LoginResult result = authRepository.login(username, password, requestedRole, verification);
@@ -133,15 +134,21 @@ public class LoginActivity extends AppCompatActivity {
         if (result.isSuccess()) {
             tvStatus.setTextColor(ContextCompat.getColor(this, android.R.color.holo_green_dark));
 
-            // ✔ 保存 session（token + 角色 + 是否记住登录）
+            // ★ 必须保存 userId，不然自动登录不会生效
+            if (result.getRole() == UserRole.ADMIN) {
+                sessionManager.loginAdmin(username, username);
+            } else {
+                sessionManager.login(username, username);
+            }
+
+            // 保存 token + role
             sessionManager.saveSession(
                     result.getToken(),
-                    result.getRole(),  // UserRole ✔
+                    result.getRole(),
                     cbRememberLogin.isChecked()
             );
 
             Toast.makeText(this, result.getMessage(), Toast.LENGTH_SHORT).show();
-
             navigateByRole(result.getRole());
             finish();
 
@@ -151,7 +158,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    /** ✔ 角色判断统一用枚举 UserRole */
     private void navigateByRole(UserRole role) {
         if (role == UserRole.ADMIN) {
             startActivity(new Intent(this, AdminDashboardActivity.class));
@@ -163,7 +169,7 @@ public class LoginActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     private void prefillLoginForm() {
         String lastUsername = sessionManager.getLastUsername();
-        if (!lastUsername.isEmpty()) {
+        if (!lastUsername.equals("")) {
             etUsername.setText(lastUsername);
         }
 
@@ -179,15 +185,21 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateRoleUi(boolean adminSelected) {
         verificationLayout.setVisibility(adminSelected ? View.VISIBLE : View.GONE);
-        if (!adminSelected) etVerificationCode.setText("");
+
+        if (!adminSelected) {
+            etVerificationCode.setText("");
+        }
 
         btnGoRegister.setVisibility(adminSelected ? View.GONE : View.VISIBLE);
+
         tvRoleHint.setText(adminSelected ?
                 R.string.role_admin_login_hint :
                 R.string.role_user_login_hint);
+
         tvSecurityHint.setText(adminSelected ?
                 R.string.login_security_tip_admin :
                 R.string.login_security_tip_user);
+
         tvStatus.setTextColor(ContextCompat.getColor(this, R.color.textSecondary));
         tvStatus.setText(R.string.login_status_default);
     }

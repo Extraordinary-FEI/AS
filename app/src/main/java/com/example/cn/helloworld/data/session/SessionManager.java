@@ -24,8 +24,8 @@ public class SessionManager {
     private static final String KEY_LAST_USERNAME = "last_username";
     private static final String KEY_LAST_ROLE = "last_role";
 
-    private final SharedPreferences prefs;
-    private final SharedPreferences.Editor editor;
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
 
     public SessionManager(Context context) {
         prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
@@ -34,7 +34,7 @@ public class SessionManager {
 
     // -------------------- 登录 --------------------
 
-    /** 普通用户登录 */
+    /** 普通用户登录（必须保存 userId + username） */
     public void login(String userId, String username) {
         editor.putString(KEY_USER_ID, userId);
         editor.putString(KEY_USERNAME, username);
@@ -43,7 +43,7 @@ public class SessionManager {
         editor.apply();
     }
 
-    /** 管理员登录 */
+    /** 管理员登录（必须保存 userId + username） */
     public void loginAdmin(String userId, String username) {
         editor.putString(KEY_USER_ID, userId);
         editor.putString(KEY_USERNAME, username);
@@ -52,14 +52,13 @@ public class SessionManager {
         editor.apply();
     }
 
+    /** 保存 token + 角色 + 记住我 */
     public void saveSession(String token, UserRole role, boolean remember) {
-        prefs.edit()
-                .putString("token", token)
-                .putString("role", String.valueOf(role))  // 存 String 没问题
-                .putBoolean("remember", remember)
-                .apply();
+        editor.putString(KEY_TOKEN, token);
+        editor.putString(KEY_ROLE, String.valueOf(role));
+        editor.putBoolean(KEY_REMEMBER, remember);
+        editor.apply();
     }
-
 
     // -------------------- 获取数据 --------------------
 
@@ -80,8 +79,8 @@ public class SessionManager {
     }
 
     public UserRole getRole() {
-        String roleStr = prefs.getString("role", "USER");
-        return UserRole.valueOf(roleStr);
+        String r = prefs.getString(KEY_ROLE, "USER");
+        return UserRole.valueOf(r);
     }
 
     public String getToken() {
@@ -100,14 +99,12 @@ public class SessionManager {
         return prefs.getString(KEY_LAST_ROLE, "USER");
     }
 
-    /** 权限 */
     public Set<String> getPermissions() {
         return prefs.getStringSet(KEY_PERMISSIONS, new HashSet<String>());
     }
 
     // -------------------- 修改数据 --------------------
 
-    /** 用于登录界面 - 记住账户设置 */
     public void updateLoginPreference(String username, String role, boolean remember) {
         editor.putString(KEY_LAST_USERNAME, username);
         editor.putString(KEY_LAST_ROLE, role);
@@ -115,7 +112,6 @@ public class SessionManager {
         editor.apply();
     }
 
-    /** 保存后台给的权限 */
     public void updatePermissions(Set<String> permissions) {
         editor.putStringSet(KEY_PERMISSIONS, permissions);
         editor.apply();
