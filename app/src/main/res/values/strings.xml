@@ -224,6 +224,7 @@
 
     <string name="role_admin_login_hint">管理员登录用于管理应援商品和歌单</string>
     <string name="login_security_tip_admin">提示：管理员账号请勿泄露。</string>
+    <string name="logout">退出登录</string>
 
 
 

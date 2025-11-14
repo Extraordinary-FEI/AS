@@ -36,6 +36,7 @@
             android:orientation="vertical"
             android:paddingBottom="24dp">
 
+            <!-- Banner -->
             <android.support.v4.view.ViewPager
                 android:id="@+id/bannerPager"
                 android:layout_width="match_parent"
@@ -47,6 +48,7 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp" />
 
+            <!-- ⭐ 用户信息 + 分类区 -->
             <android.support.v7.widget.CardView
                 android:id="@+id/category_section"
                 android:layout_width="match_parent"
@@ -64,11 +66,47 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
+                    <!-- ⭐ 用户头像、用户名、UID -->
+                    <ImageView
+                        android:id="@+id/avatarImage"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/ic_user_default" />
+
+                    <TextView
+                        android:id="@+id/tvUsername"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textSize="18sp"
+                        android:textColor="@color/homeTextPrimary"
+                        android:layout_gravity="center_horizontal"/>
+
+                    <TextView
+                        android:id="@+id/tvUserId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/homeTextSecondary"
+                        android:layout_gravity="center_horizontal"/>
+
+                    <!-- ⭐ 退出登录按钮 -->
+                    <Button
+                        android:id="@+id/btnLogout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/logout"
+                        android:layout_gravity="center_horizontal" />
+
+                    <!-- ⭐ Category Title -->
                     <TextView
                         android:id="@+id/category_title"
                         style="@style/HomeSectionTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
                         android:text="@string/home_category_title" />
 
                     <TextView
@@ -79,6 +117,7 @@
                         android:layout_marginTop="4dp"
                         android:text="@string/home_category_subtitle" />
 
+                    <!-- Category List -->
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/categoryList"
                         android:layout_width="match_parent"
@@ -90,6 +129,7 @@
 
             </android.support.v7.widget.CardView>
 
+            <!-- ⭐ Playlist Section（原样保留） -->
             <android.support.v7.widget.CardView
                 android:id="@+id/playlist_section"
                 android:layout_width="match_parent"
@@ -157,6 +197,7 @@
 
             </android.support.v7.widget.CardView>
 
+            <!-- ⭐ Task Section（保持不变） -->
             <android.support.v7.widget.CardView
                 android:id="@+id/task_section"
                 android:layout_width="match_parent"
@@ -205,7 +246,7 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-    <!-- ⭐ 新增：个人中心悬浮按钮 -->
+    <!-- ⭐ 右下角悬浮个人按钮 -->
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_profile"
         android:layout_width="wrap_content"
