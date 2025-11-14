@@ -8,6 +8,7 @@
     <string name="title_confirm">注册信息确认</string>
     <string name="title_user_list">粉丝列表</string>
     <string name="title_main">千玺星球</string>
+    <string name="title_user_profile">个人中心</string>
 
     <!-- 按钮 -->
     <string name="btn_register">注册</string>
