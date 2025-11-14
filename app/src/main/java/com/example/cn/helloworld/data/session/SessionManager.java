@@ -3,6 +3,8 @@ package com.example.cn.helloworld.data.session;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.cn.helloworld.data.model.UserRole;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,12 +52,14 @@ public class SessionManager {
         editor.apply();
     }
 
-    /** 保存 Token */
-    public void saveSession(String token, boolean remember) {
-        editor.putString(KEY_TOKEN, token);
-        editor.putBoolean(KEY_REMEMBER, remember);
-        editor.apply();
+    public void saveSession(String token, UserRole role, boolean remember) {
+        prefs.edit()
+                .putString("token", token)
+                .putString("role", String.valueOf(role))  // 存 String 没问题
+                .putBoolean("remember", remember)
+                .apply();
     }
+
 
     // -------------------- 获取数据 --------------------
 
@@ -75,8 +79,9 @@ public class SessionManager {
         return prefs.getString(KEY_USERNAME, "未知用户");
     }
 
-    public String getRole() {
-        return prefs.getString(KEY_ROLE, "USER");
+    public UserRole getRole() {
+        String roleStr = prefs.getString("role", "USER");
+        return UserRole.valueOf(roleStr);
     }
 
     public String getToken() {

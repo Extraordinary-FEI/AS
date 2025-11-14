@@ -87,6 +87,11 @@ public class MainActivity extends AppCompatActivity {
                                 playlist.getId()
                         ));
                     }
+
+                    @Override
+                    public void onPlaylistClick(HomeModels.Playlist playlist) {
+
+                    }
                 }));
         viewAllPlaylistsButton.setOnClickListener(new View.OnClickListener() {
             @Override

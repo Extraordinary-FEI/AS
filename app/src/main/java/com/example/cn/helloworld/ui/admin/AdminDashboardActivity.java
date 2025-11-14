@@ -147,12 +147,14 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
     private String buildPermissionSummary() {
         StringBuilder builder = new StringBuilder();
-        for (Permission permission : sessionManager.getPermissions()) {
+
+        for (String permission : sessionManager.getPermissions()) {
             if (builder.length() > 0) {
                 builder.append(',');
             }
-            builder.append(permission.name());
+            builder.append(permission);   // permission 是 String，而不是 Permission.name()
         }
+
         return builder.toString();
     }
 

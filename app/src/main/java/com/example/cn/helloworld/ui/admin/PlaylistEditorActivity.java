@@ -31,89 +31,69 @@ import com.example.cn.helloworld.data.playlist.PlaylistRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 后台编辑歌单（本地版）
+ */
 public class PlaylistEditorActivity extends AppCompatActivity {
-
-    private static final int REQUEST_CODE_PICK_COVER = 1011;
 
     private SessionManager sessionManager;
     private PlaylistRepository playlistRepository;
     private Playlist playlist;
-    private List<Song> songs = new ArrayList<>();
 
     private EditText titleInput;
     private EditText descriptionInput;
-    private EditText playUrlInput;
     private TextView coverHint;
     private ImageView coverPreview;
+
+    private List<Song> songs = new ArrayList<>();
     private SongAdapter songAdapter;
 
-    private String coverUri;
+    // 封面 URI（可为空）
+    private String coverUri = null;
+
+    private static final int REQUEST_CODE_PICK_COVER = 2001;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_playlist_editor);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+
+        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         sessionManager = new SessionManager(this);
         if (!sessionManager.isAdmin()) {
-            Toast.makeText(this, R.string.admin_access_denied, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "需要管理员权限", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        playlistRepository = new PlaylistRepository(this);
+        playlistRepository = PlaylistRepository.getInstance();
 
+        // 读取要编辑的 playlistId
         String playlistId = getIntent().getStringExtra(PlaylistManagementActivity.EXTRA_PLAYLIST_ID);
-        if (TextUtils.isEmpty(playlistId)) {
-            finish();
-            return;
-        }
         playlist = playlistRepository.getById(playlistId);
         if (playlist == null) {
+            Toast.makeText(this, "歌单不存在", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        setTitle(playlist.getTitle());
+        bindViews();
+        populateData();
+        setupSongList();
+    }
 
+    private void bindViews() {
         titleInput = (EditText) findViewById(R.id.editPlaylistTitle);
         descriptionInput = (EditText) findViewById(R.id.editPlaylistDescription);
-        playUrlInput = (EditText) findViewById(R.id.editPlaylistPlayUrl);
         coverHint = (TextView) findViewById(R.id.textPlaylistCoverHint);
         coverPreview = (ImageView) findViewById(R.id.imagePlaylistCoverPreview);
 
         Button changeCoverButton = (Button) findViewById(R.id.buttonChangeCover);
         changeCoverButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                openCoverPicker();
-            }
-        });
-
-        RecyclerView songsRecycler = (RecyclerView) findViewById(R.id.recyclerPlaylistSongs);
-        songsRecycler.setLayoutManager(new LinearLayoutManager(this));
-        songAdapter = new SongAdapter(new ArrayList<Song>());
-        songAdapter.setListener(new SongAdapter.Listener() {
-            @Override
-            public void onEdit(Song song) {
-                showSongEditor(song);
-            }
-
-            @Override
-            public void onDelete(Song song) {
-                deleteSong(song);
-            }
-        });
-        songsRecycler.setAdapter(songAdapter);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabAddSong);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSongEditor(null);
+            public void onClick(View view) {
+                pickCoverImage();
             }
         });
 
@@ -125,34 +105,42 @@ public class PlaylistEditorActivity extends AppCompatActivity {
             }
         });
 
-        populateData();
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabAddSong);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSongEditor(null);
+            }
+        });
     }
 
     private void populateData() {
+        setTitle("编辑歌单 - " + playlist.getTitle());
+
         titleInput.setText(playlist.getTitle());
         descriptionInput.setText(playlist.getDescription());
-        playUrlInput.setText(playlist.getPlayUrl());
+
         coverUri = playlist.getCoverUrl();
         if (!TextUtils.isEmpty(coverUri)) {
-            coverHint.setText(coverUri);
             coverPreview.setImageURI(Uri.parse(coverUri));
+            coverHint.setText(coverUri);
         } else if (playlist.getCoverResId() != null) {
             coverPreview.setImageResource(playlist.getCoverResId());
         }
-        songs = playlist.getSongs();
-        songAdapter.submit(songs);
+
+        songs = new ArrayList<>(playlist.getSongs());
     }
 
-    private void openCoverPicker() {
+    // ===================== 封面选择 =====================
+
+    private void pickCoverImage() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
-        startActivityForResult(Intent.createChooser(intent, getString(R.string.playlist_pick_cover)), REQUEST_CODE_PICK_COVER);
+        startActivityForResult(intent, REQUEST_CODE_PICK_COVER);
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_PICK_COVER && resultCode == RESULT_OK && data != null) {
             Uri uri = data.getData();
             if (uri != null) {
@@ -161,79 +149,99 @@ public class PlaylistEditorActivity extends AppCompatActivity {
                 coverHint.setText(coverUri);
             }
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void showSongEditor(@Nullable final Song song) {
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_song_editor, null, false);
-        final EditText titleInput = (EditText) dialogView.findViewById(R.id.editSongTitle);
-        final EditText artistInput = (EditText) dialogView.findViewById(R.id.editSongArtist);
-        final EditText durationInput = (EditText) dialogView.findViewById(R.id.editSongDuration);
-        final EditText streamUrlInput = (EditText) dialogView.findViewById(R.id.editSongStreamUrl);
+    // ===================== 歌曲管理 =====================
 
-        if (song != null) {
-            titleInput.setText(song.getTitle());
-            artistInput.setText(song.getArtist());
-            durationInput.setText(String.valueOf(song.getDurationMs() / 1000));
-            streamUrlInput.setText(song.getStreamUrl());
+    private void setupSongList() {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerPlaylistSongs);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        songAdapter = new SongAdapter(songs);
+        recyclerView.setAdapter(songAdapter);
+
+        songAdapter.setListener(new SongAdapter.Listener() {
+            @Override
+            public void onEdit(Song song) {
+                showSongEditor(song);
+            }
+
+            @Override
+            public void onDelete(Song song) {
+                deleteSong(song);
+            }
+        });
+    }
+
+    private void showSongEditor(@Nullable final Song oldSong) {
+        View view = LayoutInflater.from(this)
+                .inflate(R.layout.dialog_song_editor, null);
+
+        final EditText titleInput = (EditText) view.findViewById(R.id.editSongTitle);
+        final EditText artistInput = (EditText) view.findViewById(R.id.editSongArtist);
+        final EditText durationInput = (EditText) view.findViewById(R.id.editSongDuration);
+
+        if (oldSong != null) {
+            titleInput.setText(oldSong.getTitle());
+            artistInput.setText(oldSong.getArtist());
+            durationInput.setText(String.valueOf(oldSong.getDurationMs() / 1000));
         }
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(song == null ? R.string.dialog_title_add_song : R.string.dialog_title_edit_song)
-                .setView(dialogView)
-                .setPositiveButton(android.R.string.ok, null)
-                .setNegativeButton(android.R.string.cancel, null)
+                .setTitle(oldSong == null ? "添加歌曲" : "编辑歌曲")
+                .setView(view)
+                .setPositiveButton("确定", null)
+                .setNegativeButton("取消", null)
                 .create();
 
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onShow(final DialogInterface dialogInterface) {
-                AlertDialog alertDialog = (AlertDialog) dialogInterface;
-                Button button = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                button.setOnClickListener(new View.OnClickListener() {
+            public void onShow(DialogInterface d) {
+                final AlertDialog ad = (AlertDialog) d;
+                Button btn = ad.getButton(AlertDialog.BUTTON_POSITIVE);
+                btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String title = titleInput.getText() == null ? "" : titleInput.getText().toString().trim();
-                        String artist = artistInput.getText() == null ? "" : artistInput.getText().toString().trim();
-                        String durationText = durationInput.getText() == null ? "" : durationInput.getText().toString().trim();
-                        String streamUrl = streamUrlInput.getText() == null ? "" : streamUrlInput.getText().toString().trim();
+                        String title = titleInput.getText().toString().trim();
+                        String artist = artistInput.getText().toString().trim();
+                        String durText = durationInput.getText().toString().trim();
 
                         if (TextUtils.isEmpty(title)) {
-                            titleInput.setError(getString(R.string.error_song_title_required));
-                            return;
-                        }
-                        long durationMs;
-                        try {
-                            durationMs = Long.parseLong(durationText) * 1000L;
-                        } catch (NumberFormatException exception) {
-                            durationInput.setError(getString(R.string.error_song_duration_invalid));
-                            return;
-                        }
-                        if (TextUtils.isEmpty(streamUrl)) {
-                            streamUrlInput.setError(getString(R.string.error_song_stream_required));
+                            titleInput.setError("请输入歌曲名");
                             return;
                         }
 
-                        Song updated;
-                        if (song == null) {
-                            String newId = playlistRepository.generateSongId(playlist.getId());
-                            updated = new Song(newId, title, artist, durationMs, streamUrl,
-                                    "",
-                                    null,
-                                    null);
-                            songs.add(updated);
-                        } else {
-                            updated = new Song(song.getId(), title, artist, durationMs, streamUrl,
-                                    song.getDescription(), song.getCoverUrl(), song.getCoverResId());
+                        long duration;
+                        try {
+                            duration = Long.parseLong(durText) * 1000;
+                        } catch (Exception e) {
+                            durationInput.setError("时长格式错误");
+                            return;
+                        }
+
+                        Song newSong = new Song(
+                                oldSong == null ? System.currentTimeMillis() + "" : oldSong.getId(),
+                                title,
+                                artist,
+                                "",
+                                duration,
+                                0,      // audioResId 本地 mp3 你可以自己扩展
+                                0       // coverResId 本地封面
+                        );
+
+                        if (oldSong == null) songs.add(newSong);
+                        else {
                             for (int i = 0; i < songs.size(); i++) {
-                                if (songs.get(i).getId().equals(updated.getId())) {
-                                    songs.set(i, updated);
+                                if (songs.get(i).getId().equals(oldSong.getId())) {
+                                    songs.set(i, newSong);
                                     break;
                                 }
                             }
                         }
 
                         songAdapter.submit(songs);
-                        dialogInterface.dismiss();
+                        ad.dismiss();
                     }
                 });
             }
@@ -244,42 +252,43 @@ public class PlaylistEditorActivity extends AppCompatActivity {
 
     private void deleteSong(final Song song) {
         new AlertDialog.Builder(this)
-                .setTitle(R.string.dialog_title_delete_song)
-                .setMessage(getString(R.string.dialog_message_delete_song, song.getTitle()))
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                .setTitle("删除歌曲")
+                .setMessage("确定删除 " + song.getTitle() + " 吗？")
+                .setPositiveButton("删除", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        for (int i = songs.size() - 1; i >= 0; i--) {
-                            if (songs.get(i).getId().equals(song.getId())) {
-                                songs.remove(i);
-                            }
-                        }
+                        songs.remove(song);
                         songAdapter.submit(songs);
                     }
                 })
-                .setNegativeButton(android.R.string.cancel, null)
+                .setNegativeButton("取消", null)
                 .show();
     }
 
-    private void savePlaylist() {
-        String title = titleInput.getText() == null ? "" : titleInput.getText().toString().trim();
-        String description = descriptionInput.getText() == null ? "" : descriptionInput.getText().toString().trim();
-        String playUrl = playUrlInput.getText() == null ? "" : playUrlInput.getText().toString().trim();
+    // ===================== 保存歌单 =====================
 
+    private void savePlaylist() {
+        String title = titleInput.getText().toString().trim();
         if (TextUtils.isEmpty(title)) {
-            titleInput.setError(getString(R.string.error_playlist_title_required));
+            titleInput.setError("标题不能为空");
             return;
         }
 
-        playlistRepository.updatePlaylistDetails(playlist.getId(),
+        Playlist updated = playlist.copyWith(
                 title,
-                description,
-                playUrl,
+                descriptionInput.getText().toString().trim(),
+                null,                // playUrl（本地版不用）
                 coverUri,
                 coverUri == null ? playlist.getCoverResId() : null,
-                playlist.getTags());
-        playlistRepository.replaceSongs(playlist.getId(), songs);
-        Toast.makeText(this, R.string.toast_playlist_saved, Toast.LENGTH_SHORT).show();
+                playlist.getTags(),
+                songs,
+                playlist.getPlayCount(),
+                playlist.getFavoriteCount()
+        );
+
+        playlistRepository.updatePlaylist(updated);
+
+        Toast.makeText(this, "已保存歌单", Toast.LENGTH_SHORT).show();
         finish();
     }
 
@@ -292,84 +301,71 @@ public class PlaylistEditorActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // ===================== SongAdapter =====================
+
     private static class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
         interface Listener {
             void onEdit(Song song);
-
             void onDelete(Song song);
         }
 
-        private final List<Song> songs;
+        private List<Song> songs;
         private Listener listener;
 
         SongAdapter(List<Song> songs) {
             this.songs = songs;
         }
 
-        void setListener(Listener listener) {
-            this.listener = listener;
-        }
+        void setListener(Listener l) { this.listener = l; }
 
         void submit(List<Song> list) {
-            songs.clear();
-            if (list != null) {
-                songs.addAll(list);
-            }
+            songs = new ArrayList<>(list);
             notifyDataSetChanged();
         }
 
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_admin_song, parent, false);
-            return new ViewHolder(view);
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_admin_song, parent, false);
+            return new ViewHolder(v);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            final Song song = songs.get(position);
-            holder.titleView.setText(song.getTitle());
-            holder.subtitleView.setText(holder.itemView.getContext().getString(
-                    R.string.playlist_song_duration_format,
-                    song.getArtist(),
-                    song.getDurationMs() / 1000));
-            holder.editButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onEdit(song);
-                    }
+        public void onBindViewHolder(@NonNull ViewHolder h, int pos) {
+            final Song s = songs.get(pos);
+            h.title.setText(s.getTitle());
+            h.subtitle.setText(s.getArtist() + " · " + (s.getDurationMs() / 1000) + "秒");
+
+            h.edit.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    if (listener != null) listener.onEdit(s);
                 }
             });
-            holder.deleteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onDelete(song);
-                    }
+
+            h.delete.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    if (listener != null) listener.onDelete(s);
                 }
             });
         }
 
         @Override
-        public int getItemCount() {
-            return songs.size();
-        }
+        public int getItemCount() { return songs.size(); }
 
         static class ViewHolder extends RecyclerView.ViewHolder {
-
-            final TextView titleView;
-            final TextView subtitleView;
-            final Button editButton;
-            final Button deleteButton;
+            TextView title;
+            TextView subtitle;
+            Button edit;
+            Button delete;
 
             ViewHolder(View itemView) {
                 super(itemView);
-                titleView = (TextView) itemView.findViewById(R.id.textSongTitle);
-                subtitleView = (TextView) itemView.findViewById(R.id.textSongSubtitle);
-                editButton = (Button) itemView.findViewById(R.id.buttonEditSong);
-                deleteButton = (Button) itemView.findViewById(R.id.buttonDeleteSong);
+                title = (TextView) itemView.findViewById(R.id.textSongTitle);
+                subtitle = (TextView) itemView.findViewById(R.id.textSongSubtitle);
+                edit = (Button) itemView.findViewById(R.id.buttonEditSong);
+                delete = (Button) itemView.findViewById(R.id.buttonDeleteSong);
             }
         }
     }

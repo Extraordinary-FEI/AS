@@ -23,15 +23,20 @@ public class UserProfileActivity extends AppCompatActivity {
 
         sessionManager = new SessionManager(this);
 
-        ImageView avatar = (ImageView) findViewById(R.id.userAvatar);
-        TextView username = (TextView) findViewById(R.id.userName);
-        TextView userId = (TextView) findViewById(R.id.userId);
-        Button logout = (Button) findViewById(R.id.buttonLogout);
+        // 使用 layout 中真实存在的 ID
+        ImageView avatar  = (ImageView) findViewById(R.id.avatarImage);
+        TextView username = (TextView) findViewById(R.id.tvUsername);
+        TextView userId   = (TextView) findViewById(R.id.tvUserId);
+        Button  logout    = (Button) findViewById(R.id.btnLogout);
 
-        avatar.setImageResource(R.drawable.ic_user_default); // 默认头像，可替换成易烊千玺风格
+        // 默认头像
+        avatar.setImageResource(R.drawable.ic_user_default);
+
+        // 显示用户信息
         username.setText(sessionManager.getUsername());
         userId.setText("UID: " + sessionManager.getUserId());
 
+        // 退出登录
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

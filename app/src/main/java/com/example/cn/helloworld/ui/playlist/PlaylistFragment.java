@@ -58,7 +58,7 @@ public class PlaylistFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_playlist, container, false);
 
         // ★★ 改成 findById()
-        Playlist playlist = playlistRepository.findById(playlistId);
+        Playlist playlist = playlistRepository.getById(playlistId);
         if (playlist != null) {
             bindHeader(root, playlist);
             bindSongList(root, playlist.getSongs());
