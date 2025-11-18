@@ -33,17 +33,14 @@ public class HomeFragment extends Fragment {
     private View viewAllPlaylistsButton;
     private HomeDataSource dataSource;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        dataSource = new FakeHomeDataSource();
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+        // ⭐ 关键修改：传入 Context
+        dataSource = new FakeHomeDataSource(root.getContext());
 
         bannerPager = (ViewPager) root.findViewById(R.id.bannerPager);
         categoryList = (RecyclerView) root.findViewById(R.id.categoryList);

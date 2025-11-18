@@ -19,17 +19,15 @@ public class SupportTasksFragment extends Fragment {
 
     private HomeDataSource dataSource;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        dataSource = new FakeHomeDataSource();
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_support_tasks, container, false);
+
+        // ⭐ 关键修改：传入 Context
+        dataSource = new FakeHomeDataSource(root.getContext());
+
         RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recycler_support_tasks);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new TaskAdapter(dataSource.loadSupportTasks()));

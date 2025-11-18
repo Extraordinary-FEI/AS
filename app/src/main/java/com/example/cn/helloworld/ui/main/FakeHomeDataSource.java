@@ -29,7 +29,6 @@ public class FakeHomeDataSource implements HomeDataSource {
         }
         playlistRepository = PlaylistRepository.getInstance(context.getApplicationContext());
     }
-
     @Override
     public List<HomeModels.BannerItem> loadBanners() {
         return Arrays.asList(

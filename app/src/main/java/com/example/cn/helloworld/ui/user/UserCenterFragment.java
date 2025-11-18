@@ -43,7 +43,8 @@ public class UserCenterFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_user_center, container, false);
 
         sessionManager = new SessionManager(root.getContext());
-        homeDataSource = new FakeHomeDataSource();
+        // ⭐ 关键修改：传入 Context
+        homeDataSource = new FakeHomeDataSource(root.getContext());
 
         ImageView avatar = (ImageView) root.findViewById(R.id.avatarImage);
         TextView username = (TextView) root.findViewById(R.id.tvUsername);

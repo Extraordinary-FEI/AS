@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.ui.order.CartFragment;
 import com.example.cn.helloworld.ui.playlist.PlaylistLibraryFragment;
-import com.example.cn.helloworld.ui.support.SupportTasksFragment;
 import com.example.cn.helloworld.ui.user.UserCenterFragment;
 
 public class MainActivity extends AppCompatActivity
