@@ -25,11 +25,12 @@ public class ConfirmActivity extends AppCompatActivity {
             tvClass, tvDate, tvHobbies, tvBio;
     private Button btnBack, btnOk;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm);
 
-        // 1) Toolbar（注意：布局里必须有 id=toolbar 的 Toolbar）
+        // Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -42,41 +43,42 @@ public class ConfirmActivity extends AppCompatActivity {
             });
         }
 
-        // 2) 绑定视图（id 要和 activity_confirm.xml 完全一致）
-        tvName    = (TextView) findViewById(R.id.tvName);
-        tvRole    = (TextView) findViewById(R.id.tvRole);
-        tvPwd     = (TextView) findViewById(R.id.tvPwd);
-        tvEmail   = (TextView) findViewById(R.id.tvEmail);
-        tvPhone   = (TextView) findViewById(R.id.tvPhone);
-        tvGender  = (TextView) findViewById(R.id.tvGender);
-        tvMajor   = (TextView) findViewById(R.id.tvMajor);
-        tvClass   = (TextView) findViewById(R.id.tvClass);
-        tvDate    = (TextView) findViewById(R.id.tvDate);
-        tvHobbies = (TextView) findViewById(R.id.tvHobbies);
-        tvBio     = (TextView) findViewById(R.id.tvBio);
+        // Bind views
+        tvName = findViewById(R.id.tvName);
+        tvRole = findViewById(R.id.tvRole);
+        tvPwd = findViewById(R.id.tvPwd);
+        tvEmail = findViewById(R.id.tvEmail);
+        tvPhone = findViewById(R.id.tvPhone);
+        tvGender = findViewById(R.id.tvGender);
+        tvMajor = findViewById(R.id.tvMajor);
+        tvClass = findViewById(R.id.tvClass);
+        tvDate = findViewById(R.id.tvDate);
+        tvHobbies = findViewById(R.id.tvHobbies);
+        tvBio = findViewById(R.id.tvBio);
 
-        btnBack   = (Button) findViewById(R.id.btnBack);
-        btnOk     = (Button) findViewById(R.id.btnOk);
+        btnBack = findViewById(R.id.btnBack);
+        btnOk = findViewById(R.id.btnOk);
 
-        // 3) 取参（即使某些 key 为空也不会崩）
+        // Read data
         Intent it = getIntent();
-        final String name    = it.getStringExtra("name");
-        final String pwd     = it.getStringExtra("pwd");
-        final String email   = it.getStringExtra("email");
-        final String phone   = it.getStringExtra("phone");
-        final String gender  = it.getStringExtra("gender");
-        final String major   = it.getStringExtra("major");
-        final String clazz   = it.getStringExtra("clazz");
-        final String date    = it.getStringExtra("date");
+        final String name = it.getStringExtra("name");
+        final String pwd = it.getStringExtra("pwd");
+        final String email = it.getStringExtra("email");
+        final String phone = it.getStringExtra("phone");
+        final String gender = it.getStringExtra("gender");
+        final String major = it.getStringExtra("major");
+        final String clazz = it.getStringExtra("clazz");
+        final String date = it.getStringExtra("date");
         final String hobbies = it.getStringExtra("hobbies");
-        final String bio     = it.getStringExtra("bio");
-        final String role    = it.getStringExtra("role");
+        final String bio = it.getStringExtra("bio");
+        final String role = it.getStringExtra("role");
 
-        // 4) 显示
+        // Fill UI
         tvName.setText(name);
-        String roleDisplay = AuthRepository.ROLE_ADMIN.equals(role) ?
-                getString(R.string.role_admin) : getString(R.string.role_fan);
-        tvRole.setText(roleDisplay);
+        tvRole.setText(AuthRepository.ROLE_ADMIN.equals(role)
+                ? getString(R.string.role_admin)
+                : getString(R.string.role_fan)
+        );
         tvPwd.setText(pwd);
         tvEmail.setText(email);
         tvPhone.setText(phone);
@@ -87,47 +89,19 @@ public class ConfirmActivity extends AppCompatActivity {
         tvHobbies.setText(hobbies);
         tvBio.setText(bio);
 
-        // 5) 返回
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) { finish(); }
-        });
+        // Back button
+        btnBack.setOnClickListener(v -> finish());
 
-        // 6) 确认：入库 → 跳列表
-//        btnOk.setOnClickListener(new View.OnClickListener() {
-//            @Override public void onClick(View v) {
-//                DBHelper helper = new DBHelper(ConfirmActivity.this);
-//                SQLiteDatabase db = null;
-//                try {
-//                    db = helper.getWritableDatabase();
-//                    ContentValues cv = new ContentValues();
-//                    cv.put(DBHelper.C_NAME,  name);
-//                    cv.put(DBHelper.C_PWD,   pwd);
-//                    cv.put(DBHelper.C_EMAIL, email);
-//                    cv.put(DBHelper.C_PHONE, phone);
-//                    cv.put(DBHelper.C_GENDER,gender);
-//                    cv.put(DBHelper.C_MAJOR, major);
-//                    cv.put(DBHelper.C_CLAZZ, clazz);
-//                    cv.put(DBHelper.C_DATE,  date);
-//                    cv.put(DBHelper.C_HOBBIES, hobbies);
-//                    cv.put(DBHelper.C_BIO,   bio);
-//                    db.insert(DBHelper.T_USER, null, cv);
-//
-//                    Toast.makeText(getApplicationContext(), "已保存到数据库", Toast.LENGTH_SHORT).show();
-//                    startActivity(new Intent(ConfirmActivity.this, ListUserActivity.class));
-//                    finish(); // 关闭确认页，回退栈更干净
-//                } catch (Exception e) {
-//                    Toast.makeText(getApplicationContext(), "数据库异常：" + e.getMessage(), Toast.LENGTH_LONG).show();
-//                } finally {
-//                    if (db != null) db.close();
-//                }
-//            }
-//        });
+        // OK button
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 SQLiteDatabase db = null;
+
                 try {
                     db = new DBHelper(ConfirmActivity.this).getWritableDatabase();
+
                     ContentValues values = new ContentValues();
                     values.put(DBHelper.C_NAME, name);
                     values.put(DBHelper.C_PWD, pwd);
@@ -139,6 +113,7 @@ public class ConfirmActivity extends AppCompatActivity {
                     values.put(DBHelper.C_DATE, date);
                     values.put(DBHelper.C_HOBBIES, hobbies);
                     values.put(DBHelper.C_BIO, bio);
+
                     long rowId = db.insert(DBHelper.T_USER, null, values);
 
                     if (rowId == -1L) {
@@ -150,32 +125,39 @@ public class ConfirmActivity extends AppCompatActivity {
                         return;
                     }
 
+                    // Save session
                     SessionManager sessionManager = new SessionManager(ConfirmActivity.this);
                     sessionManager.login(String.valueOf(rowId), name);
                     sessionManager.saveSession(UUID.randomUUID().toString(), UserRole.USER, false);
 
                     Toast.makeText(ConfirmActivity.this, R.string.msg_register_success, Toast.LENGTH_SHORT).show();
 
+                    // Jump to main page
                     Intent mainIntent = new Intent(ConfirmActivity.this, MainActivity.class);
-                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mainIntent.addFlags(
+                            Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                            Intent.FLAG_ACTIVITY_NEW_TASK
+                    );
                     startActivity(mainIntent);
+
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                         finishAffinity();
                     } else {
                         finish();
                     }
+
                 } catch (Exception e) {
-                    Toast.makeText(ConfirmActivity.this, getString(R.string.error_db, e.getMessage()), Toast.LENGTH_LONG).show();
+                    Toast.makeText(
+                            ConfirmActivity.this,
+                            getString(R.string.error_db, e.getMessage()),
+                            Toast.LENGTH_LONG
+                    ).show();
+
                 } finally {
-                    if (db != null) {
-                        db.close();
-                    }
+                    if (db != null) db.close();
                 }
             }
         });
-
-
-
-
     }
 }
