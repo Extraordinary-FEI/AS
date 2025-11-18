@@ -200,6 +200,13 @@
     <string name="category_subtitle_merch">官方应援周边</string>
     <string name="category_subtitle_signed">签名照与拍立得</string>
 
+    <!-- 底部导航 -->
+    <string name="nav_home">主页</string>
+    <string name="nav_cart">购物车</string>
+    <string name="nav_support">应援任务</string>
+    <string name="nav_playlist">歌单</string>
+    <string name="nav_profile">个人中心</string>
+
     <!-- 首页任务 -->
     <string name="task_type_format">类型：%1$s</string>
     <string name="task_time_format">时间：%1$s</string>
