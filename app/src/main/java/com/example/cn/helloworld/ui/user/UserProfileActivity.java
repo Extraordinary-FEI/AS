@@ -18,7 +18,7 @@ import com.example.cn.helloworld.ui.auth.LoginActivity;
 import com.example.cn.helloworld.ui.main.FakeHomeDataSource;
 import com.example.cn.helloworld.ui.main.HomeDataSource;
 import com.example.cn.helloworld.ui.main.HomeModels;
-import com.example.cn.helloworld.ui.playlist.PlaylistAdapter;
+import com.example.cn.helloworld.ui.main.PlaylistAdapter;
 import com.example.cn.helloworld.ui.playlist.PlaylistDetailActivity;
 import com.example.cn.helloworld.ui.playlist.PlaylistOverviewActivity;
 
