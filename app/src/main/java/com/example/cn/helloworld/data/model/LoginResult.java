@@ -7,6 +7,7 @@ import java.util.Set;
 public class LoginResult {
 
     private final boolean success;
+    private final String userId;
     private final String username;
     private final String token;
     private final UserRole role;
@@ -14,12 +15,14 @@ public class LoginResult {
     private final String message;
 
     public LoginResult(boolean success,
+                       String userId,
                        String username,
                        String token,
                        UserRole role,
                        Set<Permission> permissions,
                        String message) {
         this.success = success;
+        this.userId = userId;
         this.username = username;
         this.token = token;
         this.role = role == null ? UserRole.USER : role;
@@ -31,6 +34,10 @@ public class LoginResult {
 
     public boolean isSuccess() {
         return success;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 
     public String getUsername() {

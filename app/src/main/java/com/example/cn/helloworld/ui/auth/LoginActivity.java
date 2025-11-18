@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        authRepository = new AuthRepository();
+        authRepository = new AuthRepository(getApplicationContext());
         sessionManager = new SessionManager(this);
 
         // 自动登录
@@ -135,10 +135,14 @@ public class LoginActivity extends AppCompatActivity {
             tvStatus.setTextColor(ContextCompat.getColor(this, android.R.color.holo_green_dark));
 
             // ★ 必须保存 userId，不然自动登录不会生效
+            String userId = result.getUserId() == null
+                    ? result.getUsername()
+                    : result.getUserId();
+
             if (result.getRole() == UserRole.ADMIN) {
-                sessionManager.loginAdmin(username, username);
+                sessionManager.loginAdmin(userId, result.getUsername());
             } else {
-                sessionManager.login(username, username);
+                sessionManager.login(userId, result.getUsername());
             }
 
             // 保存 token + role

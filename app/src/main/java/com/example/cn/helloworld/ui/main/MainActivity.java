@@ -18,6 +18,7 @@ import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.ui.playlist.PlaylistDetailActivity;
 import com.example.cn.helloworld.ui.playlist.PlaylistOverviewActivity;
 import com.example.cn.helloworld.ui.user.UserProfileActivity;
+import com.example.cn.helloworld.ui.widget.MusicFloatingWidget;
 
 
 /**
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView taskList;
     private View viewAllPlaylistsButton;
     private HomeDataSource dataSource;
+    private MusicFloatingWidget musicFloatingWidget;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         setTitle(R.string.title_main);
 
         dataSource = new FakeHomeDataSource();
+        musicFloatingWidget = new MusicFloatingWidget(this);
 
 
         bannerPager = (ViewPager) findViewById(R.id.bannerPager);
@@ -57,6 +60,22 @@ public class MainActivity extends AppCompatActivity {
         setupPlaylists();
         setupTasks();
         setupUserFab();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (musicFloatingWidget != null) {
+            musicFloatingWidget.start();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        if (musicFloatingWidget != null) {
+            musicFloatingWidget.stop();
+        }
+        super.onStop();
     }
 
     private void setupBanner() {
