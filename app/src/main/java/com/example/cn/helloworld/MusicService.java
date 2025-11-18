@@ -35,7 +35,7 @@ public class MusicService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        playlistRepository = PlaylistRepository.getInstance();
+        playlistRepository = PlaylistRepository.getInstance(this);
         ensureDefaultPlaylist();
         preparePlayer();
 

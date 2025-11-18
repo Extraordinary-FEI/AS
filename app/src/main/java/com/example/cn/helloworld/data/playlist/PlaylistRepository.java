@@ -1,8 +1,17 @@
 package com.example.cn.helloworld.data.playlist;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.text.TextUtils;
+
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.data.model.Song;
+import com.example.cn.helloworld.data.storage.AdminLocalStore;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,63 +22,112 @@ import java.util.List;
  */
 public final class PlaylistRepository {
 
-    // 单例
     private static final PlaylistRepository INSTANCE = new PlaylistRepository();
+    private static final String KEY_PLAYLISTS = "admin_playlists";
 
-    // 内存中的歌单列表
-    private final List<Playlist> playlists;
+    private final List<Playlist> playlists = new ArrayList<>();
+    private SharedPreferences preferences;
+    private boolean initialized;
 
-    /** 私有构造：外部不能 new，只能通过 getInstance() 拿 */
     private PlaylistRepository() {
-        playlists = buildPlaylists();
     }
 
-    /** 对外获取单例 */
-    public static PlaylistRepository getInstance() {
+    public static PlaylistRepository getInstance(Context context) {
+        if (context == null) {
+            throw new IllegalArgumentException("context == null");
+        }
+        INSTANCE.ensureInitialized(context.getApplicationContext());
         return INSTANCE;
     }
 
-    // ===================== 对外提供的操作 =====================
+    public static PlaylistRepository getInstance() {
+        if (!INSTANCE.initialized) {
+            throw new IllegalStateException("Call getInstance(Context) first");
+        }
+        return INSTANCE;
+    }
 
-    /** 获取全部歌单列表（给主页、后台管理用） */
     public List<Playlist> getAllPlaylists() {
         return new ArrayList<>(playlists);
     }
 
-    /** 后台管理 / 主页都可以用这个名字 */
     public List<Playlist> getHomeSummaries() {
         return getAllPlaylists();
     }
 
-    /** 根据 id 查歌单（给 PlaylistFragment / 详情页用） */
     public Playlist getById(String playlistId) {
         if (playlistId == null) return null;
-        for (Playlist p : playlists) {
-            if (playlistId.equals(p.getId())) {
-                return p;
+        for (Playlist playlist : playlists) {
+            if (playlistId.equals(playlist.getId())) {
+                return playlist;
             }
         }
         return null;
     }
 
-    /** 新增一个歌单（给 PlaylistManagementActivity.createNewPlaylist 用） */
     public void addPlaylist(Playlist playlist) {
         if (playlist == null) return;
         playlists.add(playlist);
+        persist();
     }
 
-    /** 编辑歌单时，更新已有歌单（如果后面 PlaylistEditorActivity 需要的话可以用这个） */
     public void updatePlaylist(Playlist updated) {
         if (updated == null) return;
         for (int i = 0; i < playlists.size(); i++) {
             if (playlists.get(i).getId().equals(updated.getId())) {
                 playlists.set(i, updated);
+                persist();
                 return;
             }
         }
     }
 
-    // ===================== 构建初始本地数据 =====================
+    private synchronized void ensureInitialized(Context context) {
+        if (initialized) {
+            return;
+        }
+        AdminLocalStore.init(context);
+        preferences = AdminLocalStore.get(context);
+        loadFromStorage();
+        initialized = true;
+    }
+
+    private void loadFromStorage() {
+        if (preferences == null) {
+            playlists.clear();
+            playlists.addAll(buildPlaylists());
+            return;
+        }
+        String json = preferences.getString(KEY_PLAYLISTS, null);
+        if (TextUtils.isEmpty(json)) {
+            playlists.clear();
+            playlists.addAll(buildPlaylists());
+            persist();
+            return;
+        }
+        try {
+            JSONArray array = new JSONArray(json);
+            playlists.clear();
+            for (int i = 0; i < array.length(); i++) {
+                playlists.add(fromJson(array.getJSONObject(i)));
+            }
+        } catch (JSONException e) {
+            playlists.clear();
+            playlists.addAll(buildPlaylists());
+            persist();
+        }
+    }
+
+    private void persist() {
+        if (preferences == null) {
+            return;
+        }
+        JSONArray array = new JSONArray();
+        for (Playlist playlist : playlists) {
+            array.put(toJson(playlist));
+        }
+        preferences.edit().putString(KEY_PLAYLISTS, array.toString()).commit();
+    }
 
     private List<Playlist> buildPlaylists() {
         List<Playlist> list = new ArrayList<>();
@@ -78,7 +136,6 @@ public final class PlaylistRepository {
         return list;
     }
 
-    /** 歌单 1：舞台聚光 */
     private Playlist createStageSpotlight() {
 
         List<String> tags = Arrays.asList("舞台", "燃", "LIVE");
@@ -106,7 +163,6 @@ public final class PlaylistRepository {
         );
     }
 
-    /** 歌单 2：轻声慢语 */
     private Playlist createHealingVoice() {
 
         List<String> tags = Arrays.asList("治愈", "抒情");
@@ -130,5 +186,108 @@ public final class PlaylistRepository {
                 612000L,
                 98000L
         );
+    }
+
+    private Playlist fromJson(JSONObject object) throws JSONException {
+        List<String> tags = jsonArrayToList(object.optJSONArray("tags"));
+        List<Song> songs = jsonArrayToSongs(object.optJSONArray("songs"));
+        Integer coverResId = object.has("coverResId") && !object.isNull("coverResId")
+                ? object.optInt("coverResId") : null;
+        return new Playlist(
+                object.getString("id"),
+                object.optString("title"),
+                object.optString("description"),
+                object.optString("playUrl", null),
+                object.optString("coverUrl", null),
+                coverResId,
+                tags,
+                songs,
+                object.optLong("playCount"),
+                object.optLong("favoriteCount")
+        );
+    }
+
+    private JSONObject toJson(Playlist playlist) {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("id", playlist.getId());
+            object.put("title", playlist.getTitle());
+            object.put("description", playlist.getDescription());
+            object.put("playUrl", playlist.getPlayUrl());
+            object.put("coverUrl", playlist.getCoverUrl());
+            object.put("coverResId", playlist.getCoverResId());
+            object.put("tags", new JSONArray(playlist.getTags()));
+            object.put("songs", songsToJsonArray(playlist.getSongs()));
+            object.put("playCount", playlist.getPlayCount());
+            object.put("favoriteCount", playlist.getFavoriteCount());
+        } catch (JSONException ignored) {
+        }
+        return object;
+    }
+
+    private JSONArray songsToJsonArray(List<Song> songs) {
+        JSONArray array = new JSONArray();
+        if (songs == null) {
+            return array;
+        }
+        for (Song song : songs) {
+            array.put(songToJson(song));
+        }
+        return array;
+    }
+
+    private JSONObject songToJson(Song song) {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("id", song.getId());
+            object.put("title", song.getTitle());
+            object.put("artist", song.getArtist());
+            object.put("description", song.getDescription());
+            object.put("durationMs", song.getDurationMs());
+            object.put("audioResId", song.getAudioResId());
+            object.put("coverResId", song.getCoverResId());
+            object.put("streamUrl", song.getStreamUrl());
+            object.put("coverUrl", song.getCoverUrl());
+        } catch (JSONException ignored) {
+        }
+        return object;
+    }
+
+    private List<Song> jsonArrayToSongs(JSONArray array) throws JSONException {
+        List<Song> songs = new ArrayList<>();
+        if (array == null) {
+            return songs;
+        }
+        for (int i = 0; i < array.length(); i++) {
+            songs.add(songFromJson(array.getJSONObject(i)));
+        }
+        return songs;
+    }
+
+    private Song songFromJson(JSONObject object) {
+        long duration = object.optLong("durationMs");
+        int audioResId = object.optInt("audioResId");
+        int coverResId = object.optInt("coverResId");
+        String streamUrl = object.optString("streamUrl", null);
+        String coverUrl = object.optString("coverUrl", null);
+        String id = object.optString("id");
+        String title = object.optString("title");
+        String artist = object.optString("artist");
+        String description = object.optString("description");
+        if (audioResId > 0) {
+            return new Song(id, title, artist, description, duration, audioResId, coverResId);
+        }
+        return new Song(id, title, artist, description, duration, streamUrl, coverUrl, coverResId);
+    }
+
+    private List<String> jsonArrayToList(JSONArray array) {
+        List<String> list = new ArrayList<>();
+        if (array == null) {
+            return list;
+        }
+        for (int i = 0; i < array.length(); i++) {
+            list.add(array.optString(i));
+        }
+        return list;
     }
 }

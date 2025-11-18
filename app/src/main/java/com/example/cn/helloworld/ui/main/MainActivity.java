@@ -12,14 +12,14 @@ import android.view.MenuItem;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.ui.order.CartFragment;
 import com.example.cn.helloworld.ui.playlist.PlaylistLibraryFragment;
-import com.example.cn.helloworld.ui.support.SupportTasksFragment;
 import com.example.cn.helloworld.ui.user.UserCenterFragment;
 
 /**
  * 主界面，包含底部导航栏 + Fragment 切换
  * 兼容 AS2.3.2 + Java 1.7 + support.v4
  */
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity
+        implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG_HOME = "home";
     private static final String TAG_CART = "cart";

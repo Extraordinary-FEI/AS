@@ -24,7 +24,9 @@
         android:padding="8dp"
         android:src="@android:drawable/ic_media_previous"
         android:tint="@android:color/white"
-        android:contentDescription="返回" />
+        android:contentDescription="返回"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="16dp" />
 
     <!-- 封面图 -->
     <ImageView

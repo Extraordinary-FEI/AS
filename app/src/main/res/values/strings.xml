@@ -109,6 +109,8 @@
     <string name="title_admin_manage_products">商品管理</string>
     <string name="title_admin_manage_playlists">歌单管理</string>
     <string name="title_admin_support_tasks">应援任务审批</string>
+    <string name="title_admin_manage_support_tasks">应援任务管理</string>
+    <string name="title_admin_order_list">订单列表</string>
     <string name="dashboard_stats_title">核心指标</string>
     <string name="stat_label_order">订单</string>
     <string name="stat_label_support">待审批任务</string>
@@ -117,6 +119,9 @@
     <string name="dashboard_summary">今日完成 %1$d 个订单，仍有 %2$d 个任务待审批，新增 %3$d 位粉丝加入。</string>
     <string name="dashboard_chart_description">管理员统计图，显示订单、任务、粉丝等数据</string>
     <string name="dashboard_tip">及时关注任务审批状态，确保应援计划顺利推进。</string>
+    <string name="dashboard_action_orders">查看订单列表</string>
+    <string name="dashboard_action_manage_support">管理应援任务</string>
+    <string name="dashboard_action_approval">应援任务审批</string>
     <string name="admin_access_denied">仅管理员可访问后台功能</string>
 
     <!-- 商品管理表单 -->
@@ -177,6 +182,20 @@
     <string name="support_task_status_pending">待审批</string>
     <string name="support_task_status_approved">已通过</string>
     <string name="support_task_status_rejected">已驳回</string>
+    <string name="hint_support_task_title">任务标题</string>
+    <string name="hint_support_task_desc">任务描述</string>
+    <string name="hint_support_task_priority">优先级（数字越大越紧急）</string>
+    <string name="label_support_task_status">任务状态</string>
+    <string name="dialog_title_add_support_task">新增应援任务</string>
+    <string name="dialog_title_edit_support_task">编辑应援任务</string>
+    <string name="dialog_title_delete_support_task">删除应援任务</string>
+    <string name="dialog_message_delete_support_task">确定删除“%1$s”这条任务吗？</string>
+    <string name="error_support_task_title_required">请输入任务标题</string>
+    <string name="error_support_task_description_required">请输入任务描述</string>
+    <string name="error_support_task_priority_invalid">请输入正确的优先级数字</string>
+    <string name="support_task_priority_format">优先级：%1$d</string>
+    <string name="support_task_updated_time_format">更新时间：%1$s</string>
+    <string name="orders_empty">暂无订单记录</string>
 
     <string name="category_header_title">千玺应援好物</string>
     <string name="category_header_subtitle">挑选巡演门票、限定周边与签名纪念</string>

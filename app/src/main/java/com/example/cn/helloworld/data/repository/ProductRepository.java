@@ -1,22 +1,36 @@
 package com.example.cn.helloworld.data.repository;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.text.TextUtils;
 
+import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Category;
 import com.example.cn.helloworld.data.model.Product;
-import com.example.cn.helloworld.R;
+import com.example.cn.helloworld.data.storage.AdminLocalStore;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class ProductRepository {
 
+    private static final String KEY_PRODUCTS = "admin_products";
+
     private final List<Product> products = new ArrayList<Product>();
+    private final SharedPreferences preferences;
 
     public ProductRepository(Context context) {
-        loadInitialProducts();
+        AdminLocalStore.init(context);
+        preferences = AdminLocalStore.get(context);
+        loadProductsFromStorage();
     }
 
     // 初始化三类商品
@@ -71,6 +85,36 @@ public class ProductRepository {
         ));
     }
 
+    private void loadProductsFromStorage() {
+        String json = preferences.getString(KEY_PRODUCTS, null);
+        if (TextUtils.isEmpty(json)) {
+            products.clear();
+            loadInitialProducts();
+            persist();
+            return;
+        }
+        try {
+            JSONArray array = new JSONArray(json);
+            products.clear();
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject object = array.getJSONObject(i);
+                products.add(fromJson(object));
+            }
+        } catch (JSONException exception) {
+            products.clear();
+            loadInitialProducts();
+            persist();
+        }
+    }
+
+    private void persist() {
+        JSONArray array = new JSONArray();
+        for (Product product : products) {
+            array.put(toJson(product));
+        }
+        preferences.edit().putString(KEY_PRODUCTS, array.toString()).commit();
+    }
+
     private HashMap<String,String> createAttributes(String k1, String v1) {
         HashMap<String,String> map = new HashMap<String, String>();
         map.put(k1, v1);
@@ -123,10 +167,20 @@ public class ProductRepository {
                 break;
             }
         }
+        persist();
     }
 
     public void saveProduct(Product product) {
+        if (product == null) return;
+        for (int i = 0; i < products.size(); i++) {
+            if (products.get(i).getId().equals(product.getId())) {
+                products.set(i, product);
+                persist();
+                return;
+            }
+        }
         products.add(product);
+        persist();
     }
 
     public void updateProductDetails(
@@ -136,7 +190,7 @@ public class ProductRepository {
             double price,
             int inventory,
             boolean active,
-            String coverUrl
+            String categoryId
     ) {
         for (Product p : products) {
             if (p.getId().equals(productId)) {
@@ -145,21 +199,25 @@ public class ProductRepository {
                 p.setPrice(price);
                 p.setInventory(inventory);
                 p.setActive(active);
-                p.setCoverUrl(coverUrl);
+                if (!TextUtils.isEmpty(categoryId)) {
+                    p.setCategory(categoryId);
+                }
                 break;
             }
         }
+        persist();
     }
 
     // 供 ProductManagementActivity 使用
     public String generateProductId(String categoryId) {
         int count = 0;
+        String prefix = TextUtils.isEmpty(categoryId) ? "product" : categoryId;
         for (Product p : products) {
-            if (p.getCategory().equals(categoryId)) {
+            if (prefix.equals(p.getCategory())) {
                 count++;
             }
         }
-        return categoryId + "_" + (count + 1);
+        return prefix + "_" + (count + 1);
     }
 
     // 供 CategoryFragment / ProductListFragment 使用
@@ -171,6 +229,94 @@ public class ProductRepository {
                 "应援周边", R.drawable.ic_category_merch));
         list.add(new Category("qianxi_signed",
                 "签名 / To签", R.drawable.ic_category_signed));
+        return list;
+    }
+
+    private JSONObject toJson(Product product) {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("id", product.getId());
+            object.put("name", product.getName());
+            object.put("description", product.getDescription());
+            object.put("price", product.getPrice());
+            object.put("inventory", product.getInventory());
+            object.put("category", product.getCategory());
+            object.put("rating", product.getRating());
+            object.put("tags", new JSONArray(product.getTags()));
+            object.put("starEvents", new JSONArray(product.getStarEvents()));
+            object.put("active", product.isActive());
+            object.put("coverUrl", product.getCoverUrl());
+            object.put("releaseTime", product.getReleaseTime());
+            object.put("attributes", mapToJson(product.getAttributes()));
+            object.put("imageResId", product.getImageResId());
+            object.put("limitedQuantity", product.getLimitedQuantity());
+            object.put("categoryAttributes", mapToJson(product.getCategoryAttributes()));
+        } catch (JSONException ignored) {
+        }
+        return object;
+    }
+
+    private Product fromJson(JSONObject object) throws JSONException {
+        List<String> tags = jsonArrayToList(object.optJSONArray("tags"));
+        List<String> starEvents = jsonArrayToList(object.optJSONArray("starEvents"));
+        Map<String, String> attributes = jsonToMap(object.optJSONObject("attributes"));
+        Map<String, String> categoryAttributes = jsonToMap(object.optJSONObject("categoryAttributes"));
+
+        Product product = new Product(
+                object.getString("id"),
+                object.optString("name"),
+                object.optString("description"),
+                object.optDouble("price"),
+                object.optInt("inventory"),
+                object.optString("category"),
+                object.optInt("rating", 5),
+                tags,
+                starEvents,
+                object.optBoolean("active", true),
+                object.optString("coverUrl", null),
+                object.optString("releaseTime", null),
+                attributes,
+                object.optInt("imageResId", 0),
+                object.optString("limitedQuantity", ""),
+                categoryAttributes
+        );
+        return product;
+    }
+
+    private JSONObject mapToJson(Map<String, String> map) {
+        JSONObject object = new JSONObject();
+        if (map != null) {
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                try {
+                    object.put(entry.getKey(), entry.getValue());
+                } catch (JSONException ignored) {
+                }
+            }
+        }
+        return object;
+    }
+
+    private Map<String, String> jsonToMap(JSONObject object) {
+        if (object == null) {
+            return null;
+        }
+        Map<String, String> map = new HashMap<>();
+        Iterator<String> keys = object.keys();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            map.put(key, object.optString(key));
+        }
+        return map;
+    }
+
+    private List<String> jsonArrayToList(JSONArray array) {
+        List<String> list = new ArrayList<>();
+        if (array == null) {
+            return list;
+        }
+        for (int i = 0; i < array.length(); i++) {
+            list.add(array.optString(i));
+        }
         return list;
     }
 }

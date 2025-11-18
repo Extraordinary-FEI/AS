@@ -22,9 +22,26 @@ public class AdminMetricsRepository {
 
     private void seed() {
         // 模拟最近一天内的订单
+        long now = System.currentTimeMillis();
         for (int i = 0; i < 18; i++) {
             Order order = new Order("order-" + (1000 + i));
-            order.setStatus(i % 3 == 0 ? "PAID" : "CREATED");
+            double total = 128 + (i % 5) * 50;
+            order.setTotalAmount(total);
+            order.setCreatedAt(now - (i * 60L * 60L * 1000L));
+            switch (i % 4) {
+                case 0:
+                    order.setStatus("PAID");
+                    break;
+                case 1:
+                    order.setStatus("FULFILLED");
+                    break;
+                case 2:
+                    order.setStatus("SHIPPED");
+                    break;
+                default:
+                    order.setStatus("CREATED");
+                    break;
+            }
             orders.add(order);
         }
 
@@ -56,6 +73,10 @@ public class AdminMetricsRepository {
         if (order != null) {
             orders.add(order);
         }
+    }
+
+    public List<Order> getOrders() {
+        return new ArrayList<>(orders);
     }
 
     public void registerUser(String userId) {

@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.cn.helloworld.MusicService;
-import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.data.session.SessionManager;
 import com.example.cn.helloworld.ui.auth.LoginActivity;
@@ -45,8 +44,11 @@ public class UserProfileActivity extends AppCompatActivity {
         }
 
         sessionManager = new SessionManager(this);
-        homeDataSource = new FakeHomeDataSource();
+        homeDataSource = new FakeHomeDataSource(this);
         musicFloatingWidget = new MusicFloatingWidget(this);
+
+
+
 
         // 使用 layout 中真实存在的 ID
         ImageView avatar  = (ImageView) findViewById(R.id.avatarImage);
