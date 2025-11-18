@@ -12,6 +12,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import android.support.v4.content.ContextCompat;
+
 public class MusicActivity extends Activity {
 
     public static final String EXTRA_PLAYLIST_ID = "extra_playlist_id";
@@ -21,7 +23,6 @@ public class MusicActivity extends Activity {
     private ImageView imgCover;
     private TextView tvSongName;
 
-    // 当前播放状态
     private boolean isPlaying = false;
 
     private BroadcastReceiver uiUpdateReceiver;
@@ -38,12 +39,25 @@ public class MusicActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
 
-        btnPlayPause = (ImageButton) findViewById(R.id.btn_play);
-        btnStop = (ImageButton) findViewById(R.id.btn_stop);
-        btnNext = (ImageButton) findViewById(R.id.btn_next);
-        btnPrev = (ImageButton) findViewById(R.id.btn_prev);
-        imgCover = (ImageView) findViewById(R.id.img_cover);
-        tvSongName = (TextView) findViewById(R.id.tv_song_name);
+        btnPlayPause = findViewById(R.id.btn_play);
+        btnStop = findViewById(R.id.btn_stop);
+        btnNext = findViewById(R.id.btn_next);
+        btnPrev = findViewById(R.id.btn_prev);
+        imgCover = findViewById(R.id.img_cover);
+        tvSongName = findViewById(R.id.tv_song_name);
+
+        String playlistId = getIntent().getStringExtra(EXTRA_PLAYLIST_ID);
+        String songId = getIntent().getStringExtra(EXTRA_SONG_ID);
+
+        if (playlistId != null || songId != null) {
+            Intent serviceIntent = MusicService.createPlaySongIntent(this, playlistId, songId);
+
+            // ⭐ 保留 local 分支做法：更简洁且符合当前规范
+            ContextCompat.startForegroundService(this, serviceIntent);
+
+        } else {
+            startService(new Intent(this, MusicService.class));
+        }
 
         String playlistId = getIntent().getStringExtra(EXTRA_PLAYLIST_ID);
         String songId = getIntent().getStringExtra(EXTRA_SONG_ID);
@@ -53,40 +67,29 @@ public class MusicActivity extends Activity {
         } else {
             startServiceCompat(new Intent(this, MusicService.class));
         }
+
         registerUIReceiver();
 
-        // 点击播放/暂停键
-        btnPlayPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isPlaying) {
-                    sendBroadcast(new Intent("ACTION_PAUSE"));
-                } else {
-                    sendBroadcast(new Intent("ACTION_PLAY"));
-                }
+        // 播放与暂停
+        btnPlayPause.setOnClickListener(v -> {
+            if (isPlaying) {
+                sendBroadcast(new Intent("ACTION_PAUSE"));
+            } else {
+                sendBroadcast(new Intent("ACTION_PLAY"));
             }
         });
 
-        btnStop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendBroadcast(new Intent("ACTION_STOP"));
-            }
-        });
+        btnStop.setOnClickListener(v ->
+                sendBroadcast(new Intent("ACTION_STOP"))
+        );
 
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendBroadcast(new Intent("ACTION_NEXT"));
-            }
-        });
+        btnNext.setOnClickListener(v ->
+                sendBroadcast(new Intent("ACTION_NEXT"))
+        );
 
-        btnPrev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendBroadcast(new Intent("ACTION_PREV"));
-            }
-        });
+        btnPrev.setOnClickListener(v ->
+                sendBroadcast(new Intent("ACTION_PREV"))
+        );
     }
 
     private void startServiceCompat(Intent intent) {
@@ -118,18 +121,20 @@ public class MusicActivity extends Activity {
                     String prefix = isPlaying ? "正在播放：" : "已暂停：";
                     String safeTitle = title == null ? getString(R.string.app_name) : title;
                     String subtitle = artist == null ? "" : " - " + artist;
+
                     if (index < 0 || total <= 0) {
                         index = 0;
                         total = 1;
                     }
                     tvSongName.setText(prefix + safeTitle + subtitle + " (" + (index + 1) + "/" + total + ")");
+
                     imgCover.setImageResource(coverResId);
 
-                    // ✅ 根据播放状态更新图标
+                    // 图标更新
                     if (isPlaying) {
-                        btnPlayPause.setImageResource(R.drawable.pause); // 替换为你的暂停图标
+                        btnPlayPause.setImageResource(R.drawable.pause);
                     } else {
-                        btnPlayPause.setImageResource(R.drawable.play);  // 替换为你的播放图标
+                        btnPlayPause.setImageResource(R.drawable.play);
                     }
                 }
             }
