@@ -59,7 +59,7 @@ public class ConfirmActivity extends AppCompatActivity {
         btnBack = (Button) findViewById(R.id.btnBack);
         btnOk = (Button) findViewById(R.id.btnOk);
 
-        // Read data from intent
+        // Read intent
         Intent it = getIntent();
         final String name = it.getStringExtra("name");
         final String pwd = it.getStringExtra("pwd");
@@ -73,13 +73,13 @@ public class ConfirmActivity extends AppCompatActivity {
         final String bio = it.getStringExtra("bio");
         final String role = it.getStringExtra("role");
 
-        // Fill UI
+        // Set fields
         tvName.setText(name);
-        String roleDisplay = AuthRepository.ROLE_ADMIN.equals(role)
-                ? getString(R.string.role_admin)
-                : getString(R.string.role_fan);
-        tvRole.setText(roleDisplay);
-
+        tvRole.setText(
+                AuthRepository.ROLE_ADMIN.equals(role)
+                        ? getString(R.string.role_admin)
+                        : getString(R.string.role_fan)
+        );
         tvPwd.setText(pwd);
         tvEmail.setText(email);
         tvPhone.setText(phone);
@@ -90,12 +90,14 @@ public class ConfirmActivity extends AppCompatActivity {
         tvHobbies.setText(hobbies);
         tvBio.setText(bio);
 
-        // Back button
+        // Back
         btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) { finish(); }
+            @Override public void onClick(View v) {
+                finish();
+            }
         });
 
-        // Confirm button → save to DB → save session → go MainActivity
+        // Confirm → save → login session → go main
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,16 +128,18 @@ public class ConfirmActivity extends AppCompatActivity {
                     }
 
                     // Save session
-                    SessionManager sm = new SessionManager(ConfirmActivity.this);
-                    sm.login(String.valueOf(rowId), name);
-                    sm.saveSession(UUID.randomUUID().toString(), UserRole.USER, false);
+                    SessionManager sessionManager = new SessionManager(ConfirmActivity.this);
+                    sessionManager.login(String.valueOf(rowId), name);
+                    sessionManager.saveSession(UUID.randomUUID().toString(), UserRole.USER, false);
 
-                    Toast.makeText(ConfirmActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ConfirmActivity.this,
+                            "注册成功", Toast.LENGTH_SHORT).show();
 
                     Intent mainIntent = new Intent(ConfirmActivity.this, MainActivity.class);
                     mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                             | Intent.FLAG_ACTIVITY_CLEAR_TASK
                             | Intent.FLAG_ACTIVITY_NEW_TASK);
+
                     startActivity(mainIntent);
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -148,6 +152,7 @@ public class ConfirmActivity extends AppCompatActivity {
                     Toast.makeText(ConfirmActivity.this,
                             "数据库错误: " + e.getMessage(),
                             Toast.LENGTH_LONG).show();
+
                 } finally {
                     if (db != null) db.close();
                 }
