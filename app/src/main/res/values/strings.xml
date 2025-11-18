@@ -44,6 +44,8 @@
     <string name="error_insert_failed">无法保存注册信息</string>
     <string name="accessibility_profile">打开用户资料</string>
     <string name="error_profile_not_found">暂时无法打开个人中心，请稍后重试</string>
+    <string name="error_playlist_not_found">未找到对应歌单</string>
+    <string name="error_song_not_found">未找到对应歌曲</string>
 
     <!-- 表单字段 -->
     <string name="hint_name">昵称</string>

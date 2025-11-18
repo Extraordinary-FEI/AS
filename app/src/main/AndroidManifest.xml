@@ -8,16 +8,14 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
 
-        <!-- 启动页：登录界面 -->
+        <!-- 登录页（启动页） -->
         <activity
             android:name="com.example.cn.helloworld.ui.auth.LoginActivity"
             android:label="@string/app_name">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
         <!-- 主界面 -->
@@ -40,7 +38,6 @@
             android:name="com.example.cn.helloworld.ConfirmActivity"
             android:label="@string/title_confirm"
             android:parentActivityName="com.example.cn.helloworld.RegisterActivity">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.cn.helloworld.RegisterActivity" />
@@ -85,18 +82,17 @@
             android:name="com.example.cn.helloworld.ui.admin.SupportTaskApprovalActivity"
             android:label="@string/title_admin_support_tasks" />
 
-        <!-- 用户中心 -->
+        <!-- 用户中心（去除冲突，只保留一份最终版本） -->
         <activity
             android:name="com.example.cn.helloworld.ui.user.UserProfileActivity"
             android:label="@string/title_user_profile"
             android:parentActivityName="com.example.cn.helloworld.ui.main.MainActivity">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.cn.helloworld.ui.main.MainActivity" />
         </activity>
 
-        <!-- 应援商城详情 -->
+        <!-- 应援商城（商品详情） -->
         <activity
             android:name="com.example.cn.helloworld.ui.catalog.ProductDetailActivity"
             android:label="@string/app_name" />
@@ -106,7 +102,6 @@
             android:name="com.example.cn.helloworld.ui.playlist.PlaylistDetailActivity"
             android:label="@string/title_playlist_detail"
             android:parentActivityName="com.example.cn.helloworld.ui.main.MainActivity">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.cn.helloworld.ui.main.MainActivity" />
@@ -116,7 +111,6 @@
             android:name="com.example.cn.helloworld.ui.playlist.PlaylistOverviewActivity"
             android:label="@string/title_playlist_overview"
             android:parentActivityName="com.example.cn.helloworld.ui.main.MainActivity">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.cn.helloworld.ui.main.MainActivity" />

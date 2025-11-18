@@ -39,10 +39,7 @@ public class ConfirmActivity extends AppCompatActivity {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
+                @Override public void onClick(View v) { finish(); }
             });
         }
 
@@ -62,7 +59,7 @@ public class ConfirmActivity extends AppCompatActivity {
         btnBack = (Button) findViewById(R.id.btnBack);
         btnOk = (Button) findViewById(R.id.btnOk);
 
-        // Get data from intent
+        // Read data from intent
         Intent it = getIntent();
         final String name = it.getStringExtra("name");
         final String pwd = it.getStringExtra("pwd");
@@ -76,10 +73,11 @@ public class ConfirmActivity extends AppCompatActivity {
         final String bio = it.getStringExtra("bio");
         final String role = it.getStringExtra("role");
 
-        // Show values
+        // Fill UI
         tvName.setText(name);
-        String roleDisplay = AuthRepository.ROLE_ADMIN.equals(role) ?
-                getString(R.string.role_admin) : getString(R.string.role_fan);
+        String roleDisplay = AuthRepository.ROLE_ADMIN.equals(role)
+                ? getString(R.string.role_admin)
+                : getString(R.string.role_fan);
         tvRole.setText(roleDisplay);
 
         tvPwd.setText(pwd);
@@ -94,13 +92,10 @@ public class ConfirmActivity extends AppCompatActivity {
 
         // Back button
         btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
+            @Override public void onClick(View v) { finish(); }
         });
 
-        // Confirm → Save to DB → Save Session → Go to MainActivity
+        // Confirm button → save to DB → save session → go MainActivity
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,26 +120,22 @@ public class ConfirmActivity extends AppCompatActivity {
                     long rowId = db.insert(DBHelper.T_USER, null, values);
 
                     if (rowId == -1) {
-                        Toast.makeText(
-                                ConfirmActivity.this,
-                                "数据库插入失败",
-                                Toast.LENGTH_LONG
-                        ).show();
+                        Toast.makeText(ConfirmActivity.this,
+                                "数据库插入失败", Toast.LENGTH_LONG).show();
                         return;
                     }
 
                     // Save session
-                    SessionManager sessionManager = new SessionManager(ConfirmActivity.this);
-                    sessionManager.login(String.valueOf(rowId), name);
-                    sessionManager.saveSession(UUID.randomUUID().toString(), UserRole.USER, false);
+                    SessionManager sm = new SessionManager(ConfirmActivity.this);
+                    sm.login(String.valueOf(rowId), name);
+                    sm.saveSession(UUID.randomUUID().toString(), UserRole.USER, false);
 
                     Toast.makeText(ConfirmActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
 
                     Intent mainIntent = new Intent(ConfirmActivity.this, MainActivity.class);
-                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                            Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                            Intent.FLAG_ACTIVITY_NEW_TASK);
-
+                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(mainIntent);
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -157,7 +148,6 @@ public class ConfirmActivity extends AppCompatActivity {
                     Toast.makeText(ConfirmActivity.this,
                             "数据库错误: " + e.getMessage(),
                             Toast.LENGTH_LONG).show();
-
                 } finally {
                     if (db != null) db.close();
                 }
