@@ -74,11 +74,44 @@ public class MainActivity extends AppCompatActivity
         if (playlistFragment == null) playlistFragment = new PlaylistLibraryFragment();
         if (profileFragment == null) profileFragment = new UserCenterFragment();
 
-        // 默认显示首页
-        activeFragment = homeFragment;
-        manager.beginTransaction()
-                .add(R.id.main_container, homeFragment, TAG_HOME)
-                .commit();
+        // 根据当前选择的导航项确定默认显示的 Fragment
+        activeFragment = getFragmentByNavId(selectedNavId);
+        if (activeFragment == null) {
+            // 如果还没有选中过其他 tab，则默认显示首页
+            activeFragment = homeFragment;
+            selectedNavId = R.id.navigation_home;
+        }
+
+        // 首次进入应用时需要把首页添加到容器中，重复添加会抛出异常
+        if (!homeFragment.isAdded()) {
+            manager.beginTransaction()
+                    .add(R.id.main_container, homeFragment, TAG_HOME)
+                    .commit();
+        }
+    }
+
+    private Fragment getFragmentByNavId(int navId) {
+        Fragment fragment;
+        switch (navId) {
+            case R.id.navigation_home:
+                fragment = homeFragment;
+                break;
+            case R.id.navigation_cart:
+                fragment = cartFragment;
+                break;
+            case R.id.navigation_support:
+                fragment = supportFragment;
+                break;
+            case R.id.navigation_playlist:
+                fragment = playlistFragment;
+                break;
+            case R.id.navigation_profile:
+                fragment = profileFragment;
+                break;
+            default:
+                fragment = null;
+        }
+        return fragment != null && fragment.isAdded() ? fragment : null;
     }
 
     /**
@@ -126,7 +159,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager manager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
 
-        if (activeFragment != null) {
+        if (activeFragment != null && activeFragment.isAdded()) {
             transaction.hide(activeFragment);
         }
 
