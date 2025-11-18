@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -17,9 +18,12 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
-
+import com.example.cn.helloworld.R;
+import com.example.cn.helloworld.R;
+import com.example.cn.helloworld.ui.auth.LoginActivity;
 
 import com.example.cn.helloworld.data.repository.AuthRepository;
+import com.example.cn.helloworld.ui.auth.LoginActivity;
 
 import java.util.Calendar;
 
@@ -42,6 +46,8 @@ public class RegisterActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("易烊千玺粉丝应援注册系统");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
         }
 
         bindViews();
@@ -196,5 +202,16 @@ public class RegisterActivity extends AppCompatActivity {
     }
     private static String itemOf(Spinner s){
         return s.getSelectedItem()==null? "" : s.getSelectedItem().toString();
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
