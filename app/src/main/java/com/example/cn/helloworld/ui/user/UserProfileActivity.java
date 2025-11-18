@@ -42,7 +42,7 @@ public class UserProfileActivity extends AppCompatActivity {
         }
 
         sessionManager = new SessionManager(this);
-        homeDataSource = new FakeHomeDataSource();
+        homeDataSource = new FakeHomeDataSource(this);
 
         // 使用 layout 中真实存在的 ID
         ImageView avatar  = (ImageView) findViewById(R.id.avatarImage);

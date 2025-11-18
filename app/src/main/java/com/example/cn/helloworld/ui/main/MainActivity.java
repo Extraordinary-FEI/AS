@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         setTitle(R.string.title_main);
 
-        dataSource = new FakeHomeDataSource();
+        dataSource = new FakeHomeDataSource(this);
 
 
         bannerPager = (ViewPager) findViewById(R.id.bannerPager);

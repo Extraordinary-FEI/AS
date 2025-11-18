@@ -1,5 +1,7 @@
 package com.example.cn.helloworld.ui.main;
 
+import android.content.Context;
+
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.data.playlist.PlaylistRepository;
@@ -13,8 +15,29 @@ import java.util.List;
  */
 public class FakeHomeDataSource implements HomeDataSource {
 
-    private final PlaylistRepository playlistRepository = PlaylistRepository.getInstance();
+    private static Context appContext;
+
+    private final PlaylistRepository playlistRepository;
     private final SupportTaskRepository supportTaskRepository = new SupportTaskRepository();
+
+    public FakeHomeDataSource() {
+        this(null);
+    }
+
+    public FakeHomeDataSource(Context context) {
+        if (context != null) {
+            appContext = context.getApplicationContext();
+        }
+        if (appContext != null) {
+            playlistRepository = PlaylistRepository.getInstance(appContext);
+        } else {
+            try {
+                playlistRepository = PlaylistRepository.getInstance();
+            } catch (IllegalStateException e) {
+                throw new IllegalStateException("FakeHomeDataSource requires Context before first use", e);
+            }
+        }
+    }
 
     @Override
     public List<HomeModels.BannerItem> loadBanners() {

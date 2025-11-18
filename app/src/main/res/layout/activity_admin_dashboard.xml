@@ -98,11 +98,25 @@
             android:text="歌单管理" />
 
         <Button
-            android:id="@+id/btnViewUsers"
+            android:id="@+id/btnViewOrders"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="@string/title_admin_support_tasks" />
+            android:text="@string/dashboard_action_orders" />
+
+        <Button
+            android:id="@+id/btnManageSupportTasks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/dashboard_action_manage_support" />
+
+        <Button
+            android:id="@+id/btnTaskApproval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/dashboard_action_approval" />
 
         <!-- 退出登录 -->
         <Button

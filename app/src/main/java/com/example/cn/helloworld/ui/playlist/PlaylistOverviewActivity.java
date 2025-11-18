@@ -44,7 +44,7 @@ public class PlaylistOverviewActivity extends AppCompatActivity {
         playlistRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         playlistRecyclerView.setHasFixedSize(true);
 
-        List<Playlist> playlists = PlaylistRepository.getInstance().getHomeSummaries();
+        List<Playlist> playlists = PlaylistRepository.getInstance(this).getHomeSummaries();
         playlistRecyclerView.setAdapter(new PlaylistAdapter(playlists, new PlaylistAdapter.OnPlaylistClickListener() {
             @Override
             public void onPlaylistClick(Playlist playlist) {
