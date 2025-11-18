@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG_SUPPORT = "support";
     private static final String TAG_PLAYLIST = "playlist";
     private static final String TAG_PROFILE = "profile";
+
     private static final String KEY_SELECTED_NAV = "selected_nav";
 
     private Fragment homeFragment;
@@ -29,7 +30,9 @@ public class MainActivity extends AppCompatActivity
     private Fragment supportFragment;
     private Fragment playlistFragment;
     private Fragment profileFragment;
+
     private Fragment activeFragment;
+
     private int selectedNavId = R.id.navigation_home;
 
     @Override
@@ -37,7 +40,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // 顶部标题栏
+        // 顶部栏
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle(R.string.title_main);
@@ -46,10 +49,8 @@ public class MainActivity extends AppCompatActivity
             selectedNavId = savedInstanceState.getInt(KEY_SELECTED_NAV, R.id.navigation_home);
         }
 
-        // 初始化 Fragment
         initFragments();
 
-        // 初始化底部导航
         BottomNavigationView bottomNavigationView =
                 (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -57,16 +58,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * 初始化所有 Fragment
+     * 初始化 Fragment（全部只创建一次，不会重复添加）
      */
     private void initFragments() {
-        FragmentManager manager = getSupportFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
 
-        homeFragment = manager.findFragmentByTag(TAG_HOME);
-        cartFragment = manager.findFragmentByTag(TAG_CART);
-        supportFragment = manager.findFragmentByTag(TAG_SUPPORT);
-        playlistFragment = manager.findFragmentByTag(TAG_PLAYLIST);
-        profileFragment = manager.findFragmentByTag(TAG_PROFILE);
+        homeFragment = fm.findFragmentByTag(TAG_HOME);
+        cartFragment = fm.findFragmentByTag(TAG_CART);
+        supportFragment = fm.findFragmentByTag(TAG_SUPPORT);
+        playlistFragment = fm.findFragmentByTag(TAG_PLAYLIST);
+        profileFragment = fm.findFragmentByTag(TAG_PROFILE);
 
         if (homeFragment == null) homeFragment = new HomeFragment();
         if (cartFragment == null) cartFragment = new CartFragment();
@@ -74,103 +75,68 @@ public class MainActivity extends AppCompatActivity
         if (playlistFragment == null) playlistFragment = new PlaylistLibraryFragment();
         if (profileFragment == null) profileFragment = new UserCenterFragment();
 
-        // 根据当前选择的导航项确定默认显示的 Fragment
-        activeFragment = getFragmentByNavId(selectedNavId);
-        if (activeFragment == null) {
-            // 如果还没有选中过其他 tab，则默认显示首页
-            activeFragment = homeFragment;
-            selectedNavId = R.id.navigation_home;
-        }
+        // 只 add 首页，其余保持未添加状态，避免重复添加
+        activeFragment = homeFragment;
 
-        // 首次进入应用时需要把首页添加到容器中，重复添加会抛出异常
-        if (!homeFragment.isAdded()) {
-            manager.beginTransaction()
-                    .add(R.id.main_container, homeFragment, TAG_HOME)
-                    .commit();
-        }
+        fm.beginTransaction()
+                .add(R.id.main_container, activeFragment, TAG_HOME)
+                .commit();
     }
 
-    private Fragment getFragmentByNavId(int navId) {
-        Fragment fragment;
-        switch (navId) {
-            case R.id.navigation_home:
-                fragment = homeFragment;
-                break;
-            case R.id.navigation_cart:
-                fragment = cartFragment;
-                break;
-            case R.id.navigation_support:
-                fragment = supportFragment;
-                break;
-            case R.id.navigation_playlist:
-                fragment = playlistFragment;
-                break;
-            case R.id.navigation_profile:
-                fragment = profileFragment;
-                break;
-            default:
-                fragment = null;
-        }
-        return fragment != null && fragment.isAdded() ? fragment : null;
-    }
-
-    /**
-     * 底部导航切换
-     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         selectedNavId = item.getItemId();
 
         switch (item.getItemId()) {
             case R.id.navigation_home:
-                showFragment(homeFragment, TAG_HOME);
+                switchFragment(homeFragment, TAG_HOME);
                 setTitle(R.string.title_main);
                 return true;
 
             case R.id.navigation_cart:
-                showFragment(cartFragment, TAG_CART);
+                switchFragment(cartFragment, TAG_CART);
                 setTitle(R.string.nav_cart);
                 return true;
 
             case R.id.navigation_support:
-                showFragment(supportFragment, TAG_SUPPORT);
+                switchFragment(supportFragment, TAG_SUPPORT);
                 setTitle(R.string.nav_support);
                 return true;
 
             case R.id.navigation_playlist:
-                showFragment(playlistFragment, TAG_PLAYLIST);
+                switchFragment(playlistFragment, TAG_PLAYLIST);
                 setTitle(R.string.nav_playlist);
                 return true;
 
             case R.id.navigation_profile:
-                showFragment(profileFragment, TAG_PROFILE);
+                switchFragment(profileFragment, TAG_PROFILE);
                 setTitle(R.string.title_user_profile);
                 return true;
+
+            default:
+                return false;
         }
-        return false;
     }
 
     /**
-     * 显示某个 Fragment
+     * 核心修复点：Fragment 切换，不重复 add
      */
-    private void showFragment(Fragment fragment, String tag) {
-        if (fragment == null) return;
+    private void switchFragment(Fragment target, String tag) {
+        if (activeFragment == target) return; // 已在当前，不重复操作
 
-        FragmentManager manager = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
+        FragmentManager fm = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
 
-        if (activeFragment != null && activeFragment.isAdded()) {
-            transaction.hide(activeFragment);
-        }
+        ft.hide(activeFragment);
 
-        if (!fragment.isAdded()) {
-            transaction.add(R.id.main_container, fragment, tag);
+        if (!target.isAdded()) {
+            ft.add(R.id.main_container, target, tag);
         } else {
-            transaction.show(fragment);
+            ft.show(target);
         }
 
-        transaction.commit();
-        activeFragment = fragment;
+        ft.commitAllowingStateLoss();
+        activeFragment = target;
     }
 
     @Override
