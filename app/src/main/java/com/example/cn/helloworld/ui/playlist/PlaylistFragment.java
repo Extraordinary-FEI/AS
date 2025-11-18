@@ -2,7 +2,6 @@ package com.example.cn.helloworld.ui.playlist;
 
 import android.content.Context;
 import android.content.Intent;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -46,6 +45,7 @@ public class PlaylistFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         playlistRepository = PlaylistRepository.getInstance();
 
         if (getArguments() != null) {
@@ -72,21 +72,23 @@ public class PlaylistFragment extends Fragment {
      * 绑定顶部封面信息区域
      */
     private void bindHeader(View root, Playlist playlist) {
-        ImageView cover = (ImageView) root.findViewById(R.id.image_playlist_cover);
-        TextView title = (TextView) root.findViewById(R.id.text_playlist_title);
-        TextView description = (TextView) root.findViewById(R.id.text_playlist_description);
-        TextView tags = (TextView) root.findViewById(R.id.text_playlist_tags);
-        TextView meta = (TextView) root.findViewById(R.id.text_playlist_meta);
+        ImageView cover = root.findViewById(R.id.image_playlist_cover);
+        TextView title = root.findViewById(R.id.text_playlist_title);
+        TextView description = root.findViewById(R.id.text_playlist_description);
+        TextView tags = root.findViewById(R.id.text_playlist_tags);
+        TextView meta = root.findViewById(R.id.text_playlist_meta);
 
         title.setText(playlist.getTitle());
         description.setText(playlist.getDescription());
 
+        // 标签
         if (playlist.getTags() != null && !playlist.getTags().isEmpty()) {
             tags.setText(TextUtils.join(" / ", playlist.getTags()));
         } else {
             tags.setText("无标签");
         }
 
+        // 播放统计信息
         meta.setText(String.format(
                 "共 %d 首 · %d 次播放 · %d 人收藏",
                 playlist.getSongs().size(),
@@ -94,6 +96,7 @@ public class PlaylistFragment extends Fragment {
                 playlist.getFavoriteCount()
         ));
 
+        // 封面（本地 resId）
         if (playlist.getCoverResId() != null) {
             cover.setImageResource(playlist.getCoverResId());
         } else {
@@ -106,15 +109,14 @@ public class PlaylistFragment extends Fragment {
      */
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     private void bindSongList(View root, final List<Song> songs) {
-        RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recycler_playlist_songs);
+        RecyclerView recyclerView = root.findViewById(R.id.recycler_playlist_songs);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new SongsAdapter(songs, new SongsAdapter.OnSongClickListener() {
             @Override
             public void onSongClick(Song song, int position) {
                 Context context = getContext();
                 if (context != null) {
-
-                    // ★★ 保留你本地分支的 createIntent 写法
+                    // ⭐ 保留 local 分支方案：使用 createIntent
                     context.startActivity(
                             MusicActivity.createIntent(context, playlistId, song.getId())
                     );
@@ -156,6 +158,7 @@ public class PlaylistFragment extends Fragment {
             holder.artist.setText(song.getArtist());
             holder.duration.setText(formatDuration(song.getDurationMs()));
 
+            // 描述
             if (TextUtils.isEmpty(song.getDescription())) {
                 holder.description.setVisibility(View.GONE);
             } else {
@@ -163,16 +166,15 @@ public class PlaylistFragment extends Fragment {
                 holder.description.setText(song.getDescription());
             }
 
+            // 封面
             holder.cover.setImageResource(song.getCoverResId());
 
+            // 点击事件
             if (clickListener != null) {
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int adapterPosition = holder.getAdapterPosition();
-                        if (adapterPosition != RecyclerView.NO_POSITION) {
-                            clickListener.onSongClick(song, adapterPosition);
-                        }
+                holder.itemView.setOnClickListener(v -> {
+                    int adapterPosition = holder.getAdapterPosition();
+                    if (adapterPosition != RecyclerView.NO_POSITION) {
+                        clickListener.onSongClick(song, adapterPosition);
                     }
                 });
             }
@@ -192,11 +194,11 @@ public class PlaylistFragment extends Fragment {
 
             ViewHolder(View itemView) {
                 super(itemView);
-                cover = (ImageView) itemView.findViewById(R.id.image_song_cover);
-                title = (TextView) itemView.findViewById(R.id.text_song_title);
-                artist = (TextView) itemView.findViewById(R.id.text_song_artist);
-                duration = (TextView) itemView.findViewById(R.id.text_song_duration);
-                description = (TextView) itemView.findViewById(R.id.text_song_description);
+                cover = itemView.findViewById(R.id.image_song_cover);
+                title = itemView.findViewById(R.id.text_song_title);
+                artist = itemView.findViewById(R.id.text_song_artist);
+                duration = itemView.findViewById(R.id.text_song_duration);
+                description = itemView.findViewById(R.id.text_song_description);
             }
         }
 
