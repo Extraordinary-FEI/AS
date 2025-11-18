@@ -11,6 +11,21 @@
         android:layout_height="match_parent"
         android:background="#88000000" />
 
+    <!-- 返回按钮 -->
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:background="@android:color/transparent"
+        android:padding="8dp"
+        android:src="@android:drawable/ic_media_previous"
+        android:tint="@android:color/white"
+        android:contentDescription="返回" />
+
     <!-- 封面图 -->
     <ImageView
         android:id="@+id/img_cover"
