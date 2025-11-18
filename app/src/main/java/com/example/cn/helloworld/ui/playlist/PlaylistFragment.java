@@ -2,6 +2,7 @@ package com.example.cn.helloworld.ui.playlist;
 
 import android.content.Context;
 import android.content.Intent;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -45,8 +46,6 @@ public class PlaylistFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // ★★ 使用你的单例仓库，而不是 new
         playlistRepository = PlaylistRepository.getInstance();
 
         if (getArguments() != null) {
@@ -60,7 +59,6 @@ public class PlaylistFragment extends Fragment {
     ) {
         View root = inflater.inflate(R.layout.fragment_playlist, container, false);
 
-        // ★★ 改成 findById()
         Playlist playlist = playlistRepository.getById(playlistId);
         if (playlist != null) {
             bindHeader(root, playlist);
@@ -83,14 +81,12 @@ public class PlaylistFragment extends Fragment {
         title.setText(playlist.getTitle());
         description.setText(playlist.getDescription());
 
-        // 标签
         if (playlist.getTags() != null && !playlist.getTags().isEmpty()) {
             tags.setText(TextUtils.join(" / ", playlist.getTags()));
         } else {
             tags.setText("无标签");
         }
 
-        // 播放统计信息
         meta.setText(String.format(
                 "共 %d 首 · %d 次播放 · %d 人收藏",
                 playlist.getSongs().size(),
@@ -98,7 +94,6 @@ public class PlaylistFragment extends Fragment {
                 playlist.getFavoriteCount()
         ));
 
-        // 封面（本地 resId）
         if (playlist.getCoverResId() != null) {
             cover.setImageResource(playlist.getCoverResId());
         } else {
@@ -118,10 +113,11 @@ public class PlaylistFragment extends Fragment {
             public void onSongClick(Song song, int position) {
                 Context context = getContext();
                 if (context != null) {
-                    Intent intent = new Intent(context, MusicActivity.class);
-                    intent.putExtra(MusicActivity.EXTRA_PLAYLIST_ID, playlistId);
-                    intent.putExtra(MusicActivity.EXTRA_SONG_ID, song.getId());
-                    context.startActivity(intent);
+
+                    // ★★ 保留你本地分支的 createIntent 写法
+                    context.startActivity(
+                            MusicActivity.createIntent(context, playlistId, song.getId())
+                    );
                 }
             }
         }));
@@ -155,13 +151,11 @@ public class PlaylistFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             final Song song = songs.get(position);
-            final ViewHolder songHolder = holder;
 
             holder.title.setText(song.getTitle());
             holder.artist.setText(song.getArtist());
             holder.duration.setText(formatDuration(song.getDurationMs()));
 
-            // 描述
             if (TextUtils.isEmpty(song.getDescription())) {
                 holder.description.setVisibility(View.GONE);
             } else {
@@ -169,14 +163,13 @@ public class PlaylistFragment extends Fragment {
                 holder.description.setText(song.getDescription());
             }
 
-            // ★★ 封面：本地 coverResId
             holder.cover.setImageResource(song.getCoverResId());
 
             if (clickListener != null) {
-                songHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int adapterPosition = songHolder.getAdapterPosition();
+                        int adapterPosition = holder.getAdapterPosition();
                         if (adapterPosition != RecyclerView.NO_POSITION) {
                             clickListener.onSongClick(song, adapterPosition);
                         }
@@ -190,7 +183,6 @@ public class PlaylistFragment extends Fragment {
             return songs == null ? 0 : songs.size();
         }
 
-        /** ViewHolder：对应 item_song.xml */
         static class ViewHolder extends RecyclerView.ViewHolder {
             ImageView cover;
             TextView title;
@@ -208,7 +200,6 @@ public class PlaylistFragment extends Fragment {
             }
         }
 
-        /** 毫秒 → MM:SS */
         private static String formatDuration(long ms) {
             int seconds = (int) (ms / 1000);
             int minutes = seconds / 60;
