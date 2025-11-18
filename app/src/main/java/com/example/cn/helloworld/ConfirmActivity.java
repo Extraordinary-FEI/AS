@@ -3,6 +3,7 @@ package com.example.cn.helloworld;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,7 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cn.helloworld.data.repository.AuthRepository;
+import com.example.cn.helloworld.data.session.SessionManager;
+import com.example.cn.helloworld.data.model.UserRole;
 import com.example.cn.helloworld.ui.main.MainActivity;
+
+import java.util.UUID;
 
 public class ConfirmActivity extends AppCompatActivity {
 
@@ -117,28 +122,55 @@ public class ConfirmActivity extends AppCompatActivity {
 //                }
 //            }
 //        });
-        //跳转到歌曲列表
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // （1）保存数据逻辑（保持不变）
-                SQLiteDatabase db = new DBHelper(ConfirmActivity.this).getWritableDatabase();
-                ContentValues values = new ContentValues();
-                values.put("name", tvName.getText().toString());
-                values.put("pwd", tvPwd.getText().toString());
-                values.put("email", tvEmail.getText().toString());
-                values.put("phone", tvPhone.getText().toString());
-                db.insert("tb_user", null, values);
-                db.close();
+                SQLiteDatabase db = null;
+                try {
+                    db = new DBHelper(ConfirmActivity.this).getWritableDatabase();
+                    ContentValues values = new ContentValues();
+                    values.put(DBHelper.C_NAME, name);
+                    values.put(DBHelper.C_PWD, pwd);
+                    values.put(DBHelper.C_EMAIL, email);
+                    values.put(DBHelper.C_PHONE, phone);
+                    values.put(DBHelper.C_GENDER, gender);
+                    values.put(DBHelper.C_MAJOR, major);
+                    values.put(DBHelper.C_CLAZZ, clazz);
+                    values.put(DBHelper.C_DATE, date);
+                    values.put(DBHelper.C_HOBBIES, hobbies);
+                    values.put(DBHelper.C_BIO, bio);
+                    long rowId = db.insert(DBHelper.T_USER, null, values);
 
-                Toast.makeText(ConfirmActivity.this, "注册成功！", Toast.LENGTH_SHORT).show();
+                    if (rowId == -1L) {
+                        Toast.makeText(
+                                ConfirmActivity.this,
+                                getString(R.string.error_db, getString(R.string.error_insert_failed)),
+                                Toast.LENGTH_LONG
+                        ).show();
+                        return;
+                    }
 
-                // （2）修改跳转目标为 MusicActivity
-                Intent intent = new Intent(ConfirmActivity.this, MainActivity.class);
-                startActivity(intent);
+                    SessionManager sessionManager = new SessionManager(ConfirmActivity.this);
+                    sessionManager.login(String.valueOf(rowId), name);
+                    sessionManager.saveSession(UUID.randomUUID().toString(), UserRole.USER, false);
 
-                // （3）关闭当前页面，防止回退又回到确认页
-                finish();
+                    Toast.makeText(ConfirmActivity.this, R.string.msg_register_success, Toast.LENGTH_SHORT).show();
+
+                    Intent mainIntent = new Intent(ConfirmActivity.this, MainActivity.class);
+                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(mainIntent);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        finishAffinity();
+                    } else {
+                        finish();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(ConfirmActivity.this, getString(R.string.error_db, e.getMessage()), Toast.LENGTH_LONG).show();
+                } finally {
+                    if (db != null) {
+                        db.close();
+                    }
+                }
             }
         });
 
