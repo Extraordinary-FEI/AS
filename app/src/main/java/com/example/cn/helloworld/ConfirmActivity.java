@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -25,6 +26,7 @@ public class ConfirmActivity extends AppCompatActivity {
             tvClass, tvDate, tvHobbies, tvBio;
     private Button btnBack, btnOk;
 
+    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,25 +41,28 @@ public class ConfirmActivity extends AppCompatActivity {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) { finish(); }
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
             });
         }
 
         // Bind views
-        tvName = findViewById(R.id.tvName);
-        tvRole = findViewById(R.id.tvRole);
-        tvPwd = findViewById(R.id.tvPwd);
-        tvEmail = findViewById(R.id.tvEmail);
-        tvPhone = findViewById(R.id.tvPhone);
-        tvGender = findViewById(R.id.tvGender);
-        tvMajor = findViewById(R.id.tvMajor);
-        tvClass = findViewById(R.id.tvClass);
-        tvDate = findViewById(R.id.tvDate);
-        tvHobbies = findViewById(R.id.tvHobbies);
-        tvBio = findViewById(R.id.tvBio);
+        tvName = (TextView) findViewById(R.id.tvName);
+        tvRole = (TextView) findViewById(R.id.tvRole);
+        tvPwd = (TextView) findViewById(R.id.tvPwd);
+        tvEmail = (TextView) findViewById(R.id.tvEmail);
+        tvPhone = (TextView) findViewById(R.id.tvPhone);
+        tvGender = (TextView) findViewById(R.id.tvGender);
+        tvMajor = (TextView) findViewById(R.id.tvMajor);
+        tvClass = (TextView) findViewById(R.id.tvClass);
+        tvDate = (TextView) findViewById(R.id.tvDate);
+        tvHobbies = (TextView) findViewById(R.id.tvHobbies);
+        tvBio = (TextView) findViewById(R.id.tvBio);
 
-        btnBack = findViewById(R.id.btnBack);
-        btnOk = findViewById(R.id.btnOk);
+        btnBack = (Button) findViewById(R.id.btnBack);
+        btnOk = (Button) findViewById(R.id.btnOk);
 
         // Read data
         Intent it = getIntent();
@@ -89,10 +94,15 @@ public class ConfirmActivity extends AppCompatActivity {
         tvHobbies.setText(hobbies);
         tvBio.setText(bio);
 
-        // Back button
-        btnBack.setOnClickListener(v -> finish());
+        // Back button (匿名内部类)
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
-        // OK button
+        // OK button（匿名内部类）
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,14 +140,18 @@ public class ConfirmActivity extends AppCompatActivity {
                     sessionManager.login(String.valueOf(rowId), name);
                     sessionManager.saveSession(UUID.randomUUID().toString(), UserRole.USER, false);
 
-                    Toast.makeText(ConfirmActivity.this, R.string.msg_register_success, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            ConfirmActivity.this,
+                            R.string.msg_register_success,
+                            Toast.LENGTH_SHORT
+                    ).show();
 
                     // Jump to main page
                     Intent mainIntent = new Intent(ConfirmActivity.this, MainActivity.class);
                     mainIntent.addFlags(
                             Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                            Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                            Intent.FLAG_ACTIVITY_NEW_TASK
+                                    Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                                    Intent.FLAG_ACTIVITY_NEW_TASK
                     );
                     startActivity(mainIntent);
 

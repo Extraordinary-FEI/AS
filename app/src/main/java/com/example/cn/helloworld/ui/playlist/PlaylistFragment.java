@@ -72,11 +72,11 @@ public class PlaylistFragment extends Fragment {
      * 绑定顶部封面信息区域
      */
     private void bindHeader(View root, Playlist playlist) {
-        ImageView cover = root.findViewById(R.id.image_playlist_cover);
-        TextView title = root.findViewById(R.id.text_playlist_title);
-        TextView description = root.findViewById(R.id.text_playlist_description);
-        TextView tags = root.findViewById(R.id.text_playlist_tags);
-        TextView meta = root.findViewById(R.id.text_playlist_meta);
+        ImageView cover = (ImageView) root.findViewById(R.id.image_playlist_cover);
+        TextView title = (TextView) root.findViewById(R.id.text_playlist_title);
+        TextView description = (TextView) root.findViewById(R.id.text_playlist_description);
+        TextView tags = (TextView) root.findViewById(R.id.text_playlist_tags);
+        TextView meta = (TextView) root.findViewById(R.id.text_playlist_meta);
 
         title.setText(playlist.getTitle());
         description.setText(playlist.getDescription());
@@ -109,17 +109,17 @@ public class PlaylistFragment extends Fragment {
      */
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     private void bindSongList(View root, final List<Song> songs) {
-        RecyclerView recyclerView = root.findViewById(R.id.recycler_playlist_songs);
+        RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recycler_playlist_songs);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new SongsAdapter(songs, new SongsAdapter.OnSongClickListener() {
             @Override
             public void onSongClick(Song song, int position) {
                 Context context = getContext();
                 if (context != null) {
-                    // ⭐ 保留 local 分支方案：使用 createIntent
-                    context.startActivity(
-                            MusicActivity.createIntent(context, playlistId, song.getId())
-                    );
+                    Intent intent = new Intent(context, MusicActivity.class);
+                    intent.putExtra(MusicActivity.EXTRA_PLAYLIST_ID, playlistId);
+                    intent.putExtra(MusicActivity.EXTRA_SONG_ID, song.getId());
+                    context.startActivity(intent);
                 }
             }
         }));
@@ -153,6 +153,7 @@ public class PlaylistFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             final Song song = songs.get(position);
+            final ViewHolder songHolder = holder;
 
             holder.title.setText(song.getTitle());
             holder.artist.setText(song.getArtist());
@@ -169,12 +170,15 @@ public class PlaylistFragment extends Fragment {
             // 封面
             holder.cover.setImageResource(song.getCoverResId());
 
-            // 点击事件
             if (clickListener != null) {
-                holder.itemView.setOnClickListener(v -> {
-                    int adapterPosition = holder.getAdapterPosition();
-                    if (adapterPosition != RecyclerView.NO_POSITION) {
-                        clickListener.onSongClick(song, adapterPosition);
+                songHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int adapterPosition = songHolder.getAdapterPosition();
+                        if (adapterPosition != RecyclerView.NO_POSITION) {
+                            clickListener.onSongClick(song, adapterPosition);
+                        }
+
                     }
                 });
             }
@@ -194,11 +198,11 @@ public class PlaylistFragment extends Fragment {
 
             ViewHolder(View itemView) {
                 super(itemView);
-                cover = itemView.findViewById(R.id.image_song_cover);
-                title = itemView.findViewById(R.id.text_song_title);
-                artist = itemView.findViewById(R.id.text_song_artist);
-                duration = itemView.findViewById(R.id.text_song_duration);
-                description = itemView.findViewById(R.id.text_song_description);
+                cover = (ImageView) itemView.findViewById(R.id.image_song_cover);
+                title = (TextView) itemView.findViewById(R.id.text_song_title);
+                artist = (TextView) itemView.findViewById(R.id.text_song_artist);
+                duration = (TextView) itemView.findViewById(R.id.text_song_duration);
+                description = (TextView) itemView.findViewById(R.id.text_song_description);
             }
         }
 
