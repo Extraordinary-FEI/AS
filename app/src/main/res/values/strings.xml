@@ -15,6 +15,7 @@
     <string name="btn_cancel">清空</string>
     <string name="btn_back">返回</string>
     <string name="btn_ok">确认</string>
+    <string name="close">关闭</string>
 
     <!-- 登录与注册 -->
     <string name="login_title">欢迎回到千玺星球</string>
