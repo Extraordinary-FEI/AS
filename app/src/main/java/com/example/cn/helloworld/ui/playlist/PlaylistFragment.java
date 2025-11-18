@@ -1,5 +1,7 @@
 package com.example.cn.helloworld.ui.playlist;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.cn.helloworld.MusicActivity;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.data.playlist.PlaylistRepository;
@@ -107,10 +110,21 @@ public class PlaylistFragment extends Fragment {
      * 绑定歌曲列表
      */
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
-    private void bindSongList(View root, List<Song> songs) {
+    private void bindSongList(View root, final List<Song> songs) {
         RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recycler_playlist_songs);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new SongsAdapter(songs));
+        recyclerView.setAdapter(new SongsAdapter(songs, new SongsAdapter.OnSongClickListener() {
+            @Override
+            public void onSongClick(Song song, int position) {
+                Context context = getContext();
+                if (context != null) {
+                    Intent intent = new Intent(context, MusicActivity.class);
+                    intent.putExtra(MusicActivity.EXTRA_PLAYLIST_ID, playlistId);
+                    intent.putExtra(MusicActivity.EXTRA_SONG_ID, song.getId());
+                    context.startActivity(intent);
+                }
+            }
+        }));
     }
 
     /**
@@ -118,10 +132,16 @@ public class PlaylistFragment extends Fragment {
      */
     private static class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> {
 
-        private final List<Song> songs;
+        interface OnSongClickListener {
+            void onSongClick(Song song, int position);
+        }
 
-        SongsAdapter(List<Song> songs) {
+        private final List<Song> songs;
+        private final OnSongClickListener clickListener;
+
+        SongsAdapter(List<Song> songs, OnSongClickListener listener) {
             this.songs = songs;
+            this.clickListener = listener;
         }
 
         @NonNull
@@ -134,7 +154,8 @@ public class PlaylistFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            Song song = songs.get(position);
+            final Song song = songs.get(position);
+            final ViewHolder songHolder = holder;
 
             holder.title.setText(song.getTitle());
             holder.artist.setText(song.getArtist());
@@ -150,6 +171,18 @@ public class PlaylistFragment extends Fragment {
 
             // ★★ 封面：本地 coverResId
             holder.cover.setImageResource(song.getCoverResId());
+
+            if (clickListener != null) {
+                songHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int adapterPosition = songHolder.getAdapterPosition();
+                        if (adapterPosition != RecyclerView.NO_POSITION) {
+                            clickListener.onSongClick(song, adapterPosition);
+                        }
+                    }
+                });
+            }
         }
 
         @Override

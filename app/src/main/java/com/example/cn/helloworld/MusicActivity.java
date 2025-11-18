@@ -11,7 +11,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import android.support.v4.content.ContextCompat;
+
 public class MusicActivity extends Activity {
+
+    public static final String EXTRA_PLAYLIST_ID = "extra_playlist_id";
+    public static final String EXTRA_SONG_ID = "extra_song_id";
 
     private ImageButton btnPlayPause, btnStop, btnNext, btnPrev;
     private ImageView imgCover;
@@ -20,14 +25,14 @@ public class MusicActivity extends Activity {
     // 当前播放状态
     private boolean isPlaying = false;
 
-    // 封面图资源数组
-    private int[] coverRes = {
-            R.drawable.cover_playlist_stage,
-            R.drawable.cover_playlist_healing,
-            R.drawable.cover_playlist_city
-    };
-
     private BroadcastReceiver uiUpdateReceiver;
+
+    public static Intent createIntent(Context context, String playlistId, String songId) {
+        Intent intent = new Intent(context, MusicActivity.class);
+        intent.putExtra(EXTRA_PLAYLIST_ID, playlistId);
+        intent.putExtra(EXTRA_SONG_ID, songId);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +46,14 @@ public class MusicActivity extends Activity {
         imgCover = (ImageView) findViewById(R.id.img_cover);
         tvSongName = (TextView) findViewById(R.id.tv_song_name);
 
-        startService(new Intent(this, MusicService.class));
+        String playlistId = getIntent().getStringExtra(EXTRA_PLAYLIST_ID);
+        String songId = getIntent().getStringExtra(EXTRA_SONG_ID);
+        if (playlistId != null || songId != null) {
+            Intent serviceIntent = MusicService.createPlaySongIntent(this, playlistId, songId);
+            ContextCompat.startForegroundService(this, serviceIntent);
+        } else {
+            startService(new Intent(this, MusicService.class));
+        }
         registerUIReceiver();
 
         // 点击播放/暂停键
@@ -84,15 +96,21 @@ public class MusicActivity extends Activity {
             public void onReceive(Context context, Intent intent) {
                 if ("ACTION_UPDATE_UI".equals(intent.getAction())) {
                     String title = intent.getStringExtra("title");
+                    String artist = intent.getStringExtra("artist");
                     int index = intent.getIntExtra("index", 0);
                     int total = intent.getIntExtra("total", 1);
+                    int coverResId = intent.getIntExtra("coverResId", R.drawable.cover_playlist_placeholder);
                     isPlaying = intent.getBooleanExtra("playing", false);
 
-                    if (index < 0 || index >= coverRes.length) index = 0;
-
                     String prefix = isPlaying ? "正在播放：" : "已暂停：";
-                    tvSongName.setText(prefix + title + " (" + (index + 1) + "/" + total + ")");
-                    imgCover.setImageResource(coverRes[index]);
+                    String safeTitle = title == null ? getString(R.string.app_name) : title;
+                    String subtitle = artist == null ? "" : " - " + artist;
+                    if (index < 0 || total <= 0) {
+                        index = 0;
+                        total = 1;
+                    }
+                    tvSongName.setText(prefix + safeTitle + subtitle + " (" + (index + 1) + "/" + total + ")");
+                    imgCover.setImageResource(coverResId);
 
                     // ✅ 根据播放状态更新图标
                     if (isPlaying) {
