@@ -217,8 +217,10 @@ public class SupportTaskManagementActivity extends AppCompatActivity {
                 .show();
     }
 
-    private CharSequence[] getStatusLabels() {
-        return new CharSequence[]{
+
+    private String[] getStatusLabels() {
+        return new String[]{
+
                 getString(R.string.support_task_status_pending),
                 getString(R.string.support_task_status_approved),
                 getString(R.string.support_task_status_rejected)

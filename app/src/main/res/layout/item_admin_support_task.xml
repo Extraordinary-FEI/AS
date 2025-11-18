@@ -61,6 +61,55 @@
             android:textColor="@android:color/darker_gray"
             android:textSize="12sp" />
 
+        <!-- ⭐ 管理按钮（编辑/删除） -->
+        <LinearLayout
+            android:id="@+id/groupManageButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonEditTask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/product_action_edit" />
+
+            <Button
+                android:id="@+id/buttonDeleteTask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:text="@string/playlist_action_delete_song" />
+
+        </LinearLayout>
+
+        <!-- ⭐ 审批按钮（通过/拒绝） -->
+        <LinearLayout
+            android:id="@+id/groupApprovalButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/buttonApproveTask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/support_task_action_approve" />
+
+            <Button
+                android:id="@+id/buttonRejectTask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:text="@string/support_task_action_reject" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

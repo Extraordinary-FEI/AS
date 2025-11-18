@@ -48,8 +48,6 @@ public class UserProfileActivity extends AppCompatActivity {
         musicFloatingWidget = new MusicFloatingWidget(this);
 
 
-
-
         // 使用 layout 中真实存在的 ID
         ImageView avatar  = (ImageView) findViewById(R.id.avatarImage);
         TextView username = (TextView) findViewById(R.id.tvUsername);

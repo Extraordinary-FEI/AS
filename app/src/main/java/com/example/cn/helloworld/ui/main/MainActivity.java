@@ -12,12 +12,9 @@ import android.view.MenuItem;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.ui.order.CartFragment;
 import com.example.cn.helloworld.ui.playlist.PlaylistLibraryFragment;
+import com.example.cn.helloworld.ui.support.SupportTasksFragment;
 import com.example.cn.helloworld.ui.user.UserCenterFragment;
 
-/**
- * 主界面，包含底部导航栏 + Fragment 切换
- * 兼容 AS2.3.2 + Java 1.7 + support.v4
- */
 public class MainActivity extends AppCompatActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -61,7 +58,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * 初始化所有 Fragment，避免重复创建
+     * 初始化所有 Fragment
      */
     private void initFragments() {
         FragmentManager manager = getSupportFragmentManager();
@@ -86,7 +83,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * 底部按钮点击切换 Fragment
+     * 底部导航切换
      */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -122,7 +119,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * 显示指定 Fragment（隐藏其他）
+     * 显示某个 Fragment
      */
     private void showFragment(Fragment fragment, String tag) {
         if (fragment == null) return;
@@ -130,12 +127,10 @@ public class MainActivity extends AppCompatActivity
         FragmentManager manager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
 
-        // 隐藏当前活动的 Fragment
         if (activeFragment != null) {
             transaction.hide(activeFragment);
         }
 
-        // 如果目标 Fragment 没添加过，添加；否则直接 show
         if (!fragment.isAdded()) {
             transaction.add(R.id.main_container, fragment, tag);
         } else {
