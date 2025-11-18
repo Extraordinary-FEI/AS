@@ -1,5 +1,6 @@
 package com.example.cn.helloworld.ui.main;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.ui.playlist.PlaylistDetailActivity;
 import com.example.cn.helloworld.ui.playlist.PlaylistOverviewActivity;
+import com.example.cn.helloworld.ui.user.UserProfileActivity;
 
 
 /**
@@ -109,8 +111,16 @@ public class MainActivity extends AppCompatActivity {
         fabProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, com.example.cn.helloworld.ui.user.UserProfileActivity.class);
-                startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
+                try {
+                    startActivity(intent);
+                } catch (ActivityNotFoundException notFound) {
+                    android.widget.Toast.makeText(
+                            MainActivity.this,
+                            R.string.error_profile_not_found,
+                            android.widget.Toast.LENGTH_SHORT
+                    ).show();
+                }
             }
         });
     }
