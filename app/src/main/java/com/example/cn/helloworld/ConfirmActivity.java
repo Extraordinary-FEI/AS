@@ -92,13 +92,40 @@ public class ConfirmActivity extends AppCompatActivity {
         // Back button
         btnBack.setOnClickListener(v -> finish());
 
-        // OK button
+        // 6) 确认：入库 → 跳列表
+//        btnOk.setOnClickListener(new View.OnClickListener() {
+//            @Override public void onClick(View v) {
+//                DBHelper helper = new DBHelper(ConfirmActivity.this);
+//                SQLiteDatabase db = null;
+//                try {
+//                    db = helper.getWritableDatabase();
+//                    ContentValues cv = new ContentValues();
+//                    cv.put(DBHelper.C_NAME,  name);
+//                    cv.put(DBHelper.C_PWD,   pwd);
+//                    cv.put(DBHelper.C_EMAIL, email);
+//                    cv.put(DBHelper.C_PHONE, phone);
+//                    cv.put(DBHelper.C_GENDER,gender);
+//                    cv.put(DBHelper.C_MAJOR, major);
+//                    cv.put(DBHelper.C_CLAZZ, clazz);
+//                    cv.put(DBHelper.C_DATE,  date);
+//                    cv.put(DBHelper.C_HOBBIES, hobbies);
+//                    cv.put(DBHelper.C_BIO,   bio);
+//                    db.insert(DBHelper.T_USER, null, cv);
+//
+//                    Toast.makeText(getApplicationContext(), "已保存到数据库", Toast.LENGTH_SHORT).show();
+//                    startActivity(new Intent(ConfirmActivity.this, ListUserActivity.class));
+//                    finish(); // 关闭确认页，回退栈更干净
+//                } catch (Exception e) {
+//                    Toast.makeText(getApplicationContext(), "数据库异常：" + e.getMessage(), Toast.LENGTH_LONG).show();
+//                } finally {
+//                    if (db != null) db.close();
+//                }
+//            }
+//        });
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 SQLiteDatabase db = null;
-
                 try {
                     db = new DBHelper(ConfirmActivity.this).getWritableDatabase();
 
@@ -113,7 +140,7 @@ public class ConfirmActivity extends AppCompatActivity {
                     values.put(DBHelper.C_DATE, date);
                     values.put(DBHelper.C_HOBBIES, hobbies);
                     values.put(DBHelper.C_BIO, bio);
-
+                  
                     long rowId = db.insert(DBHelper.T_USER, null, values);
 
                     if (rowId == -1L) {
@@ -125,20 +152,13 @@ public class ConfirmActivity extends AppCompatActivity {
                         return;
                     }
 
-                    // Save session
                     SessionManager sessionManager = new SessionManager(ConfirmActivity.this);
                     sessionManager.login(String.valueOf(rowId), name);
                     sessionManager.saveSession(UUID.randomUUID().toString(), UserRole.USER, false);
 
                     Toast.makeText(ConfirmActivity.this, R.string.msg_register_success, Toast.LENGTH_SHORT).show();
-
-                    // Jump to main page
                     Intent mainIntent = new Intent(ConfirmActivity.this, MainActivity.class);
-                    mainIntent.addFlags(
-                            Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                            Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                            Intent.FLAG_ACTIVITY_NEW_TASK
-                    );
+                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(mainIntent);
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -146,16 +166,13 @@ public class ConfirmActivity extends AppCompatActivity {
                     } else {
                         finish();
                     }
-
                 } catch (Exception e) {
-                    Toast.makeText(
-                            ConfirmActivity.this,
-                            getString(R.string.error_db, e.getMessage()),
-                            Toast.LENGTH_LONG
-                    ).show();
-
+                    Toast.makeText(ConfirmActivity.this, getString(R.string.error_db, e.getMessage()), Toast.LENGTH_LONG).show();
                 } finally {
-                    if (db != null) db.close();
+                    if (db != null) {
+                        db.close();
+                    }
+
                 }
             }
         });

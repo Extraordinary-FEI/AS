@@ -82,7 +82,22 @@
             android:name="com.example.cn.helloworld.ui.admin.SupportTaskApprovalActivity"
             android:label="@string/title_admin_support_tasks" />
 
+
+        <!-- 个人中心 -->
+        <activity
+            android:name=".ui.user.UserProfileActivity"
+            android:exported="false"
+            android:label="@string/title_user_profile"
+            android:parentActivityName=".ui.main.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.main.MainActivity" />
+        </activity>
+
+        <!-- 应援商城详情（新增分类模块） -->
+
         <!-- 用户中心（最终保留版本） -->
+
         <activity
             android:name="com.example.cn.helloworld.ui.user.UserProfileActivity"
             android:label="@string/title_user_profile"

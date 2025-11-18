@@ -59,6 +59,15 @@ public class MusicActivity extends Activity {
             startService(new Intent(this, MusicService.class));
         }
 
+        String playlistId = getIntent().getStringExtra(EXTRA_PLAYLIST_ID);
+        String songId = getIntent().getStringExtra(EXTRA_SONG_ID);
+        if (playlistId != null || songId != null) {
+            Intent serviceIntent = MusicService.createPlaySongIntent(this, playlistId, songId);
+            startServiceCompat(serviceIntent);
+        } else {
+            startServiceCompat(new Intent(this, MusicService.class));
+        }
+
         registerUIReceiver();
 
         // 播放与暂停
@@ -83,6 +92,20 @@ public class MusicActivity extends Activity {
         );
     }
 
+    private void startServiceCompat(Intent intent) {
+        // 项目当前 compileSdk/targetSdk 仍为 25，没有可用的 ContextCompat#startForegroundService
+        // 并且在 API < 26 上可以直接使用 startService
+        if (Build.VERSION.SDK_INT >= 26) {
+            try {
+                // 反射调用以避免在 API 25 的 SDK 上找不到方法
+                Activity.class.getMethod("startForegroundService", Intent.class).invoke(this, intent);
+                return;
+            } catch (Exception ignored) {
+            }
+        }
+        startService(intent);
+    }
+
     private void registerUIReceiver() {
         uiUpdateReceiver = new BroadcastReceiver() {
             @Override
@@ -96,16 +119,15 @@ public class MusicActivity extends Activity {
                     isPlaying = intent.getBooleanExtra("playing", false);
 
                     String prefix = isPlaying ? "正在播放：" : "已暂停：";
-                    String safeTitle = (title == null ? getString(R.string.app_name) : title);
-                    String subtitle = (artist == null ? "" : " - " + artist);
+                    String safeTitle = title == null ? getString(R.string.app_name) : title;
+                    String subtitle = artist == null ? "" : " - " + artist;
 
                     if (index < 0 || total <= 0) {
                         index = 0;
                         total = 1;
                     }
+                    tvSongName.setText(prefix + safeTitle + subtitle + " (" + (index + 1) + "/" + total + ")");
 
-                    tvSongName.setText(prefix + safeTitle + subtitle +
-                            " (" + (index + 1) + "/" + total + ")");
                     imgCover.setImageResource(coverResId);
 
                     // 图标更新
