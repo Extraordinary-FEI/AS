@@ -82,6 +82,19 @@
             android:name="com.example.cn.helloworld.ui.admin.SupportTaskApprovalActivity"
             android:label="@string/title_admin_support_tasks" />
 
+        <activity
+            android:name="com.example.cn.helloworld.ui.admin.SupportTaskManagementActivity"
+            android:label="@string/title_admin_manage_support_tasks" />
+
+        <activity
+            android:name="com.example.cn.helloworld.ui.admin.AdminOrderListActivity"
+            android:label="@string/title_admin_order_list"
+            android:parentActivityName="com.example.cn.helloworld.ui.admin.AdminDashboardActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.cn.helloworld.ui.admin.AdminDashboardActivity" />
+        </activity>
+
         <!-- ⭐ 正确保留版本：用户中心 -->
         <activity
             android:name="com.example.cn.helloworld.ui.user.UserProfileActivity"

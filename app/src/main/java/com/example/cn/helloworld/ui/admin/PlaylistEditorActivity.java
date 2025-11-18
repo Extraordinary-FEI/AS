@@ -72,7 +72,7 @@ public class PlaylistEditorActivity extends AppCompatActivity {
             return;
         }
 
-        playlistRepository = PlaylistRepository.getInstance();
+        playlistRepository = PlaylistRepository.getInstance(this);
 
         // 读取要编辑的 playlistId
         String playlistId = getIntent().getStringExtra(PlaylistManagementActivity.EXTRA_PLAYLIST_ID);

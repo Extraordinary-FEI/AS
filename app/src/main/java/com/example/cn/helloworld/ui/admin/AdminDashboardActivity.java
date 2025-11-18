@@ -12,12 +12,15 @@ import android.widget.Toast;
 
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.AdminMetrics;
+import com.example.cn.helloworld.data.model.Order;
 import com.example.cn.helloworld.data.model.Permission;
 import com.example.cn.helloworld.data.repository.AdminMetricsRepository;
 import com.example.cn.helloworld.data.repository.SupportTaskRepository;
 import com.example.cn.helloworld.data.session.SessionManager;
 import com.example.cn.helloworld.ui.auth.LoginActivity;
-import com.example.cn.helloworld.data.playlist.PlaylistRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -35,7 +38,9 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private TextView summaryText;
     private Button btnProducts;
     private Button btnPlaylists;
-    private Button btnUsers;
+    private Button btnViewOrders;
+    private Button btnManageSupportTasks;
+    private Button btnTaskApproval;
     private Button btnLogout;
     private StatsBarView statsBarView;
 
@@ -52,7 +57,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
             return;
         }
 
-        supportTaskRepository = new SupportTaskRepository();
+        supportTaskRepository = new SupportTaskRepository(this);
         metricsRepository = new AdminMetricsRepository(supportTaskRepository);
 
         bindViews();
@@ -67,7 +72,9 @@ public class AdminDashboardActivity extends AppCompatActivity {
         summaryText = (TextView) findViewById(R.id.text_dashboard_summary);
         btnProducts = (Button) findViewById(R.id.btnManageProducts);
         btnPlaylists = (Button) findViewById(R.id.btnManagePlaylists);
-        btnUsers = (Button) findViewById(R.id.btnViewUsers);
+        btnViewOrders = (Button) findViewById(R.id.btnViewOrders);
+        btnManageSupportTasks = (Button) findViewById(R.id.btnManageSupportTasks);
+        btnTaskApproval = (Button) findViewById(R.id.btnTaskApproval);
         btnLogout = (Button) findViewById(R.id.btnLogout);
         statsBarView = (StatsBarView) findViewById(R.id.stats_bar_view);
     }
@@ -130,7 +137,21 @@ public class AdminDashboardActivity extends AppCompatActivity {
                 startActivity(new Intent(AdminDashboardActivity.this, PlaylistManagementActivity.class));
             }
         });
-        btnUsers.setOnClickListener(new View.OnClickListener() {
+        btnViewOrders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openOrderList();
+            }
+        });
+
+        btnManageSupportTasks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AdminDashboardActivity.this, SupportTaskManagementActivity.class));
+            }
+        });
+
+        btnTaskApproval.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(AdminDashboardActivity.this, SupportTaskApprovalActivity.class));
@@ -183,5 +204,12 @@ public class AdminDashboardActivity extends AppCompatActivity {
                 })
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();
+    }
+
+    private void openOrderList() {
+        List<Order> orders = metricsRepository.getOrders();
+        ArrayList<Order> extras = new ArrayList<Order>(orders);
+        Intent intent = AdminOrderListActivity.createIntent(this, extras);
+        startActivity(intent);
     }
 }

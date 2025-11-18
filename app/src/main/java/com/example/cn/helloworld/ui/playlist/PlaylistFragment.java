@@ -46,7 +46,10 @@ public class PlaylistFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        playlistRepository = PlaylistRepository.getInstance();
+        if (getContext() == null) {
+            throw new IllegalStateException("PlaylistFragment not attached to context");
+        }
+        playlistRepository = PlaylistRepository.getInstance(getContext());
 
         if (getArguments() != null) {
             playlistId = getArguments().getString(ARG_PLAYLIST_ID);
