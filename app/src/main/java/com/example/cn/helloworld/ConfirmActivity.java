@@ -44,22 +44,22 @@ public class ConfirmActivity extends AppCompatActivity {
         }
 
         // Bind views
-        tvName = (TextView) findViewById(R.id.tvName);
-        tvRole = (TextView) findViewById(R.id.tvRole);
-        tvPwd = (TextView) findViewById(R.id.tvPwd);
-        tvEmail = (TextView) findViewById(R.id.tvEmail);
-        tvPhone = (TextView) findViewById(R.id.tvPhone);
-        tvGender = (TextView) findViewById(R.id.tvGender);
-        tvMajor = (TextView) findViewById(R.id.tvMajor);
-        tvClass = (TextView) findViewById(R.id.tvClass);
-        tvDate = (TextView) findViewById(R.id.tvDate);
-        tvHobbies = (TextView) findViewById(R.id.tvHobbies);
-        tvBio = (TextView) findViewById(R.id.tvBio);
+        tvName = findViewById(R.id.tvName);
+        tvRole = findViewById(R.id.tvRole);
+        tvPwd = findViewById(R.id.tvPwd);
+        tvEmail = findViewById(R.id.tvEmail);
+        tvPhone = findViewById(R.id.tvPhone);
+        tvGender = findViewById(R.id.tvGender);
+        tvMajor = findViewById(R.id.tvMajor);
+        tvClass = findViewById(R.id.tvClass);
+        tvDate = findViewById(R.id.tvDate);
+        tvHobbies = findViewById(R.id.tvHobbies);
+        tvBio = findViewById(R.id.tvBio);
 
-        btnBack = (Button) findViewById(R.id.btnBack);
-        btnOk = (Button) findViewById(R.id.btnOk);
+        btnBack = findViewById(R.id.btnBack);
+        btnOk = findViewById(R.id.btnOk);
 
-        // Read intent
+        // Read data
         Intent it = getIntent();
         final String name = it.getStringExtra("name");
         final String pwd = it.getStringExtra("pwd");
@@ -73,12 +73,11 @@ public class ConfirmActivity extends AppCompatActivity {
         final String bio = it.getStringExtra("bio");
         final String role = it.getStringExtra("role");
 
-        // Set fields
+        // Fill UI
         tvName.setText(name);
-        tvRole.setText(
-                AuthRepository.ROLE_ADMIN.equals(role)
-                        ? getString(R.string.role_admin)
-                        : getString(R.string.role_fan)
+        tvRole.setText(AuthRepository.ROLE_ADMIN.equals(role)
+                ? getString(R.string.role_admin)
+                : getString(R.string.role_fan)
         );
         tvPwd.setText(pwd);
         tvEmail.setText(email);
@@ -90,14 +89,10 @@ public class ConfirmActivity extends AppCompatActivity {
         tvHobbies.setText(hobbies);
         tvBio.setText(bio);
 
-        // Back
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                finish();
-            }
-        });
+        // Back button
+        btnBack.setOnClickListener(v -> finish());
 
-        // Confirm → save → login session → go main
+        // OK button
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,9 +116,12 @@ public class ConfirmActivity extends AppCompatActivity {
 
                     long rowId = db.insert(DBHelper.T_USER, null, values);
 
-                    if (rowId == -1) {
-                        Toast.makeText(ConfirmActivity.this,
-                                "数据库插入失败", Toast.LENGTH_LONG).show();
+                    if (rowId == -1L) {
+                        Toast.makeText(
+                                ConfirmActivity.this,
+                                getString(R.string.error_db, getString(R.string.error_insert_failed)),
+                                Toast.LENGTH_LONG
+                        ).show();
                         return;
                     }
 
@@ -132,14 +130,15 @@ public class ConfirmActivity extends AppCompatActivity {
                     sessionManager.login(String.valueOf(rowId), name);
                     sessionManager.saveSession(UUID.randomUUID().toString(), UserRole.USER, false);
 
-                    Toast.makeText(ConfirmActivity.this,
-                            "注册成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ConfirmActivity.this, R.string.msg_register_success, Toast.LENGTH_SHORT).show();
 
+                    // Jump to main page
                     Intent mainIntent = new Intent(ConfirmActivity.this, MainActivity.class);
-                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                            | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                            | Intent.FLAG_ACTIVITY_NEW_TASK);
-
+                    mainIntent.addFlags(
+                            Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                            Intent.FLAG_ACTIVITY_NEW_TASK
+                    );
                     startActivity(mainIntent);
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -149,9 +148,11 @@ public class ConfirmActivity extends AppCompatActivity {
                     }
 
                 } catch (Exception e) {
-                    Toast.makeText(ConfirmActivity.this,
-                            "数据库错误: " + e.getMessage(),
-                            Toast.LENGTH_LONG).show();
+                    Toast.makeText(
+                            ConfirmActivity.this,
+                            getString(R.string.error_db, e.getMessage()),
+                            Toast.LENGTH_LONG
+                    ).show();
 
                 } finally {
                     if (db != null) db.close();

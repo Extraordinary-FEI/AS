@@ -82,7 +82,7 @@
             android:name="com.example.cn.helloworld.ui.admin.SupportTaskApprovalActivity"
             android:label="@string/title_admin_support_tasks" />
 
-        <!-- 用户中心 -->
+        <!-- 用户中心（最终保留版本） -->
         <activity
             android:name="com.example.cn.helloworld.ui.user.UserProfileActivity"
             android:label="@string/title_user_profile"
@@ -107,7 +107,7 @@
                 android:value="com.example.cn.helloworld.ui.main.MainActivity" />
         </activity>
 
-        <!-- 全部歌单页面 -->
+        <!-- 全部歌单 -->
         <activity
             android:name="com.example.cn.helloworld.ui.playlist.PlaylistOverviewActivity"
             android:label="@string/title_playlist_overview"
