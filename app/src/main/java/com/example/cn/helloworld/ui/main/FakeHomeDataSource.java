@@ -15,28 +15,19 @@ import java.util.List;
  */
 public class FakeHomeDataSource implements HomeDataSource {
 
-    private static Context appContext;
-
     private final PlaylistRepository playlistRepository;
     private final SupportTaskRepository supportTaskRepository = new SupportTaskRepository();
 
-    public FakeHomeDataSource() {
-        this(null);
-    }
-
+    /**
+     * 正确写法：
+     * - 必须依赖 Context，否则 PlaylistRepository.getInstance() 会抛 IllegalStateException
+     * - 使用 applicationContext 避免 Activity 泄漏
+     */
     public FakeHomeDataSource(Context context) {
-        if (context != null) {
-            appContext = context.getApplicationContext();
+        if (context == null) {
+            throw new IllegalArgumentException("FakeHomeDataSource requires non-null Context");
         }
-        if (appContext != null) {
-            playlistRepository = PlaylistRepository.getInstance(appContext);
-        } else {
-            try {
-                playlistRepository = PlaylistRepository.getInstance();
-            } catch (IllegalStateException e) {
-                throw new IllegalStateException("FakeHomeDataSource requires Context before first use", e);
-            }
-        }
+        playlistRepository = PlaylistRepository.getInstance(context.getApplicationContext());
     }
 
     @Override
@@ -61,7 +52,8 @@ public class FakeHomeDataSource implements HomeDataSource {
     }
 
     /**
-     * 修复点：使用 getAllPlaylists()（你新的 PlaylistRepository 中唯一合法的获取方法）
+     * ✔ 修复点：使用 PlaylistRepository.getAllPlaylists()
+     *   （你当前项目里 PlaylistRepository 只有这个方法）
      */
     @Override
     public List<Playlist> loadPlaylists() {

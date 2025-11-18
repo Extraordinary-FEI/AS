@@ -15,6 +15,7 @@
     <string name="btn_cancel">清空</string>
     <string name="btn_back">返回</string>
     <string name="btn_ok">确认</string>
+    <string name="close">关闭</string>
 
     <!-- 登录与注册 -->
     <string name="login_title">欢迎回到千玺星球</string>
@@ -217,6 +218,13 @@
     <string name="category_subtitle_ticket">巡演限定纪念票</string>
     <string name="category_subtitle_merch">官方应援周边</string>
     <string name="category_subtitle_signed">签名照与拍立得</string>
+
+    <!-- 底部导航 -->
+    <string name="nav_home">主页</string>
+    <string name="nav_cart">购物车</string>
+    <string name="nav_support">应援任务</string>
+    <string name="nav_playlist">歌单</string>
+    <string name="nav_profile">个人中心</string>
 
     <!-- 首页任务 -->
     <string name="task_type_format">类型：%1$s</string>

@@ -1,134 +1,149 @@
 package com.example.cn.helloworld.ui.main;
 
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.v4.view.ViewPager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.view.MenuItem;
 
 import com.example.cn.helloworld.R;
-import com.example.cn.helloworld.data.model.Playlist;
-import com.example.cn.helloworld.ui.playlist.PlaylistDetailActivity;
-import com.example.cn.helloworld.ui.playlist.PlaylistOverviewActivity;
-import com.example.cn.helloworld.ui.user.UserProfileActivity;
+import com.example.cn.helloworld.ui.order.CartFragment;
+import com.example.cn.helloworld.ui.playlist.PlaylistLibraryFragment;
+import com.example.cn.helloworld.ui.support.SupportTasksFragment;
+import com.example.cn.helloworld.ui.user.UserCenterFragment;
 
+public class MainActivity extends AppCompatActivity
+        implements BottomNavigationView.OnNavigationItemSelectedListener {
 
-/**
- * 首页入口，负责拼装轮播、分类、歌单和应援任务模块。
- */
-public class MainActivity extends AppCompatActivity {
+    private static final String TAG_HOME = "home";
+    private static final String TAG_CART = "cart";
+    private static final String TAG_SUPPORT = "support";
+    private static final String TAG_PLAYLIST = "playlist";
+    private static final String TAG_PROFILE = "profile";
+    private static final String KEY_SELECTED_NAV = "selected_nav";
 
-    private ViewPager bannerPager;
-    private RecyclerView categoryList;
-    private RecyclerView playlistList;
-    private RecyclerView taskList;
-    private View viewAllPlaylistsButton;
-    private HomeDataSource dataSource;
+    private Fragment homeFragment;
+    private Fragment cartFragment;
+    private Fragment supportFragment;
+    private Fragment playlistFragment;
+    private Fragment profileFragment;
+    private Fragment activeFragment;
+    private int selectedNavId = R.id.navigation_home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // 顶部标题栏
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
         setSupportActionBar(toolbar);
         setTitle(R.string.title_main);
 
-        dataSource = new FakeHomeDataSource(this);
+        if (savedInstanceState != null) {
+            selectedNavId = savedInstanceState.getInt(KEY_SELECTED_NAV, R.id.navigation_home);
+        }
 
+        // 初始化 Fragment
+        initFragments();
 
-        bannerPager = (ViewPager) findViewById(R.id.bannerPager);
-        categoryList = (RecyclerView) findViewById(R.id.categoryList);
-        playlistList = (RecyclerView) findViewById(R.id.playlistList);
-        viewAllPlaylistsButton = findViewById(R.id.button_view_all_playlists);
-        taskList = (RecyclerView) findViewById(R.id.taskList);
-
-
-        setupBanner();
-        setupCategories();
-        setupPlaylists();
-        setupTasks();
-        setupUserFab();
+        // 初始化底部导航
+        BottomNavigationView bottomNavigationView =
+                (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        bottomNavigationView.setSelectedItemId(selectedNavId);
     }
 
-    private void setupBanner() {
-        BannerAdapter bannerAdapter = new BannerAdapter(this, dataSource.loadBanners());
-        bannerPager.setAdapter(bannerAdapter);
-        bannerPager.setOffscreenPageLimit(3);
+    /**
+     * 初始化所有 Fragment
+     */
+    private void initFragments() {
+        FragmentManager manager = getSupportFragmentManager();
+
+        homeFragment = manager.findFragmentByTag(TAG_HOME);
+        cartFragment = manager.findFragmentByTag(TAG_CART);
+        supportFragment = manager.findFragmentByTag(TAG_SUPPORT);
+        playlistFragment = manager.findFragmentByTag(TAG_PLAYLIST);
+        profileFragment = manager.findFragmentByTag(TAG_PROFILE);
+
+        if (homeFragment == null) homeFragment = new HomeFragment();
+        if (cartFragment == null) cartFragment = new CartFragment();
+        if (supportFragment == null) supportFragment = new SupportTasksFragment();
+        if (playlistFragment == null) playlistFragment = new PlaylistLibraryFragment();
+        if (profileFragment == null) profileFragment = new UserCenterFragment();
+
+        // 默认显示首页
+        activeFragment = homeFragment;
+        manager.beginTransaction()
+                .add(R.id.main_container, homeFragment, TAG_HOME)
+                .commit();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
-    private void setupCategories() {
-        categoryList.setLayoutManager(new GridLayoutManager(this, 3));
-        categoryList.setNestedScrollingEnabled(false);
-        categoryList.setAdapter(new CategoryAdapter(dataSource.loadCategories()));
+    /**
+     * 底部导航切换
+     */
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        selectedNavId = item.getItemId();
+
+        switch (item.getItemId()) {
+            case R.id.navigation_home:
+                showFragment(homeFragment, TAG_HOME);
+                setTitle(R.string.title_main);
+                return true;
+
+            case R.id.navigation_cart:
+                showFragment(cartFragment, TAG_CART);
+                setTitle(R.string.nav_cart);
+                return true;
+
+            case R.id.navigation_support:
+                showFragment(supportFragment, TAG_SUPPORT);
+                setTitle(R.string.nav_support);
+                return true;
+
+            case R.id.navigation_playlist:
+                showFragment(playlistFragment, TAG_PLAYLIST);
+                setTitle(R.string.nav_playlist);
+                return true;
+
+            case R.id.navigation_profile:
+                showFragment(profileFragment, TAG_PROFILE);
+                setTitle(R.string.title_user_profile);
+                return true;
+        }
+        return false;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
-    private void setupPlaylists() {
-        LinearLayoutManager layoutManager =
-                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        playlistList.setLayoutManager(layoutManager);
-        playlistList.setNestedScrollingEnabled(false);
+    /**
+     * 显示某个 Fragment
+     */
+    private void showFragment(Fragment fragment, String tag) {
+        if (fragment == null) return;
 
-        playlistList.setAdapter(new PlaylistAdapter(
-                dataSource.loadPlaylists(),
-                new PlaylistAdapter.OnPlaylistClickListener() {
-                    @Override
-                    public void onPlaylistClick(Playlist playlist) {
-                        startActivity(PlaylistDetailActivity.createIntent(
-                                MainActivity.this,
-                                playlist.getId()
-                        ));
-                    }
+        FragmentManager manager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
 
-                    @Override
-                    public void onPlaylistClick(HomeModels.Playlist playlist) {
+        if (activeFragment != null) {
+            transaction.hide(activeFragment);
+        }
 
-                    }
-                }));
-        viewAllPlaylistsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, PlaylistOverviewActivity.class));
-            }
-        });
+        if (!fragment.isAdded()) {
+            transaction.add(R.id.main_container, fragment, tag);
+        } else {
+            transaction.show(fragment);
+        }
+
+        transaction.commit();
+        activeFragment = fragment;
     }
 
-
-    private void setupUserFab() {
-        android.support.design.widget.FloatingActionButton fabProfile =
-                (android.support.design.widget.FloatingActionButton) findViewById(R.id.fab_profile);
-
-        fabProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
-                try {
-                    startActivity(intent);
-                } catch (ActivityNotFoundException notFound) {
-                    android.widget.Toast.makeText(
-                            MainActivity.this,
-                            R.string.error_profile_not_found,
-                            android.widget.Toast.LENGTH_SHORT
-                    ).show();
-                }
-            }
-        });
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
-    private void setupTasks() {
-        taskList.setLayoutManager(new LinearLayoutManager(this));
-        taskList.setNestedScrollingEnabled(false);
-        taskList.setAdapter(new TaskAdapter(dataSource.loadSupportTasks()));
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(KEY_SELECTED_NAV, selectedNavId);
+        super.onSaveInstanceState(outState);
     }
 }

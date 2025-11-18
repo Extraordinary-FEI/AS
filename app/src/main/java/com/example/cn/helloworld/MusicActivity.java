@@ -12,12 +12,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.cn.helloworld.ui.main.MainActivity;
+
 public class MusicActivity extends Activity {
 
     public static final String EXTRA_PLAYLIST_ID = "extra_playlist_id";
     public static final String EXTRA_SONG_ID = "extra_song_id";
 
-    private ImageButton btnPlayPause, btnStop, btnNext, btnPrev;
+    private ImageButton btnPlayPause, btnStop, btnNext, btnPrev, btnBack;
     private ImageView imgCover;
     private TextView tvSongName;
 
@@ -40,6 +42,7 @@ public class MusicActivity extends Activity {
         btnStop = (ImageButton) findViewById(R.id.btn_stop);
         btnNext = (ImageButton) findViewById(R.id.btn_next);
         btnPrev = (ImageButton) findViewById(R.id.btn_prev);
+        btnBack = (ImageButton) findViewById(R.id.btn_back);
         imgCover = (ImageView) findViewById(R.id.img_cover);
         tvSongName = (TextView) findViewById(R.id.tv_song_name);
 
@@ -90,6 +93,16 @@ public class MusicActivity extends Activity {
             @Override
             public void onClick(View v) {
                 sendBroadcast(new Intent("ACTION_PREV"));
+            }
+        });
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MusicActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                finish();
             }
         });
     }
