@@ -85,6 +85,10 @@
             android:name="com.example.cn.helloworld.ui.admin.SupportTaskApprovalActivity"
             android:label="@string/title_admin_support_tasks" />
 
+        <activity
+            android:name="com.example.cn.helloworld.ui.admin.AdminOrderListActivity"
+            android:label="@string/title_admin_orders" />
+
         <!-- 用户中心 -->
         <activity
             android:name="com.example.cn.helloworld.ui.user.UserProfileActivity"

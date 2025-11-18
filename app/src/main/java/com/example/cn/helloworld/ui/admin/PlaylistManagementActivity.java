@@ -52,8 +52,7 @@ public class PlaylistManagementActivity extends AppCompatActivity {
             return;
         }
 
-        // ❗ 正确写法：单例
-        playlistRepository = PlaylistRepository.getInstance();
+        playlistRepository = PlaylistRepository.getInstance(this);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerPlaylists);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

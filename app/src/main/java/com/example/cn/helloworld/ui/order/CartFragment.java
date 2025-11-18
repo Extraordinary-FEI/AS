@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.CartItem;
 import com.example.cn.helloworld.data.model.Order;
+import com.example.cn.helloworld.data.repository.AdminMetricsRepository;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -74,6 +75,7 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartChan
         order.recalculateTotal();
         Context context = getActivity();
         if (context != null) {
+            AdminMetricsRepository.getInstance(context).recordOrder(order);
             Intent intent = new Intent(context, OrderDetailActivity.class);
             intent.putExtra(OrderDetailActivity.EXTRA_ORDER, order);
             startActivity(intent);

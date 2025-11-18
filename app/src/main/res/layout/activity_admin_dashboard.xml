@@ -98,6 +98,13 @@
             android:text="歌单管理" />
 
         <Button
+            android:id="@+id/btnViewOrders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/title_admin_orders" />
+
+        <Button
             android:id="@+id/btnViewUsers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

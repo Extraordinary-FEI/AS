@@ -86,6 +86,11 @@
     <string name="order_address_template">收货地址：%1$s</string>
     <string name="order_created_template">下单时间：%1$s</string>
     <string name="order_items">商品清单</string>
+    <string name="order_status_paid">已支付</string>
+    <string name="order_status_pending_payment">待支付</string>
+    <string name="order_status_created">已创建</string>
+    <string name="order_status_unknown">状态未知</string>
+    <string name="order_action_view_detail">查看详情</string>
 
     <!-- 商品详情文本 -->
     <string name="default_product_name">易烊千玺特别周边</string>
@@ -107,6 +112,7 @@
     <string name="title_admin_manage_products">商品管理</string>
     <string name="title_admin_manage_playlists">歌单管理</string>
     <string name="title_admin_support_tasks">应援任务审批</string>
+    <string name="title_admin_orders">订单明细</string>
     <string name="dashboard_stats_title">核心指标</string>
     <string name="stat_label_order">订单</string>
     <string name="stat_label_support">待审批任务</string>
@@ -169,12 +175,26 @@
     <!-- 应援任务审批 -->
     <string name="support_task_action_approve">通过</string>
     <string name="support_task_action_reject">驳回</string>
+    <string name="support_task_action_edit">编辑</string>
+    <string name="support_task_action_delete">删除</string>
     <string name="support_task_status_format">状态：%1$s</string>
     <string name="support_task_unassigned">未分配审批人</string>
     <string name="support_task_assigned_format">审批人：%1$s</string>
     <string name="support_task_status_pending">待审批</string>
     <string name="support_task_status_approved">已通过</string>
     <string name="support_task_status_rejected">已驳回</string>
+    <string name="support_task_priority_format">优先级：%1$d</string>
+    <string name="support_task_dialog_title_create">新增应援任务</string>
+    <string name="support_task_dialog_title_edit">编辑应援任务</string>
+    <string name="support_task_dialog_title_delete">删除应援任务</string>
+    <string name="support_task_dialog_message_delete">确定要删除“%1$s”吗？</string>
+    <string name="hint_support_task_title">任务标题</string>
+    <string name="hint_support_task_description">任务描述</string>
+    <string name="hint_support_task_priority">优先级（数字，越小越紧急）</string>
+    <string name="label_support_task_status">任务状态</string>
+    <string name="support_task_error_title_required">请输入任务标题</string>
+    <string name="support_task_error_desc_required">请输入任务描述</string>
+    <string name="support_task_error_priority">请输入正确的优先级数字</string>
     <string name="category_header_title">千玺应援好物</string>
     <string name="category_header_subtitle">挑选巡演门票、限定周边与签名纪念</string>
     <string name="category_default_subtitle">更多精选内容</string>

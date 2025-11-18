@@ -17,8 +17,6 @@ import com.example.cn.helloworld.data.repository.AdminMetricsRepository;
 import com.example.cn.helloworld.data.repository.SupportTaskRepository;
 import com.example.cn.helloworld.data.session.SessionManager;
 import com.example.cn.helloworld.ui.auth.LoginActivity;
-import com.example.cn.helloworld.data.playlist.PlaylistRepository;
-
 
 /**
  * 管理员控制台：融合版本
@@ -35,6 +33,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private TextView summaryText;
     private Button btnProducts;
     private Button btnPlaylists;
+    private Button btnOrders;
     private Button btnUsers;
     private Button btnLogout;
     private StatsBarView statsBarView;
@@ -52,8 +51,8 @@ public class AdminDashboardActivity extends AppCompatActivity {
             return;
         }
 
-        supportTaskRepository = new SupportTaskRepository();
-        metricsRepository = new AdminMetricsRepository(supportTaskRepository);
+        supportTaskRepository = SupportTaskRepository.getInstance(this);
+        metricsRepository = AdminMetricsRepository.getInstance(this);
 
         bindViews();
         populateInfo();
@@ -68,6 +67,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         btnProducts = (Button) findViewById(R.id.btnManageProducts);
         btnPlaylists = (Button) findViewById(R.id.btnManagePlaylists);
         btnUsers = (Button) findViewById(R.id.btnViewUsers);
+        btnOrders = (Button) findViewById(R.id.btnViewOrders);
         btnLogout = (Button) findViewById(R.id.btnLogout);
         statsBarView = (StatsBarView) findViewById(R.id.stats_bar_view);
     }
@@ -93,7 +93,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
     /** 初始化仪表盘数据 */
     private void setupDashboardStats() {
         if (statsBarView == null) return;
-        AdminMetrics metrics = metricsRepository.loadMetrics();
+        AdminMetrics metrics = metricsRepository.loadMetrics(supportTaskRepository);
         float[] values = new float[]{
                 metrics.getOrderCount(),
                 metrics.getPendingTasks(),
@@ -128,6 +128,12 @@ public class AdminDashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(AdminDashboardActivity.this, PlaylistManagementActivity.class));
+            }
+        });
+        btnOrders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AdminDashboardActivity.this, AdminOrderListActivity.class));
             }
         });
         btnUsers.setOnClickListener(new View.OnClickListener() {

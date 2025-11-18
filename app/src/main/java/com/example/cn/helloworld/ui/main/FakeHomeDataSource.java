@@ -1,5 +1,7 @@
 package com.example.cn.helloworld.ui.main;
 
+import android.content.Context;
+
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.data.playlist.PlaylistRepository;
@@ -13,8 +15,12 @@ import java.util.List;
  */
 public class FakeHomeDataSource implements HomeDataSource {
 
-    private final PlaylistRepository playlistRepository = PlaylistRepository.getInstance();
+    private final PlaylistRepository playlistRepository;
     private final SupportTaskRepository supportTaskRepository = new SupportTaskRepository();
+
+    public FakeHomeDataSource(Context context) {
+        playlistRepository = PlaylistRepository.getInstance(context);
+    }
 
     @Override
     public List<HomeModels.BannerItem> loadBanners() {

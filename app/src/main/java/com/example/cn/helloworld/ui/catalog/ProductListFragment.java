@@ -46,7 +46,7 @@ public class ProductListFragment extends android.support.v4.app.Fragment {
         super.onCreate(savedInstanceState);
         Context context = getActivity();
         if (context != null) {
-            productRepository = new ProductRepository((ProductDetailActivity) context);
+            productRepository = ProductRepository.getInstance(context);
         }
         if (getArguments() != null) {
             categoryId = getArguments().getString(ARG_CATEGORY_ID);

@@ -33,7 +33,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_product_detail);
 
         String productId = getIntent().getStringExtra(EXTRA_PRODUCT_ID);
-        ProductRepository repository = new ProductRepository(this);
+        ProductRepository repository = ProductRepository.getInstance(this);
         Product product = repository.getProductById(productId);
 
         if (product == null) {
@@ -52,7 +52,12 @@ public class ProductDetailActivity extends AppCompatActivity {
         TextView descriptionView = (TextView) findViewById(R.id.detailProductDescription);
         TextView attributesView = (TextView) findViewById(R.id.detailProductAttributes);
 
-        imageView.setImageResource(product.getImageResId());
+        int imageResId = product.getImageResId();
+        if (imageResId != 0) {
+            imageView.setImageResource(imageResId);
+        } else {
+            imageView.setImageResource(R.mipmap.ic_launcher);
+        }
         nameView.setText(product.getName());
         priceView.setText(String.format(Locale.getDefault(), "¥%.2f", product.getPrice()));
         inventoryView.setText(getString(R.string.product_inventory_format, product.getInventory()));
@@ -70,10 +75,11 @@ public class ProductDetailActivity extends AppCompatActivity {
         } else {
             limitView.setVisibility(View.GONE);
         }
-        if (product.getCategoryAttributes().isEmpty()) {
+        Map<String, String> categoryAttributes = product.getCategoryAttributes();
+        if (categoryAttributes == null || categoryAttributes.isEmpty()) {
             attributesView.setVisibility(View.GONE);
         } else {
-            attributesView.setText(getString(R.string.product_attributes_format, formatAttributes((Map<String, String>) product.getCategoryAttributes())));
+            attributesView.setText(getString(R.string.product_attributes_format, formatAttributes(categoryAttributes)));
             attributesView.setVisibility(View.VISIBLE);
         }
         descriptionView.setText(product.getDescription());

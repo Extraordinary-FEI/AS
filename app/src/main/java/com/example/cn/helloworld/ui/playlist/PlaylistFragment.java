@@ -1,5 +1,6 @@
 package com.example.cn.helloworld.ui.playlist;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -44,7 +45,10 @@ public class PlaylistFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         // ★★ 使用你的单例仓库，而不是 new
-        playlistRepository = PlaylistRepository.getInstance();
+        Context context = getContext();
+        if (context != null) {
+            playlistRepository = PlaylistRepository.getInstance(context);
+        }
 
         if (getArguments() != null) {
             playlistId = getArguments().getString(ARG_PLAYLIST_ID);

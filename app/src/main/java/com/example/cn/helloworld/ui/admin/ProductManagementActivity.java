@@ -61,7 +61,7 @@ public class ProductManagementActivity extends AppCompatActivity {
             return;
         }
 
-        productRepository = new ProductRepository(this);
+        productRepository = ProductRepository.getInstance(this);
         categories = productRepository.getCategories();
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerProducts);
@@ -175,17 +175,20 @@ public class ProductManagementActivity extends AppCompatActivity {
                         }
 
                         if (product == null) {
-                            String productId = productRepository.generateProductId(name.replace(" ", ""));
+                            String productId = productRepository.generateProductId(resolvedCategoryId);
                             Product newProduct = new Product(productId,
                                     name,
                                     description,
                                     price,
-                                    R.mipmap.ic_launcher,
-                                    resolvedCategoryId,
                                     inventory,
+                                    resolvedCategoryId,
+                                    5,
                                     Collections.<String>emptyList(),
                                     Collections.<String>emptyList(),
-                                    active);
+                                    active,
+                                    null,
+                                    null,
+                                    null);
                             productRepository.saveProduct(newProduct);
                         } else {
                             productRepository.updateProductDetails(product.getId(),
