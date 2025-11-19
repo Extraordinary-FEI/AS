@@ -69,11 +69,15 @@
                 <TextView
                     android:id="@+id/category_title"
                     style="@style/HomeSectionTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="@string/home_category_title" />
 
                 <TextView
                     android:id="@+id/category_subtitle"
                     style="@style/HomeSectionSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="@string/home_category_subtitle"
                     android:layout_marginTop="2dp" />
 
@@ -174,11 +178,15 @@
                 <TextView
                     android:id="@+id/task_title"
                     style="@style/HomeSectionTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="@string/home_task_title" />
 
                 <TextView
                     android:id="@+id/task_subtitle"
                     style="@style/HomeSectionSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="@string/home_task_subtitle" />
 
