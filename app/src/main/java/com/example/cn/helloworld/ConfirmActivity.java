@@ -76,7 +76,7 @@ public class ConfirmActivity extends AppCompatActivity {
         final String date = it.getStringExtra("date");
         final String hobbies = it.getStringExtra("hobbies");
         final String bio = it.getStringExtra("bio");
-        final String role = it.getStringExtra("role");
+        final String role = it.getStringExtra("role"); // 可能是 user/admin，但注册只允许 user
 
         // Fill UI
         tvName.setText(name);
@@ -94,7 +94,7 @@ public class ConfirmActivity extends AppCompatActivity {
         tvHobbies.setText(hobbies);
         tvBio.setText(bio);
 
-        // Back button (匿名内部类)
+        // Back button
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,7 +102,7 @@ public class ConfirmActivity extends AppCompatActivity {
             }
         });
 
-        // OK button（匿名内部类）
+        // OK button
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,29 +124,36 @@ public class ConfirmActivity extends AppCompatActivity {
                     values.put(DBHelper.C_HOBBIES, hobbies);
                     values.put(DBHelper.C_BIO, bio);
 
+                    // ⭐⭐ 最重要：必须写入角色，否则登录永远失败 ⭐⭐
+                    values.put("role", AuthRepository.ROLE_USER);
+
                     long rowId = db.insert(DBHelper.T_USER, null, values);
 
                     if (rowId == -1L) {
                         Toast.makeText(
                                 ConfirmActivity.this,
-                                getString(R.string.error_db, getString(R.string.error_insert_failed)),
+                                "数据库写入失败",
                                 Toast.LENGTH_LONG
                         ).show();
                         return;
                     }
 
-                    // Save session
+                    // 保存 session
                     SessionManager sessionManager = new SessionManager(ConfirmActivity.this);
                     sessionManager.login(String.valueOf(rowId), name);
-                    sessionManager.saveSession(UUID.randomUUID().toString(), UserRole.USER, false);
+                    sessionManager.saveSession(
+                            UUID.randomUUID().toString(),
+                            UserRole.USER,
+                            false
+                    );
 
                     Toast.makeText(
                             ConfirmActivity.this,
-                            R.string.msg_register_success,
+                            "注册成功！",
                             Toast.LENGTH_SHORT
                     ).show();
 
-                    // Jump to main page
+                    // 跳转首页
                     Intent mainIntent = new Intent(ConfirmActivity.this, MainActivity.class);
                     mainIntent.addFlags(
                             Intent.FLAG_ACTIVITY_CLEAR_TOP |
@@ -164,7 +171,7 @@ public class ConfirmActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     Toast.makeText(
                             ConfirmActivity.this,
-                            getString(R.string.error_db, e.getMessage()),
+                            "错误：" + e.getMessage(),
                             Toast.LENGTH_LONG
                     ).show();
 

@@ -14,8 +14,7 @@
         android:orientation="vertical"
         android:paddingBottom="32dp">
 
-
-        <!-- ⭐ 自动轮播 Banner 卡片区（含模糊阴影） -->
+        <!-- ⭐ Banner 卡片（上面 ViewPager，下面是胶囊指示器） -->
         <android.support.v7.widget.CardView
             android:id="@+id/bannerCard"
             android:layout_width="match_parent"
@@ -35,8 +34,9 @@
                     android:layout_height="match_parent"
                     android:clipToPadding="false"
                     android:paddingLeft="24dp"
-                    android:paddingRight="24dp"/>
+                    android:paddingRight="24dp" />
 
+                <!-- 胶囊指示器容器，只放一个 LinearLayout，具体的 capsule 用代码动态添加 -->
                 <LinearLayout
                     android:id="@+id/bannerIndicator"
                     android:layout_width="wrap_content"
@@ -44,13 +44,12 @@
                     android:orientation="horizontal"
                     android:gravity="center"
                     android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="12dp"/>
+                    android:layout_marginBottom="12dp" />
             </FrameLayout>
 
         </android.support.v7.widget.CardView>
 
-
-        <!-- ⭐ 快速入口（图标入口） -->
+        <!-- ⭐ 快速入口（分类区） -->
         <android.support.v7.widget.CardView
             android:id="@+id/category_section"
             android:layout_width="match_parent"
@@ -71,24 +70,23 @@
                 <TextView
                     android:id="@+id/category_title"
                     style="@style/HomeSectionTitle"
-                    android:text="快速入口"/>
+                    android:text="@string/home_category_title" />
 
                 <TextView
                     android:id="@+id/category_subtitle"
                     style="@style/HomeSectionSubtitle"
-                    android:text="发现最常用的应援功能"
-                    android:layout_marginTop="2dp"/>
+                    android:text="@string/home_category_subtitle"
+                    android:layout_marginTop="2dp" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/categoryList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="16dp"
-                    android:nestedScrollingEnabled="false"/>
+                    android:nestedScrollingEnabled="false" />
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
-
 
         <!-- ⭐ 歌单模块 -->
         <android.support.v7.widget.CardView
@@ -103,38 +101,48 @@
             app:cardUseCompatPadding="true">
 
             <LinearLayout
-                android:orientation="vertical"
-                android:padding="16dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:id="@+id/playlist_title"
                         style="@style/HomeSectionTitle"
                         android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="千玺主题歌单"/>
+                        android:text="@string/home_playlist_title" />
 
                     <TextView
                         android:id="@+id/button_view_all_playlists"
-                        android:padding="6dp"
-                        android:text="全部歌单"
-                        android:textSize="12sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
                         android:background="@drawable/bg_category_chip"
-                        android:textColor="@color/homeTextPrimary"/>
+                        android:text="@string/home_playlist_view_all"
+                        android:textColor="@color/homeTextPrimary"
+                        android:textSize="12sp"
+                        android:clickable="true"
+                        android:focusable="true" />
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/playlist_subtitle"
                     style="@style/HomeSectionSubtitle"
-                    android:text="和他一起听舞台、电影与成长的故事"
-                    android:layout_marginTop="4dp"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/home_playlist_subtitle" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/playlistList"
@@ -142,12 +150,11 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="16dp"
                     android:nestedScrollingEnabled="false"
-                    android:clipToPadding="false"/>
+                    android:clipToPadding="false" />
 
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
-
 
         <!-- ⭐ 应援任务模块 -->
         <android.support.v7.widget.CardView
@@ -162,28 +169,29 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <TextView
                     android:id="@+id/task_title"
                     style="@style/HomeSectionTitle"
-                    android:text="应援任务"/>
+                    android:text="@string/home_task_title" />
 
                 <TextView
                     android:id="@+id/task_subtitle"
                     style="@style/HomeSectionSubtitle"
-                    android:text="参与行动，为千玺蓄力应援能量"
-                    android:layout_marginTop="4dp"/>
+                    android:layout_marginTop="4dp"
+                    android:text="@string/home_task_subtitle" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/taskList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="16dp"
-                    android:nestedScrollingEnabled="false"/>
+                    android:nestedScrollingEnabled="false" />
 
             </LinearLayout>
+
         </android.support.v7.widget.CardView>
 
     </LinearLayout>

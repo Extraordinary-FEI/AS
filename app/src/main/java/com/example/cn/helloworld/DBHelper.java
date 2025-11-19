@@ -42,8 +42,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 C_DATE + " TEXT," +
                 C_HOBBIES + " TEXT," +
                 C_BIO + " TEXT," +
+                "role TEXT," +                   // ⭐ 新增角色字段
                 C_CREATED_AT + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
                 ")");
+
     }
 
     @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
