@@ -3,9 +3,7 @@ package com.example.cn.helloworld;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -22,33 +20,29 @@ import java.util.UUID;
 
 public class ConfirmActivity extends AppCompatActivity {
 
-    private TextView tvName, tvRole, tvPwd, tvEmail, tvPhone, tvGender, tvMajor,
-            tvClass, tvDate, tvHobbies, tvBio;
+    private TextView tvName, tvRole, tvPwd, tvEmail, tvPhone, tvGender,
+            tvMajor, tvClass, tvDate, tvHobbies, tvBio;
+
     private Button btnBack, btnOk;
 
-    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm);
 
-        // Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setTitle("注册信息确认");
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
                 public void onClick(View v) {
                     finish();
                 }
             });
         }
 
-        // Bind views
         tvName = (TextView) findViewById(R.id.tvName);
         tvRole = (TextView) findViewById(R.id.tvRole);
         tvPwd = (TextView) findViewById(R.id.tvPwd);
@@ -64,8 +58,8 @@ public class ConfirmActivity extends AppCompatActivity {
         btnBack = (Button) findViewById(R.id.btnBack);
         btnOk = (Button) findViewById(R.id.btnOk);
 
-        // Read data
         Intent it = getIntent();
+
         final String name = it.getStringExtra("name");
         final String pwd = it.getStringExtra("pwd");
         final String email = it.getStringExtra("email");
@@ -76,14 +70,9 @@ public class ConfirmActivity extends AppCompatActivity {
         final String date = it.getStringExtra("date");
         final String hobbies = it.getStringExtra("hobbies");
         final String bio = it.getStringExtra("bio");
-        final String role = it.getStringExtra("role"); // 可能是 user/admin，但注册只允许 user
 
-        // Fill UI
         tvName.setText(name);
-        tvRole.setText(AuthRepository.ROLE_ADMIN.equals(role)
-                ? getString(R.string.role_admin)
-                : getString(R.string.role_fan)
-        );
+        tvRole.setText("普通用户");
         tvPwd.setText(pwd);
         tvEmail.setText(email);
         tvPhone.setText(phone);
@@ -94,17 +83,13 @@ public class ConfirmActivity extends AppCompatActivity {
         tvHobbies.setText(hobbies);
         tvBio.setText(bio);
 
-        // Back button
         btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
             public void onClick(View v) {
                 finish();
             }
         });
 
-        // OK button
         btnOk.setOnClickListener(new View.OnClickListener() {
-            @Override
             public void onClick(View v) {
 
                 SQLiteDatabase db = null;
@@ -112,68 +97,47 @@ public class ConfirmActivity extends AppCompatActivity {
                 try {
                     db = new DBHelper(ConfirmActivity.this).getWritableDatabase();
 
-                    ContentValues values = new ContentValues();
-                    values.put(DBHelper.C_NAME, name);
-                    values.put(DBHelper.C_PWD, pwd);
-                    values.put(DBHelper.C_EMAIL, email);
-                    values.put(DBHelper.C_PHONE, phone);
-                    values.put(DBHelper.C_GENDER, gender);
-                    values.put(DBHelper.C_MAJOR, major);
-                    values.put(DBHelper.C_CLAZZ, clazz);
-                    values.put(DBHelper.C_DATE, date);
-                    values.put(DBHelper.C_HOBBIES, hobbies);
-                    values.put(DBHelper.C_BIO, bio);
+                    ContentValues cv = new ContentValues();
+                    cv.put(DBHelper.C_NAME, name);
+                    cv.put(DBHelper.C_PWD, pwd);
+                    cv.put(DBHelper.C_EMAIL, email);
+                    cv.put(DBHelper.C_PHONE, phone);
+                    cv.put(DBHelper.C_GENDER, gender);
+                    cv.put(DBHelper.C_MAJOR, major);
+                    cv.put(DBHelper.C_CLAZZ, clazz);
+                    cv.put(DBHelper.C_DATE, date);
+                    cv.put(DBHelper.C_HOBBIES, hobbies);
+                    cv.put(DBHelper.C_BIO, bio);
 
-                    // ⭐⭐ 最重要：必须写入角色，否则登录永远失败 ⭐⭐
-                    values.put("role", AuthRepository.ROLE_USER);
+                    cv.put(DBHelper.C_ROLE, AuthRepository.ROLE_USER);
 
-                    long rowId = db.insert(DBHelper.T_USER, null, values);
+                    long id = db.insert(DBHelper.T_USER, null, cv);
 
-                    if (rowId == -1L) {
-                        Toast.makeText(
-                                ConfirmActivity.this,
+                    if (id == -1) {
+                        Toast.makeText(ConfirmActivity.this,
                                 "数据库写入失败",
-                                Toast.LENGTH_LONG
-                        ).show();
+                                Toast.LENGTH_LONG).show();
                         return;
                     }
 
-                    // 保存 session
-                    SessionManager sessionManager = new SessionManager(ConfirmActivity.this);
-                    sessionManager.login(String.valueOf(rowId), name);
-                    sessionManager.saveSession(
-                            UUID.randomUUID().toString(),
-                            UserRole.USER,
-                            false
-                    );
+                    SessionManager sm = new SessionManager(ConfirmActivity.this);
+                    sm.login(String.valueOf(id), name);
+                    sm.saveSession(UUID.randomUUID().toString(), UserRole.USER, false);
 
-                    Toast.makeText(
-                            ConfirmActivity.this,
-                            "注册成功！",
-                            Toast.LENGTH_SHORT
-                    ).show();
+                    Toast.makeText(ConfirmActivity.this, "注册成功！", Toast.LENGTH_SHORT).show();
 
-                    // 跳转首页
-                    Intent mainIntent = new Intent(ConfirmActivity.this, MainActivity.class);
-                    mainIntent.addFlags(
-                            Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                                    Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                                    Intent.FLAG_ACTIVITY_NEW_TASK
-                    );
-                    startActivity(mainIntent);
+                    Intent i = new Intent(ConfirmActivity.this, MainActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                            Intent.FLAG_ACTIVITY_NEW_TASK |
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(i);
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        finishAffinity();
-                    } else {
-                        finish();
-                    }
+                    finish();
 
                 } catch (Exception e) {
-                    Toast.makeText(
-                            ConfirmActivity.this,
+                    Toast.makeText(ConfirmActivity.this,
                             "错误：" + e.getMessage(),
-                            Toast.LENGTH_LONG
-                    ).show();
+                            Toast.LENGTH_LONG).show();
 
                 } finally {
                     if (db != null) db.close();

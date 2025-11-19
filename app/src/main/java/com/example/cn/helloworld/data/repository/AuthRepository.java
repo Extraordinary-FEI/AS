@@ -15,14 +15,6 @@ import java.util.EnumSet;
 import java.util.Locale;
 import java.util.UUID;
 
-/**
- * AuthRepository
- * 修复版：
- * - 支持 SQLite 注册用户（含 role 字段）
- * - 支持管理员验证
- * - 修复登录失败和找不到用户的问题
- * - 自动兼容老师要求的 SQLite 结构
- */
 public class AuthRepository {
 
     public static final String ROLE_ADMIN = UserRole.ADMIN.name();
@@ -30,62 +22,52 @@ public class AuthRepository {
 
     private static final String ADMIN_USERNAME = "admin";
     private static final String ADMIN_PASSWORD = "admin123";
-    private static final String ADMIN_VERIFICATION_CODE = "YYQX2020";
+    private static final String ADMIN_CODE = "YYQX2020";
 
     private static final String TAG = "AuthRepository";
-    private final Context context;
 
-    private DBHelper dbHelper;
+    private DBHelper helper;
+    private Context context;
 
     public AuthRepository(Context context) {
         this.context = context.getApplicationContext();
-        this.dbHelper = new DBHelper(this.context);
+        helper = new DBHelper(this.context);
     }
 
-    /**
-     * 兼容旧用法
-     */
-    public LoginResult login(String username, String password, boolean useAdminEntrance) {
-        String role = useAdminEntrance ? ROLE_ADMIN : ROLE_USER;
-        return login(username, password, role, "");
+    public LoginResult login(String username, String password, boolean adminEntry) {
+        return login(username, password,
+                adminEntry ? ROLE_ADMIN : ROLE_USER,
+                "");
     }
 
-    /**
-     * 登录入口（管理员 + 用户）
-     */
-    public LoginResult login(String username,
-                             String password,
-                             String requestedRole,
-                             String verificationCode) {
+    public LoginResult login(String username, String password, String role, String code) {
 
         if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
             return new LoginResult(false, null, username, null, null, null,
-                    "用户名和密码不能为空");
+                    "用户名或密码不能为空");
         }
 
-        String role = TextUtils.isEmpty(requestedRole)
-                ? ROLE_USER
-                : requestedRole.toUpperCase(Locale.US);
+        role = role == null ? ROLE_USER : role.toUpperCase(Locale.US);
 
-        // ========= 管理员登录 ==========
+        // -------------------------
+        // 管理员登录
+        // -------------------------
         if (ROLE_ADMIN.equals(role)) {
 
-            // 管理员验证码必须输入
-            if (TextUtils.isEmpty(verificationCode)) {
+            if (TextUtils.isEmpty(code)) {
                 return new LoginResult(false, null, username, null, null, null,
                         "请输入管理员验证码");
             }
 
-            if (!ADMIN_VERIFICATION_CODE.equalsIgnoreCase(verificationCode)) {
+            if (!ADMIN_CODE.equalsIgnoreCase(code)) {
                 return new LoginResult(false, null, username, null, null, null,
                         "管理员验证码错误");
             }
 
-            // 管理员账号判断（写死）
             if (ADMIN_USERNAME.equalsIgnoreCase(username)
                     && ADMIN_PASSWORD.equals(password)) {
 
-                String token = generateToken(username);
+                String token = token(username);
 
                 return new LoginResult(
                         true,
@@ -97,100 +79,87 @@ public class AuthRepository {
                                 Permission.MANAGE_PRODUCTS,
                                 Permission.MANAGE_PLAYLISTS,
                                 Permission.APPROVE_SUPPORT_TASKS,
-                                Permission.VIEW_ANALYTICS
-                        ),
-                        "管理员登录成功"
-                );
+                                Permission.VIEW_ANALYTICS),
+                        "管理员登录成功");
             }
 
             return new LoginResult(false, null, username, null, null, null,
                     "管理员账号或密码错误");
         }
 
-        // ========== 普通用户登录 ==========
-        if (ROLE_USER.equals(role)) {
+        // -------------------------
+        // 普通用户 SQLite 查询
+        // -------------------------
 
-            UserRecord record = queryUserFromSQLite(username, password);
+        UserRecord record = queryUser(username, password);
+        if (record != null) {
 
-            if (record != null) {
-                String token = generateToken(record.name);
+            String token = token(record.name);
 
-                return new LoginResult(
-                        true,
-                        record.id,
-                        record.name,
-                        token,
-                        UserRole.USER,
-                        EnumSet.of(Permission.VIEW_ANALYTICS),
-                        "用户登录成功"
-                );
-            }
-
-            return new LoginResult(false, null, username, null, null, null,
-                    "用户名或密码错误");
+            return new LoginResult(
+                    true,
+                    record.id,
+                    record.name,
+                    token,
+                    UserRole.USER,
+                    EnumSet.of(Permission.VIEW_ANALYTICS),
+                    "用户登录成功"
+            );
         }
 
         return new LoginResult(false, null, username, null, null, null,
-                "不支持的账号角色");
+                "用户名或密码错误");
     }
 
-    /**
-     * 从 SQLite 查询用户
-     * - 支持 ConfirmActivity 注册记录
-     * - 必须带上 role 字段
-     */
-    private UserRecord queryUserFromSQLite(String username, String password) {
+    private UserRecord queryUser(String username, String pwd) {
         SQLiteDatabase db = null;
         Cursor cursor = null;
 
         try {
-            db = dbHelper.getReadableDatabase();
+            db = helper.getReadableDatabase();
 
             cursor = db.query(
                     DBHelper.T_USER,
                     new String[]{
                             DBHelper.C_ID,
                             DBHelper.C_NAME,
-                            DBHelper.C_PWD,
-                            "role"        // ⭐ 必须有 role 字段
+                            DBHelper.C_ROLE
                     },
                     DBHelper.C_NAME + "=? AND " + DBHelper.C_PWD + "=?",
-                    new String[]{username, password},
-                    null,
-                    null,
-                    null
+                    new String[]{username, pwd},
+                    null, null, null, "1"
             );
 
             if (cursor != null && cursor.moveToFirst()) {
+                String role = cursor.getString(cursor.getColumnIndex(DBHelper.C_ROLE));
 
-                long id = cursor.getLong(cursor.getColumnIndex(DBHelper.C_ID));
-                String name = cursor.getString(cursor.getColumnIndex(DBHelper.C_NAME));
-                String role = cursor.getString(cursor.getColumnIndex("role"));
-
-                // 只允许普通用户走此流程
                 if (ROLE_USER.equalsIgnoreCase(role)) {
-                    return new UserRecord(String.valueOf(id), name);
+                    return new UserRecord(
+                            String.valueOf(cursor.getLong(cursor.getColumnIndex(DBHelper.C_ID))),
+                            cursor.getString(cursor.getColumnIndex(DBHelper.C_NAME))
+                    );
                 }
             }
+
         } catch (Exception e) {
-            Log.e(TAG, "SQLite 查询用户失败：", e);
+            Log.e(TAG, "queryUser error:", e);
         } finally {
-            if (cursor != null) cursor.close();
-            if (db != null && db.isOpen()) db.close();
+            if (cursor != null)
+                cursor.close();
+            if (db != null)
+                db.close();
         }
 
         return null;
     }
 
-    /** 生成 token */
-    private String generateToken(String username) {
-        return username + "-" + UUID.randomUUID().toString();
+    private String token(String name) {
+        return name + "-" + UUID.randomUUID().toString();
     }
 
-    /** SQLite 查询结果封装 */
     private static class UserRecord {
-        final String id;
-        final String name;
+        String id;
+        String name;
 
         UserRecord(String id, String name) {
             this.id = id;
