@@ -13,15 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.CartItem;
-import com.example.cn.helloworld.data.model.Order;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 
 public class CartFragment extends Fragment implements CartItemAdapter.OnCartChangedListener {
@@ -69,15 +68,34 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartChan
     }
 
     private void startCheckout() {
-        Order order = new Order(UUID.randomUUID().toString(), new ArrayList<CartItem>(cartItems),
-                0.0, "PENDING_PAYMENT", "北京市朝阳区应援大道1号", System.currentTimeMillis());
-        order.recalculateTotal();
         Context context = getActivity();
-        if (context != null) {
-            Intent intent = new Intent(context, OrderDetailActivity.class);
-            intent.putExtra(OrderDetailActivity.EXTRA_ORDER, order);
-            startActivity(intent);
+        if (context == null) {
+            return;
         }
+        ArrayList<CartItem> selectedItems = new ArrayList<CartItem>();
+        double total = 0.0;
+        for (int i = 0; i < cartItems.size(); i++) {
+            CartItem item = cartItems.get(i);
+            if (item != null && item.isSelected()) {
+                selectedItems.add(new CartItem(
+                        item.getProductId(),
+                        item.getProductName(),
+                        item.getUnitPrice(),
+                        item.getQuantity(),
+                        item.getImageUrl(),
+                        true
+                ));
+                total = total + item.getSubtotal();
+            }
+        }
+
+        if (selectedItems.isEmpty()) {
+            Toast.makeText(context, R.string.checkout_empty_cart, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Intent intent = CheckoutActivity.createIntent(context, selectedItems, total);
+        startActivity(intent);
     }
 
     private void updateTotal() {

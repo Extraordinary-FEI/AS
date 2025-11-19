@@ -88,6 +88,17 @@
     <string name="order_address_template">收货地址：%1$s</string>
     <string name="order_created_template">下单时间：%1$s</string>
     <string name="order_items">商品清单</string>
+    <string name="checkout_title">提交订单</string>
+    <string name="checkout_shipping_title">收货信息</string>
+    <string name="checkout_shipping_desc">请确认收货地址，确保应援好物准确送达。</string>
+    <string name="checkout_address_hint">示例：北京市朝阳区应援大道 1 号</string>
+    <string name="checkout_note_hint">给商家留言（选填）</string>
+    <string name="checkout_summary_title">订单商品</string>
+    <string name="checkout_item_meta">数量：%1$d · 单价 ¥%2$s · 小计 ¥%3$s</string>
+    <string name="checkout_total_template">应付金额：¥%1$s</string>
+    <string name="checkout_button_submit">提交订单</string>
+    <string name="checkout_empty_cart">请选择要结算的商品</string>
+    <string name="checkout_address_required">请填写收货地址</string>
 
     <!-- 商品详情文本 -->
     <string name="default_product_name">易烊千玺特别周边</string>
@@ -103,6 +114,16 @@
     <string name="error_empty_review">请写下至少一句话噢</string>
     <string name="review_submitted">应援评论发送成功</string>
     <string name="review_submit_error">评论提交失败，请稍后再试</string>
+
+    <!-- 浮窗播放器 -->
+    <string name="floating_music_title_placeholder">千玺播放器</string>
+    <string name="floating_music_subtitle_empty">随时继续播放</string>
+    <string name="floating_music_title_playing">正在播放：%1$s</string>
+    <string name="floating_music_title_paused">已暂停：%1$s</string>
+    <string name="floating_music_subtitle_artist">演唱者：%1$s</string>
+    <string name="floating_music_subtitle_playlist">来自歌单：%1$s</string>
+    <string name="floating_music_cover">当前播放封面</string>
+    <string name="floating_music_play_pause">播放或暂停音乐</string>
 
     <!-- 管理员面板 -->
     <string name="title_admin_dashboard">管理控制台</string>

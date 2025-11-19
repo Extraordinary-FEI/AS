@@ -22,6 +22,9 @@ import java.util.List;
 public class MusicService extends Service {
 
     public static final String ACTION_PLAY_SONG = "com.example.cn.helloworld.action.PLAY_SONG";
+    public static final String ACTION_UPDATE_UI = "ACTION_UPDATE_UI";
+    public static final String ACTION_HIDE_FLOATING_MUSIC =
+            "com.example.cn.helloworld.action.HIDE_FLOATING_MUSIC";
     public static final String EXTRA_PLAYLIST_ID = "extra_playlist_id";
     public static final String EXTRA_SONG_ID = "extra_song_id";
 
@@ -149,6 +152,7 @@ public class MusicService extends Service {
     public void onDestroy() {
         musicReceiver.unregister(this);
         releasePlayer();
+        sendBroadcast(new Intent(ACTION_HIDE_FLOATING_MUSIC));
         super.onDestroy();
     }
 

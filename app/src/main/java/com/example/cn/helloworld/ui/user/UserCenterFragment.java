@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.cn.helloworld.MusicService;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.data.session.SessionManager;
@@ -63,6 +64,9 @@ public class UserCenterFragment extends Fragment {
                 sessionManager.logout();
                 Context context = getContext();
                 if (context != null) {
+                    context.sendBroadcast(new Intent("ACTION_STOP"));
+                    context.stopService(new Intent(context, MusicService.class));
+                    context.sendBroadcast(new Intent(MusicService.ACTION_HIDE_FLOATING_MUSIC));
                     Intent intent = new Intent(context, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);

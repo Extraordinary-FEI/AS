@@ -60,6 +60,15 @@
         <activity
             android:name="com.example.cn.helloworld.ui.order.OrderDetailActivity"
             android:label="@string/title_order_detail" />
+        <activity
+            android:name="com.example.cn.helloworld.ui.order.CheckoutActivity"
+            android:label="@string/checkout_title"
+            android:parentActivityName="com.example.cn.helloworld.ui.main.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.cn.helloworld.ui.main.MainActivity" />
+        </activity>
+
 
         <!-- 管理员控制台 -->
         <activity

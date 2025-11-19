@@ -1,5 +1,9 @@
 package com.example.cn.helloworld.ui.main;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -7,8 +11,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.example.cn.helloworld.MusicActivity;
+import com.example.cn.helloworld.MusicService;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.ui.order.CartFragment;
 import com.example.cn.helloworld.ui.playlist.PlaylistLibraryFragment;
@@ -35,6 +46,15 @@ public class MainActivity extends AppCompatActivity
 
     private int selectedNavId = R.id.navigation_home;
 
+    private View floatingMusicContainer;
+    private ImageView floatingMusicCover;
+    private TextView floatingMusicTitle;
+    private TextView floatingMusicSubtitle;
+    private ImageButton floatingMusicPlayPause;
+    private boolean floatingMusicPlaying = false;
+    private BroadcastReceiver floatingMusicReceiver;
+    private boolean floatingMusicReceiverRegistered = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +75,20 @@ public class MainActivity extends AppCompatActivity
                 (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(selectedNavId);
+
+        initFloatingMusicWidget();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerFloatingMusicReceiver();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterFloatingMusicReceiver();
+        super.onStop();
     }
 
     /**
@@ -143,5 +177,109 @@ public class MainActivity extends AppCompatActivity
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(KEY_SELECTED_NAV, selectedNavId);
         super.onSaveInstanceState(outState);
+    }
+    private void initFloatingMusicWidget() {
+        floatingMusicContainer = findViewById(R.id.layout_floating_music);
+        if (floatingMusicContainer == null) {
+            return;
+        }
+
+        floatingMusicCover = (ImageView) floatingMusicContainer.findViewById(R.id.image_floating_cover);
+        floatingMusicTitle = (TextView) floatingMusicContainer.findViewById(R.id.text_floating_title);
+        floatingMusicSubtitle = (TextView) floatingMusicContainer.findViewById(R.id.text_floating_subtitle);
+        floatingMusicPlayPause = (ImageButton) floatingMusicContainer.findViewById(R.id.button_floating_play);
+
+        floatingMusicContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, MusicActivity.class));
+            }
+        });
+
+        floatingMusicPlayPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleFloatingPlayback();
+            }
+        });
+
+        floatingMusicReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent == null) {
+                    return;
+                }
+                String action = intent.getAction();
+                if (MusicService.ACTION_HIDE_FLOATING_MUSIC.equals(action)) {
+                    hideFloatingMusic();
+                } else if (MusicService.ACTION_UPDATE_UI.equals(action)) {
+                    updateFloatingMusic(intent);
+                }
+            }
+        };
+    }
+
+    private void toggleFloatingPlayback() {
+        Intent intent = new Intent(floatingMusicPlaying ? "ACTION_PAUSE" : "ACTION_PLAY");
+        sendBroadcast(intent);
+    }
+
+    private void updateFloatingMusic(Intent intent) {
+        if (floatingMusicContainer == null) {
+            return;
+        }
+
+        floatingMusicPlaying = intent.getBooleanExtra("playing", false);
+        String title = intent.getStringExtra("title");
+        String artist = intent.getStringExtra("artist");
+        String playlistTitle = intent.getStringExtra("playlistTitle");
+        int coverResId = intent.getIntExtra("coverResId", R.drawable.cover_playlist_placeholder);
+
+        String safeTitle = TextUtils.isEmpty(title)
+                ? getString(R.string.floating_music_title_placeholder)
+                : title;
+        floatingMusicTitle.setText(floatingMusicPlaying
+                ? getString(R.string.floating_music_title_playing, safeTitle)
+                : getString(R.string.floating_music_title_paused, safeTitle));
+
+        if (!TextUtils.isEmpty(artist)) {
+            floatingMusicSubtitle.setText(
+                    getString(R.string.floating_music_subtitle_artist, artist));
+        } else if (!TextUtils.isEmpty(playlistTitle)) {
+            floatingMusicSubtitle.setText(
+                    getString(R.string.floating_music_subtitle_playlist, playlistTitle));
+        } else {
+            floatingMusicSubtitle.setText(R.string.floating_music_subtitle_empty);
+        }
+
+        floatingMusicCover.setImageResource(coverResId);
+        floatingMusicPlayPause.setImageResource(floatingMusicPlaying ? R.drawable.pause : R.drawable.play);
+        floatingMusicContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void hideFloatingMusic() {
+        if (floatingMusicContainer != null) {
+            floatingMusicContainer.setVisibility(View.GONE);
+        }
+        floatingMusicPlaying = false;
+    }
+
+    private void registerFloatingMusicReceiver() {
+        if (floatingMusicContainer == null || floatingMusicReceiver == null || floatingMusicReceiverRegistered) {
+            return;
+        }
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(MusicService.ACTION_UPDATE_UI);
+        filter.addAction(MusicService.ACTION_HIDE_FLOATING_MUSIC);
+        registerReceiver(floatingMusicReceiver, filter);
+        floatingMusicReceiverRegistered = true;
+    }
+
+    private void unregisterFloatingMusicReceiver() {
+        if (!floatingMusicReceiverRegistered || floatingMusicReceiver == null) {
+            return;
+        }
+        unregisterReceiver(floatingMusicReceiver);
+        floatingMusicReceiverRegistered = false;
     }
 }

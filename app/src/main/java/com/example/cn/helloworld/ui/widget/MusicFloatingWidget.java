@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.cn.helloworld.MusicActivity;
+import com.example.cn.helloworld.MusicService;
 import com.example.cn.helloworld.R;
 
 /**
@@ -77,10 +78,21 @@ public class MusicFloatingWidget {
             return;
         }
 
-        IntentFilter filter = new IntentFilter("ACTION_UPDATE_UI");
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(MusicService.ACTION_UPDATE_UI);
+        filter.addAction(MusicService.ACTION_HIDE_FLOATING_MUSIC);
         uiReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                if (intent == null) {
+                    return;
+                }
+                if (MusicService.ACTION_HIDE_FLOATING_MUSIC.equals(intent.getAction())) {
+                    if (container != null) {
+                        container.setVisibility(View.GONE);
+                    }
+                    return;
+                }
                 handleUpdate(intent);
             }
         };

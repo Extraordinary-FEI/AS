@@ -1,13 +1,18 @@
 package com.example.cn.helloworld.data.repository;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Category;
 import com.example.cn.helloworld.data.model.Product;
 import com.example.cn.helloworld.data.storage.AdminLocalStore;
+import com.example.cn.helloworld.data.session.SessionManager;
+import com.example.cn.helloworld.data.storage.AdminProductDbHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,17 +25,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+
 public class ProductRepository {
 
-    private static final String KEY_PRODUCTS = "admin_products";
-
     private final List<Product> products = new ArrayList<Product>();
-    private final SharedPreferences preferences;
+    private final AdminProductDbHelper dbHelper;
+    private final SessionManager sessionManager;
 
     public ProductRepository(Context context) {
-        AdminLocalStore.init(context);
-        preferences = AdminLocalStore.get(context);
         loadProductsFromStorage();
+        dbHelper = new AdminProductDbHelper(context.getApplicationContext());
+        sessionManager = new SessionManager(context.getApplicationContext());
     }
 
     // 初始化三类商品
@@ -86,33 +91,62 @@ public class ProductRepository {
     }
 
     private void loadProductsFromStorage() {
-        String json = preferences.getString(KEY_PRODUCTS, null);
-        if (TextUtils.isEmpty(json)) {
-            products.clear();
-            loadInitialProducts();
-            persist();
-            return;
-        }
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
+        products.clear();
+
         try {
-            JSONArray array = new JSONArray(json);
-            products.clear();
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject object = array.getJSONObject(i);
-                products.add(fromJson(object));
+            cursor = database.query(AdminProductDbHelper.Tables.PRODUCTS, null,
+                    null, null, null, null, null);
+            while (cursor != null && cursor.moveToNext()) {
+                products.add(fromCursor(cursor));
             }
-        } catch (JSONException exception) {
-            products.clear();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        if (products.isEmpty()) {
             loadInitialProducts();
-            persist();
+            persistAll();
         }
     }
 
-    private void persist() {
-        JSONArray array = new JSONArray();
-        for (Product product : products) {
-            array.put(toJson(product));
+    private void persistAll() {
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        database.beginTransaction();
+        try {
+            database.delete(AdminProductDbHelper.Tables.PRODUCTS, null, null);
+            for (Product product : products) {
+                database.insertWithOnConflict(AdminProductDbHelper.Tables.PRODUCTS,
+                        null,
+                        toContentValues(product),
+                        SQLiteDatabase.CONFLICT_REPLACE);
+            }
+            database.setTransactionSuccessful();
+        } finally {
+            database.endTransaction();
         }
-        preferences.edit().putString(KEY_PRODUCTS, array.toString()).commit();
+
+    }
+
+    private void persistProduct(Product product) {
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        database.insertWithOnConflict(AdminProductDbHelper.Tables.PRODUCTS,
+                null,
+                toContentValues(product),
+                SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    private void persistActiveFlag(String productId, boolean active) {
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(AdminProductDbHelper.ProductColumns.ACTIVE, active ? 1 : 0);
+        values.put(AdminProductDbHelper.ProductColumns.UPDATED_AT, System.currentTimeMillis());
+        database.update(AdminProductDbHelper.Tables.PRODUCTS, values,
+                AdminProductDbHelper.ProductColumns.ID + "=?",
+                new String[]{productId});
     }
 
     private HashMap<String,String> createAttributes(String k1, String v1) {
@@ -167,20 +201,28 @@ public class ProductRepository {
                 break;
             }
         }
-        persist();
+        persistActiveFlag(productId, active);
+        recordOperation(active ? "ONLINE" : "OFFLINE", productId,
+                active ? "上架" : "下架");
     }
 
     public void saveProduct(Product product) {
         if (product == null) return;
+        boolean updated = false;
         for (int i = 0; i < products.size(); i++) {
             if (products.get(i).getId().equals(product.getId())) {
                 products.set(i, product);
-                persist();
-                return;
+                persistProduct(product);
+                updated = true;
+                break;
             }
         }
-        products.add(product);
-        persist();
+        if (!updated) {
+            products.add(product);
+            persistProduct(product);
+        }
+        recordOperation(updated ? "UPDATE" : "CREATE", product.getId(),
+                product.getName());
     }
 
     public void updateProductDetails(
@@ -202,10 +244,11 @@ public class ProductRepository {
                 if (!TextUtils.isEmpty(categoryId)) {
                     p.setCategory(categoryId);
                 }
+                persistProduct(p);
+                recordOperation("UPDATE", productId, name);
                 break;
             }
         }
-        persist();
     }
 
     // 供 ProductManagementActivity 使用
@@ -255,6 +298,60 @@ public class ProductRepository {
         }
         return object;
     }
+    private Product fromCursor(Cursor cursor) {
+        List<String> tags = jsonStringToList(cursor.getString(
+                cursor.getColumnIndexOrThrow(AdminProductDbHelper.ProductColumns.TAGS)));
+        List<String> starEvents = jsonStringToList(cursor.getString(
+                cursor.getColumnIndexOrThrow(AdminProductDbHelper.ProductColumns.STAR_EVENTS)));
+        Map<String, String> attributes = jsonStringToMap(cursor.getString(
+                cursor.getColumnIndexOrThrow(AdminProductDbHelper.ProductColumns.ATTRIBUTES)));
+        Map<String, String> categoryAttributes = jsonStringToMap(cursor.getString(
+                cursor.getColumnIndexOrThrow(AdminProductDbHelper.ProductColumns.CATEGORY_ATTRIBUTES)));
+
+        Product product = new Product(
+                cursor.getString(cursor.getColumnIndexOrThrow(AdminProductDbHelper.ProductColumns.ID)),
+                cursor.getString(cursor.getColumnIndexOrThrow(AdminProductDbHelper.ProductColumns.NAME)),
+                cursor.getString(cursor.getColumnIndexOrThrow(AdminProductDbHelper.ProductColumns.DESCRIPTION)),
+                cursor.getDouble(cursor.getColumnIndexOrThrow(AdminProductDbHelper.ProductColumns.PRICE)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(AdminProductDbHelper.ProductColumns.INVENTORY)),
+                cursor.getString(cursor.getColumnIndexOrThrow(AdminProductDbHelper.ProductColumns.CATEGORY)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(AdminProductDbHelper.ProductColumns.RATING)),
+                tags,
+                starEvents,
+                cursor.getInt(cursor.getColumnIndexOrThrow(AdminProductDbHelper.ProductColumns.ACTIVE)) == 1,
+                cursor.getString(cursor.getColumnIndexOrThrow(AdminProductDbHelper.ProductColumns.COVER_URL)),
+                cursor.getString(cursor.getColumnIndexOrThrow(AdminProductDbHelper.ProductColumns.RELEASE_TIME)),
+                attributes,
+                cursor.getInt(cursor.getColumnIndexOrThrow(AdminProductDbHelper.ProductColumns.IMAGE_RES_ID)),
+                cursor.getString(cursor.getColumnIndexOrThrow(AdminProductDbHelper.ProductColumns.LIMITED_QUANTITY)),
+                categoryAttributes
+        );
+        return product;
+    }
+
+    private ContentValues toContentValues(Product product) {
+        ContentValues values = new ContentValues();
+        values.put(AdminProductDbHelper.ProductColumns.ID, product.getId());
+        values.put(AdminProductDbHelper.ProductColumns.NAME, product.getName());
+        values.put(AdminProductDbHelper.ProductColumns.DESCRIPTION, product.getDescription());
+        values.put(AdminProductDbHelper.ProductColumns.PRICE, product.getPrice());
+        values.put(AdminProductDbHelper.ProductColumns.INVENTORY, product.getInventory());
+        values.put(AdminProductDbHelper.ProductColumns.CATEGORY, product.getCategory());
+        values.put(AdminProductDbHelper.ProductColumns.RATING, product.getRating());
+        values.put(AdminProductDbHelper.ProductColumns.TAGS, listToJson(product.getTags()));
+        values.put(AdminProductDbHelper.ProductColumns.STAR_EVENTS, listToJson(product.getStarEvents()));
+        values.put(AdminProductDbHelper.ProductColumns.ACTIVE, product.isActive() ? 1 : 0);
+        values.put(AdminProductDbHelper.ProductColumns.COVER_URL, product.getCoverUrl());
+        values.put(AdminProductDbHelper.ProductColumns.RELEASE_TIME, product.getReleaseTime());
+        values.put(AdminProductDbHelper.ProductColumns.ATTRIBUTES, mapToJson(product.getAttributes()).toString());
+        values.put(AdminProductDbHelper.ProductColumns.IMAGE_RES_ID, product.getImageResId());
+        values.put(AdminProductDbHelper.ProductColumns.LIMITED_QUANTITY, product.getLimitedQuantity());
+        values.put(AdminProductDbHelper.ProductColumns.CATEGORY_ATTRIBUTES,
+                mapToJson(product.getCategoryAttributes()).toString());
+        values.put(AdminProductDbHelper.ProductColumns.UPDATED_AT, System.currentTimeMillis());
+        return values;
+    }
+
 
     private Product fromJson(JSONObject object) throws JSONException {
         List<String> tags = jsonArrayToList(object.optJSONArray("tags"));
@@ -318,5 +415,49 @@ public class ProductRepository {
             list.add(array.optString(i));
         }
         return list;
+    }
+    private String listToJson(List<String> list) {
+        JSONArray array = new JSONArray();
+        if (list != null) {
+            for (String item : list) {
+                array.put(item);
+            }
+        }
+        return array.toString();
+    }
+
+    private Map<String, String> jsonStringToMap(String json) {
+        if (TextUtils.isEmpty(json)) {
+            return null;
+        }
+        try {
+            JSONObject object = new JSONObject(json);
+            return jsonToMap(object);
+        } catch (JSONException e) {
+            return null;
+        }
+    }
+
+    private List<String> jsonStringToList(String json) {
+        if (TextUtils.isEmpty(json)) {
+            return new ArrayList<String>();
+        }
+        try {
+            JSONArray array = new JSONArray(json);
+            return jsonArrayToList(array);
+        } catch (JSONException e) {
+            return new ArrayList<String>();
+        }
+    }
+
+    private void recordOperation(String operation, String productId, String summary) {
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(AdminProductDbHelper.OperationColumns.PRODUCT_ID, productId);
+        values.put(AdminProductDbHelper.OperationColumns.OPERATION, operation);
+        values.put(AdminProductDbHelper.OperationColumns.SUMMARY, summary);
+        values.put(AdminProductDbHelper.OperationColumns.OPERATOR, sessionManager.getUsername());
+        values.put(AdminProductDbHelper.OperationColumns.TIMESTAMP, System.currentTimeMillis());
+        database.insert(AdminProductDbHelper.Tables.OPERATIONS, null, values);
     }
 }

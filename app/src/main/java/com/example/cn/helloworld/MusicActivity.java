@@ -124,7 +124,7 @@ public class MusicActivity extends Activity {
         uiUpdateReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if ("ACTION_UPDATE_UI".equals(intent.getAction())) {
+                if (MusicService.ACTION_UPDATE_UI.equals(intent.getAction())) {
 
                     String title = intent.getStringExtra("title");
                     String artist = intent.getStringExtra("artist");
@@ -156,7 +156,7 @@ public class MusicActivity extends Activity {
             }
         };
 
-        IntentFilter filter = new IntentFilter("ACTION_UPDATE_UI");
+        IntentFilter filter = new IntentFilter(MusicService.ACTION_UPDATE_UI);
         registerReceiver(uiUpdateReceiver, filter);
     }
 
