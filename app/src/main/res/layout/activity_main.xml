@@ -39,7 +39,6 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_gravity="bottom"
-        app:labelVisibilityMode="labeled"
         app:menu="@menu/menu_bottom_navigation" />
 
 </android.support.design.widget.CoordinatorLayout>

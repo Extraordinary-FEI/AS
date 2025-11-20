@@ -33,9 +33,9 @@ public class ProductRepository {
     private final SessionManager sessionManager;
 
     public ProductRepository(Context context) {
-        loadProductsFromStorage();
         dbHelper = new AdminProductDbHelper(context.getApplicationContext());
         sessionManager = new SessionManager(context.getApplicationContext());
+        loadProductsFromStorage();
     }
 
     // 初始化三类商品
