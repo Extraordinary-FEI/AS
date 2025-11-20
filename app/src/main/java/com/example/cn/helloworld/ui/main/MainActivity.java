@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.example.cn.helloworld.MusicActivity;
 import com.example.cn.helloworld.MusicService;
 import com.example.cn.helloworld.R;
+import com.example.cn.helloworld.util.BottomNavigationViewHelper;
 import com.example.cn.helloworld.ui.order.CartFragment;
 import com.example.cn.helloworld.ui.playlist.PlaylistLibraryFragment;
 import com.example.cn.helloworld.ui.user.UserCenterFragment;
@@ -73,6 +74,7 @@ public class MainActivity extends AppCompatActivity
 
         BottomNavigationView bottomNavigationView =
                 (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(selectedNavId);
 

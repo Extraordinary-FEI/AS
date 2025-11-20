@@ -39,6 +39,8 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_gravity="bottom"
+        android:background="@color/homeCardBackground"
+        app:elevation="8dp"
         app:menu="@menu/menu_bottom_navigation" />
 
 </android.support.design.widget.CoordinatorLayout>
