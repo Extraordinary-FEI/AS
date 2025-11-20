@@ -237,6 +237,8 @@
     <string name="home_product_title">千玺应援好物</string>
     <string name="home_product_subtitle">门票、周边与签名，主页即可快速挑选</string>
     <string name="home_product_view_all">全部好物</string>
+    <string name="title_product_list">全部应援好物</string>
+    <string name="title_product_detail">商品详情</string>
     <string name="title_playlist_detail">歌单详情</string>
     <string name="title_playlist_overview">全部歌单</string>
     <string name="playlist_not_found">歌单未找到</string>

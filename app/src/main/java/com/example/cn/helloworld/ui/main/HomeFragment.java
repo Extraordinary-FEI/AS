@@ -25,6 +25,7 @@ import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.data.model.Product;
 import com.example.cn.helloworld.ui.catalog.ProductDetailActivity;
+import com.example.cn.helloworld.ui.catalog.ProductListActivity;
 import com.example.cn.helloworld.ui.playlist.PlaylistDetailActivity;
 import com.example.cn.helloworld.ui.playlist.PlaylistOverviewActivity;
 
@@ -193,10 +194,7 @@ public class HomeFragment extends Fragment {
         viewAllProductsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (adapter.getItemCount() > 0) {
-                    Product firstProduct = adapter.getProductAt(0);
-                    ProductDetailActivity.start(context, firstProduct.getId());
-                }
+                ProductListActivity.start(context);
             }
         });
     }

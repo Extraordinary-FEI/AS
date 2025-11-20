@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,6 +33,13 @@ public class ProductDetailActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_product_detail);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.title_product_detail);
+        }
 
         String productId = getIntent().getStringExtra(EXTRA_PRODUCT_ID);
         ProductRepository repository = new ProductRepository(this);
@@ -77,6 +86,15 @@ public class ProductDetailActivity extends AppCompatActivity {
             attributesView.setVisibility(View.VISIBLE);
         }
         descriptionView.setText(product.getDescription());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private String joinWithSeparator(Iterable<String> values) {

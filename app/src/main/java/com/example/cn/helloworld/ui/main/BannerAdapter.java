@@ -1,9 +1,10 @@
 package com.example.cn.helloworld.ui.main;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,11 +53,17 @@ public class BannerAdapter extends PagerAdapter {
         titleView.setText(banner.getTitle());
         descriptionView.setText(banner.getDescription());
 
-        Drawable background = root.getBackground();
-        if (background instanceof GradientDrawable) {
-            ((GradientDrawable) background.mutate()).setColor(
-                    ContextCompat.getColor(context, banner.getBackgroundColorResId()));
-        }
+        int baseColor = ContextCompat.getColor(context, banner.getBackgroundColorResId());
+        int softColor = ColorUtils.blendARGB(baseColor, Color.WHITE, 0.32f);
+
+        GradientDrawable gradientDrawable = new GradientDrawable(
+                GradientDrawable.Orientation.BL_TR,
+                new int[]{softColor, baseColor}
+        );
+        float radius = context.getResources().getDisplayMetrics().density * 20;
+        gradientDrawable.setCornerRadius(radius);
+
+        root.setBackground(gradientDrawable);
 
         container.addView(itemView);
         return itemView;
