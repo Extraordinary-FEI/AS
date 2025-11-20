@@ -293,4 +293,25 @@
     <string name="login_security_tip_admin">提示：管理员账号请勿泄露。</string>
     <string name="logout">退出登录</string>
 
+    <!-- 个人中心升级 -->
+    <string name="user_membership_label">钻石粉丝</string>
+    <string name="user_membership_desc">连续签到 28 天 · 应援值 +320</string>
+    <string name="user_stat_level">应援等级</string>
+    <string name="user_stat_level_value">Lv.7</string>
+    <string name="user_stat_fans">粉丝勋章</string>
+    <string name="user_stat_fans_value">臻享徽章</string>
+    <string name="user_stat_active_days">活跃天数</string>
+    <string name="user_stat_active_days_value">129</string>
+    <string name="user_quick_actions">快捷功能</string>
+    <string name="user_quick_actions_subtitle">常用入口、权益特权一键直达</string>
+    <string name="user_privileges">千纸鹤特权</string>
+    <string name="user_action_orders">我的订单</string>
+    <string name="user_action_orders_desc">查物流 / 售后服务</string>
+    <string name="user_action_collection">我的收藏</string>
+    <string name="user_action_collection_desc">心动歌单与专属周边</string>
+    <string name="user_action_address">收货地址</string>
+    <string name="user_action_address_desc">常用地址一键管理</string>
+    <string name="user_action_settings">设置</string>
+    <string name="user_action_settings_desc">账号安全 / 消息偏好</string>
+
 </resources>
