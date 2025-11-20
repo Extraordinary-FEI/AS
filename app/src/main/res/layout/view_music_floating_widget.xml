@@ -6,8 +6,11 @@
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
     android:layout_margin="16dp"
+    android:background="@drawable/bg_music_widget_container"
     android:clickable="true"
+    android:elevation="10dp"
     android:focusable="true"
+    android:padding="12dp"
     android:visibility="gone">
 
     <android.support.v7.widget.CardView
@@ -36,7 +39,8 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/cover_playlist_placeholder"
                 android:layout_marginEnd="12dp"
-                android:background="@drawable/bg_playlist_cover" />
+                android:background="@drawable/bg_playlist_cover"
+                android:layout_marginRight="12dp" />
 
             <LinearLayout
                 android:layout_width="0dp"
