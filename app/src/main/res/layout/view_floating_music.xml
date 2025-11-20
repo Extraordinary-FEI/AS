@@ -4,8 +4,9 @@
     android:id="@+id/layout_floating_music"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/floatingMusicBackground"
     android:visibility="gone"
-    app:cardBackgroundColor="@color/colorPrimary"
+    app:cardBackgroundColor="@color/floatingMusicBackground"
     app:cardCornerRadius="18dp"
     app:cardElevation="6dp">
 

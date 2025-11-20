@@ -34,7 +34,11 @@ public class SupportTaskRepository {
         } else if (preferences == null && AdminLocalStore.isInitialized()) {
             preferences = AdminLocalStore.get();
         }
-        if (!initialized) {
+        // 如果之前因为缺少 Context 只做了内存 seed，一旦拿到 SharedPreferences 就立刻加载持久化数据
+        if (preferences != null) {
+            loadFromStorage();
+            initialized = true;
+        } else if (!initialized) {
             loadFromStorage();
             initialized = true;
         }
