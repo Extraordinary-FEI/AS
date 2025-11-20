@@ -44,6 +44,10 @@ public class OrderDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_detail);
         setTitle(R.string.title_order_detail);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         orderIdTextView = (TextView) findViewById(R.id.text_order_id);
         statusTextView = (TextView) findViewById(R.id.text_order_status);
@@ -56,6 +60,11 @@ public class OrderDetailActivity extends AppCompatActivity {
         if (order != null) {
             bindOrder(order);
         }
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
