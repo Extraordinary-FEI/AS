@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.cn.helloworld.R;
@@ -32,6 +33,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public void onBindViewHolder(CategoryViewHolder holder, int position) {
         HomeModels.HomeCategory category = categories.get(position);
         holder.nameView.setText(category.getName());
+        holder.subtitleView.setText(category.getSubtitle());
+        holder.iconView.setImageResource(category.getIconResId());
     }
 
     @Override
@@ -41,10 +44,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     static class CategoryViewHolder extends RecyclerView.ViewHolder {
         final TextView nameView;
+        final TextView subtitleView;
+        final ImageView iconView;
 
         CategoryViewHolder(View itemView) {
             super(itemView);
             nameView = (TextView) itemView.findViewById(R.id.categoryName);
+            subtitleView = (TextView) itemView.findViewById(R.id.categorySubtitle);
+            iconView = (ImageView) itemView.findViewById(R.id.categoryIcon);
         }
     }
 }

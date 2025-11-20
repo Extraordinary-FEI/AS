@@ -23,6 +23,8 @@ import android.widget.TextView;
 
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
+import com.example.cn.helloworld.data.model.Product;
+import com.example.cn.helloworld.ui.catalog.ProductDetailActivity;
 import com.example.cn.helloworld.ui.playlist.PlaylistDetailActivity;
 import com.example.cn.helloworld.ui.playlist.PlaylistOverviewActivity;
 
@@ -37,7 +39,9 @@ public class HomeFragment extends Fragment {
     private RecyclerView categoryList;
     private RecyclerView playlistList;
     private RecyclerView taskList;
+    private RecyclerView productList;
     private View viewAllPlaylistsButton;
+    private View viewAllProductsButton;
     private LinearLayout bannerIndicator;
 
     private HomeDataSource dataSource;
@@ -64,11 +68,14 @@ public class HomeFragment extends Fragment {
         categoryList = (RecyclerView) root.findViewById(R.id.categoryList);
         playlistList = (RecyclerView) root.findViewById(R.id.playlistList);
         taskList = (RecyclerView) root.findViewById(R.id.taskList);
+        productList = (RecyclerView) root.findViewById(R.id.productList);
         viewAllPlaylistsButton = root.findViewById(R.id.button_view_all_playlists);
+        viewAllProductsButton = root.findViewById(R.id.button_view_all_products);
         bannerIndicator = (LinearLayout) root.findViewById(R.id.bannerIndicator);
 
         setupBanner();
         setupCategories();
+        setupProducts();
         setupPlaylists();
         setupTasks();
 
@@ -161,6 +168,37 @@ public class HomeFragment extends Fragment {
         categoryList.setLayoutManager(new GridLayoutManager(ctx, 3));
         categoryList.setNestedScrollingEnabled(false);
         categoryList.setAdapter(new CategoryAdapter(dataSource.loadCategories()));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
+    private void setupProducts() {
+        final Context context = getContext();
+        if (context == null) return;
+
+        LinearLayoutManager layoutManager =
+                new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        productList.setLayoutManager(layoutManager);
+        productList.setNestedScrollingEnabled(false);
+        final HomeProductAdapter adapter = new HomeProductAdapter(
+                dataSource.loadFeaturedProducts(),
+                new HomeProductAdapter.OnProductClickListener() {
+                    @Override
+                    public void onProductClick(Product product) {
+                        ProductDetailActivity.start(context, product.getId());
+                    }
+                }
+        );
+        productList.setAdapter(adapter);
+
+        viewAllProductsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (adapter.getItemCount() > 0) {
+                    Product firstProduct = adapter.getProductAt(0);
+                    ProductDetailActivity.start(context, firstProduct.getId());
+                }
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)

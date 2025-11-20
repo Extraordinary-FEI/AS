@@ -4,10 +4,13 @@ import android.content.Context;
 
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
+import com.example.cn.helloworld.data.model.Product;
 import com.example.cn.helloworld.data.playlist.PlaylistRepository;
+import com.example.cn.helloworld.data.repository.ProductRepository;
 import com.example.cn.helloworld.data.repository.support.SupportTaskRepository;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,8 +18,10 @@ import java.util.List;
  */
 public class FakeHomeDataSource implements HomeDataSource {
 
+    private final Context context;
     private final PlaylistRepository playlistRepository;
     private final SupportTaskRepository supportTaskRepository = new SupportTaskRepository();
+    private final ProductRepository productRepository;
 
     /**
      * 正确写法：
@@ -27,7 +32,9 @@ public class FakeHomeDataSource implements HomeDataSource {
         if (context == null) {
             throw new IllegalArgumentException("FakeHomeDataSource requires non-null Context");
         }
-        playlistRepository = PlaylistRepository.getInstance(context.getApplicationContext());
+        this.context = context.getApplicationContext();
+        playlistRepository = PlaylistRepository.getInstance(this.context);
+        productRepository = new ProductRepository(this.context);
     }
     @Override
     public List<HomeModels.BannerItem> loadBanners() {
@@ -41,12 +48,36 @@ public class FakeHomeDataSource implements HomeDataSource {
     @Override
     public List<HomeModels.HomeCategory> loadCategories() {
         return Arrays.asList(
-                new HomeModels.HomeCategory("粉籍卡"),
-                new HomeModels.HomeCategory("数据站"),
-                new HomeModels.HomeCategory("打卡墙"),
-                new HomeModels.HomeCategory("应援商城"),
-                new HomeModels.HomeCategory("易烊千玺歌单"),
-                new HomeModels.HomeCategory("日程表")
+                new HomeModels.HomeCategory(
+                        context.getString(R.string.home_category_ticket),
+                        context.getString(R.string.category_subtitle_ticket),
+                        R.drawable.ic_category_ticket
+                ),
+                new HomeModels.HomeCategory(
+                        context.getString(R.string.home_category_merch),
+                        context.getString(R.string.category_subtitle_merch),
+                        R.drawable.ic_category_merch
+                ),
+                new HomeModels.HomeCategory(
+                        context.getString(R.string.home_category_support),
+                        context.getString(R.string.home_task_subtitle),
+                        R.drawable.ic_category_signed
+                ),
+                new HomeModels.HomeCategory(
+                        context.getString(R.string.home_category_playlist),
+                        context.getString(R.string.home_playlist_subtitle),
+                        R.drawable.ic_category_signed
+                ),
+                new HomeModels.HomeCategory(
+                        context.getString(R.string.home_category_cart),
+                        context.getString(R.string.nav_cart),
+                        R.drawable.ic_category_ticket
+                ),
+                new HomeModels.HomeCategory(
+                        context.getString(R.string.home_category_profile),
+                        context.getString(R.string.nav_profile),
+                        R.drawable.ic_category_merch
+                )
         );
     }
 
@@ -62,5 +93,21 @@ public class FakeHomeDataSource implements HomeDataSource {
     @Override
     public List<HomeModels.SupportTask> loadSupportTasks() {
         return supportTaskRepository.getSupportTasks();
+    }
+
+    @Override
+    public List<Product> loadFeaturedProducts() {
+        List<Product> activeProducts = new ArrayList<Product>();
+        List<Product> all = productRepository.getAll();
+        for (int i = 0; i < all.size(); i++) {
+            Product product = all.get(i);
+            if (product != null && product.isActive()) {
+                activeProducts.add(product);
+            }
+            if (activeProducts.size() >= 6) {
+                break;
+            }
+        }
+        return activeProducts;
     }
 }
