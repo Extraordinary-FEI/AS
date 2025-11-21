@@ -17,9 +17,16 @@ import java.util.List;
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
     private final List<HomeModels.HomeCategory> categories;
+    private final OnCategoryClickListener clickListener;
 
-    public CategoryAdapter(List<HomeModels.HomeCategory> categories) {
+    public interface OnCategoryClickListener {
+        void onCategoryClick(HomeModels.HomeCategory category);
+    }
+
+    public CategoryAdapter(List<HomeModels.HomeCategory> categories,
+                           OnCategoryClickListener clickListener) {
         this.categories = categories;
+        this.clickListener = clickListener;
     }
 
     @Override
@@ -35,6 +42,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         holder.nameView.setText(category.getName());
         holder.subtitleView.setText(category.getSubtitle());
         holder.iconView.setImageResource(category.getIconResId());
+        holder.bind(category, clickListener);
     }
 
     @Override
@@ -52,6 +60,18 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             nameView = (TextView) itemView.findViewById(R.id.categoryName);
             subtitleView = (TextView) itemView.findViewById(R.id.categorySubtitle);
             iconView = (ImageView) itemView.findViewById(R.id.categoryIcon);
+        }
+
+        void bind(final HomeModels.HomeCategory category,
+                  final OnCategoryClickListener clickListener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (clickListener != null) {
+                        clickListener.onCategoryClick(category);
+                    }
+                }
+            });
         }
     }
 }

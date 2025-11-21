@@ -121,6 +121,15 @@
             android:label="@string/app_name" />
 
         <activity
+            android:name="com.example.cn.helloworld.ui.product.ReviewWallActivity"
+            android:label="@string/title_review_wall"
+            android:parentActivityName="com.example.cn.helloworld.ui.main.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.cn.helloworld.ui.main.MainActivity" />
+        </activity>
+
+        <activity
             android:name="com.example.cn.helloworld.ui.catalog.ProductListActivity"
             android:label="@string/title_product_list"
             android:parentActivityName="com.example.cn.helloworld.ui.main.MainActivity">

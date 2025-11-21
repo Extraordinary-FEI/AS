@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
@@ -28,6 +29,7 @@ import com.example.cn.helloworld.ui.catalog.ProductDetailActivity;
 import com.example.cn.helloworld.ui.catalog.ProductListActivity;
 import com.example.cn.helloworld.ui.playlist.PlaylistDetailActivity;
 import com.example.cn.helloworld.ui.playlist.PlaylistOverviewActivity;
+import com.example.cn.helloworld.ui.product.ReviewWallActivity;
 
 import java.util.List;
 
@@ -168,7 +170,37 @@ public class HomeFragment extends Fragment {
 
         categoryList.setLayoutManager(new GridLayoutManager(ctx, 3));
         categoryList.setNestedScrollingEnabled(false);
-        categoryList.setAdapter(new CategoryAdapter(dataSource.loadCategories()));
+        categoryList.setAdapter(new CategoryAdapter(dataSource.loadCategories(),
+                new CategoryAdapter.OnCategoryClickListener() {
+                    @Override
+                    public void onCategoryClick(HomeModels.HomeCategory category) {
+                        handleCategoryClick(category);
+                    }
+                }));
+    }
+
+    private void handleCategoryClick(HomeModels.HomeCategory category) {
+        Context context = getContext();
+        if (context == null || category == null) {
+            return;
+        }
+        String action = category.getAction();
+        if ("action_stage_review".equals(action)) {
+            startActivity(new Intent(context, PlaylistOverviewActivity.class));
+        } else if ("action_new_arrival".equals(action)) {
+            ProductListActivity.start(context);
+        } else if ("action_calendar".equals(action) || "action_check_in".equals(action)) {
+            if (getActivity() != null) {
+                BottomNavigationView nav = (BottomNavigationView) getActivity().findViewById(R.id.bottom_navigation);
+                if (nav != null) {
+                    nav.setSelectedItemId(R.id.navigation_support);
+                }
+            }
+        } else if ("action_review_wall".equals(action)) {
+            startActivity(ReviewWallActivity.createIntent(context, null, null));
+        } else if ("action_news".equals(action)) {
+            startActivity(new Intent(context, PlaylistOverviewActivity.class));
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)

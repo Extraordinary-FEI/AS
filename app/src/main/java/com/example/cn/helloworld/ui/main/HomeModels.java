@@ -16,12 +16,12 @@ public final class HomeModels {
     public static class BannerItem {
         private final String title;
         private final String description;
-        private final int backgroundColorResId;
+        private final int imageResId;
 
-        public BannerItem(String title, String description, int backgroundColorResId) {
+        public BannerItem(String title, String description, int imageResId) {
             this.title = title;
             this.description = description;
-            this.backgroundColorResId = backgroundColorResId;
+            this.imageResId = imageResId;
         }
 
         public String getTitle() {
@@ -32,8 +32,8 @@ public final class HomeModels {
             return description;
         }
 
-        public int getBackgroundColorResId() {
-            return backgroundColorResId;
+        public int getImageResId() {
+            return imageResId;
         }
     }
 
@@ -41,11 +41,13 @@ public final class HomeModels {
         private final String name;
         private final String subtitle;
         private final int iconResId;
+        private final String action;
 
-        public HomeCategory(String name, String subtitle, int iconResId) {
+        public HomeCategory(String name, String subtitle, int iconResId, String action) {
             this.name = name;
             this.subtitle = subtitle;
             this.iconResId = iconResId;
+            this.action = action;
         }
 
         public String getName() {
@@ -58,6 +60,10 @@ public final class HomeModels {
 
         public int getIconResId() {
             return iconResId;
+        }
+
+        public String getAction() {
+            return action;
         }
     }
 

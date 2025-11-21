@@ -39,9 +39,9 @@ public class FakeHomeDataSource implements HomeDataSource {
     @Override
     public List<HomeModels.BannerItem> loadBanners() {
         return Arrays.asList(
-                new HomeModels.BannerItem("千玺生日月冲刺", "每日打卡累计生贺能量", R.color.homeBannerColor1),
-                new HomeModels.BannerItem("公益舞台回顾", "重温他与山城孩子的约定", R.color.homeBannerColor2),
-                new HomeModels.BannerItem("线下巡礼报名", "和小橙灯一起打卡地标应援点", R.color.homeBannerColor3)
+                new HomeModels.BannerItem("千玺生日月冲刺", "每日打卡累计生贺能量", R.drawable.cover_nishuo),
+                new HomeModels.BannerItem("公益舞台回顾", "重温他与山城孩子的约定", R.drawable.cover_baobei),
+                new HomeModels.BannerItem("线下巡礼报名", "和小橙灯一起打卡地标应援点", R.drawable.song_cover)
         );
     }
 
@@ -51,32 +51,38 @@ public class FakeHomeDataSource implements HomeDataSource {
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_ticket),
                         context.getString(R.string.category_subtitle_ticket),
-                        R.drawable.ic_category_ticket
+                        R.drawable.ic_category_ticket,
+                        "action_stage_review"
                 ),
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_merch),
                         context.getString(R.string.category_subtitle_merch),
-                        R.drawable.ic_category_merch
+                        R.drawable.ic_category_merch,
+                        "action_new_arrival"
                 ),
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_support),
                         context.getString(R.string.home_task_subtitle),
-                        R.drawable.ic_category_signed
+                        R.drawable.ic_category_signed,
+                        "action_calendar"
                 ),
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_playlist),
                         context.getString(R.string.home_playlist_subtitle),
-                        R.drawable.ic_category_signed
+                        R.drawable.ic_category_signed,
+                        "action_review_wall"
                 ),
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_cart),
-                        context.getString(R.string.nav_cart),
-                        R.drawable.ic_category_ticket
+                        context.getString(R.string.category_subtitle_signed),
+                        R.drawable.ic_category_ticket,
+                        "action_news"
                 ),
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_profile),
-                        context.getString(R.string.nav_profile),
-                        R.drawable.ic_category_merch
+                        context.getString(R.string.home_task_subtitle),
+                        R.drawable.ic_category_merch,
+                        "action_check_in"
                 )
         );
     }

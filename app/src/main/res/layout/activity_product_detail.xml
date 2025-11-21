@@ -149,6 +149,15 @@
                 android:text="@string/button_view_comments" />
         </LinearLayout>
 
+        <Button
+            android:id="@+id/button_add_to_cart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:text="@string/button_add_to_cart"
+            android:textColor="@android:color/white" />
+
         <!-- 评论区标题 -->
         <TextView
             android:layout_width="match_parent"

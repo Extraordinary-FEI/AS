@@ -48,7 +48,7 @@ public class PlaylistOverviewActivity extends AppCompatActivity {
         playlistRecyclerView.setAdapter(new PlaylistAdapter(playlists, new PlaylistAdapter.OnPlaylistClickListener() {
             @Override
             public void onPlaylistClick(Playlist playlist) {
-
+                startActivity(PlaylistDetailActivity.createIntent(PlaylistOverviewActivity.this, playlist.getId()));
             }
 
             @Override

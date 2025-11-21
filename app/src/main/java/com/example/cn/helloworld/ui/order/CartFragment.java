@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.CartItem;
+import com.example.cn.helloworld.data.storage.CartStorage;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartChan
     private Button checkoutButton;
     private CartItemAdapter adapter;
     private List<CartItem> cartItems = new ArrayList<CartItem>();
+    private CartStorage cartStorage;
 
     @Nullable
     @Override
@@ -44,6 +46,8 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartChan
         adapter = new CartItemAdapter(cartItems, this);
         recyclerView.setAdapter(adapter);
 
+        cartStorage = CartStorage.getInstance(context);
+
         checkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,20 +55,28 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartChan
             }
         });
 
-        loadSampleData();
+        loadCartItems();
         updateTotal();
 
         return view;
     }
 
-    private void loadSampleData() {
+    private void loadCartItems() {
         cartItems.clear();
-        cartItems.add(new CartItem("P1001", "官方周边写真集", 128.0, 1, null, true));
-        cartItems.add(new CartItem("P1002", "演唱会应援灯牌", 89.9, 2, null, true));
-        cartItems.add(new CartItem("P1003", "定制T恤", 158.0, 1, null, true));
+        cartItems.addAll(cartStorage.getItems());
+        if (cartItems.isEmpty()) {
+            seedSampleData();
+        }
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
+    }
+
+    private void seedSampleData() {
+        cartItems.add(new CartItem("P1001", "官方周边写真集", 128.0, 1, null, true));
+        cartItems.add(new CartItem("P1002", "演唱会应援灯牌", 89.9, 2, null, true));
+        cartItems.add(new CartItem("P1003", "定制T恤", 158.0, 1, null, true));
+        cartStorage.save(cartItems);
     }
 
     private void startCheckout() {
@@ -108,6 +120,7 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartChan
         }
         DecimalFormat formatter = new DecimalFormat("0.00");
         totalTextView.setText(getString(R.string.cart_total_template, formatter.format(total)));
+        cartStorage.save(cartItems);
     }
 
     @Override

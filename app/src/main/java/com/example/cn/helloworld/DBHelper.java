@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DB_NAME = "fans.db";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
     public static final String T_USER       = "t_user";
     public static final String C_ID         = "_id";
@@ -23,6 +23,14 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String C_BIO        = "bio";
     public static final String C_ROLE       = "role";
     public static final String C_CREATED_AT = "created_at";
+
+    // 评论表
+    public static final String T_REVIEW        = "t_review";
+    public static final String C_PRODUCT_ID    = "product_id";
+    public static final String C_USER_NAME     = "user_name";
+    public static final String C_CONTENT       = "content";
+    public static final String C_RATING        = "rating";
+    public static final String C_REVIEW_TIME   = "review_created_at";
 
     public DBHelper(Context ctx) {
         super(ctx, DB_NAME, null, DB_VERSION);
@@ -45,11 +53,21 @@ public class DBHelper extends SQLiteOpenHelper {
                 C_ROLE + " TEXT," +
                 C_CREATED_AT + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
                 ")");
+
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + T_REVIEW + " (" +
+                C_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                C_PRODUCT_ID + " TEXT," +
+                C_USER_NAME + " TEXT," +
+                C_CONTENT + " TEXT," +
+                C_RATING + " REAL," +
+                C_REVIEW_TIME + " INTEGER" +
+                ")");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + T_USER);
+        db.execSQL("DROP TABLE IF EXISTS " + T_REVIEW);
         onCreate(db);
     }
 }

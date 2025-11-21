@@ -1,15 +1,11 @@
 package com.example.cn.helloworld.ui.main;
 
 import android.content.Context;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.cn.helloworld.R;
@@ -48,22 +44,12 @@ public class BannerAdapter extends PagerAdapter {
 
         TextView titleView = (TextView) itemView.findViewById(R.id.banner_title);
         TextView descriptionView = (TextView) itemView.findViewById(R.id.banner_description);
-        FrameLayout root = (FrameLayout) itemView.findViewById(R.id.banner_root);
+        ImageView bannerImage = (ImageView) itemView.findViewById(R.id.banner_image);
 
         titleView.setText(banner.getTitle());
         descriptionView.setText(banner.getDescription());
 
-        int baseColor = ContextCompat.getColor(context, banner.getBackgroundColorResId());
-        int softColor = ColorUtils.blendARGB(baseColor, Color.WHITE, 0.32f);
-
-        GradientDrawable gradientDrawable = new GradientDrawable(
-                GradientDrawable.Orientation.BL_TR,
-                new int[]{softColor, baseColor}
-        );
-        float radius = context.getResources().getDisplayMetrics().density * 20;
-        gradientDrawable.setCornerRadius(radius);
-
-        root.setBackground(gradientDrawable);
+        bannerImage.setImageResource(banner.getImageResId());
 
         container.addView(itemView);
         return itemView;
