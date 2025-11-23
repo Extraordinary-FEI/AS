@@ -5,6 +5,14 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_banner_item">
 
+    <ImageView
+        android:id="@+id/banner_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/cover_nishuo" />
+
     <LinearLayout
         android:id="@+id/banner_text_container"
         android:layout_width="match_parent"

@@ -1,7 +1,5 @@
 package com.example.cn.helloworld.data.model;
 
-import android.support.annotation.DrawableRes;
-
 import java.io.Serializable;
 
 public class Song implements Serializable {
@@ -10,14 +8,38 @@ public class Song implements Serializable {
     private String title;
     private String artist;
     private String description;
+
     private long durationMs;
 
-    private String streamUrl;
+    private int audioResId;     // 本地 mp3
+    private int coverResId;     // 本地图片
 
-    private String coverUrl;
-    @DrawableRes
-    private Integer coverResId;
+    private String streamUrl;   // 线上播放 URL
+    private String coverUrl;    // 线上封面 URL
 
+    /** 本地资源构造器 */
+    public Song(String id,
+                String title,
+                String artist,
+                String description,
+                long durationMs,
+                int audioResId,
+                int coverResId) {
+
+        this.id = id;
+        this.title = title;
+        this.artist = artist;
+        this.description = description;
+        this.durationMs = durationMs;
+
+        this.audioResId = audioResId;
+        this.coverResId = coverResId;
+
+        this.streamUrl = null;
+        this.coverUrl = null;
+    }
+
+    /** 在线编辑用构造器 */
     public Song(String id,
                 String title,
                 String artist,
@@ -32,50 +54,26 @@ public class Song implements Serializable {
         this.artist = artist;
         this.description = description;
         this.durationMs = durationMs;
+
         this.streamUrl = streamUrl;
         this.coverUrl = coverUrl;
-        this.coverResId = coverResId;
+        this.coverResId = coverResId != null ? coverResId : 0;
+
+        this.audioResId = 0; // 线上歌曲没有本地 mp3
     }
 
-    // -------- getter / setter ---------
+    // ===== getter =====
 
-    public String getId() {
-        return id;
-    }
+    public String getId() { return id; }
+    public String getTitle() { return title; }
+    public String getArtist() { return artist; }
+    public String getDescription() { return description; }
+    public long getDurationMs() { return durationMs; }
 
-    public String getTitle() {
-        return title;
-    }
+    public int getAudioResId() { return audioResId; }
+    public int getCoverResId() { return coverResId; }
 
-    public String getArtist() {
-        return artist;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public long getDurationMs() {
-        return durationMs;
-    }
-
-    public String getStreamUrl() {
-        return streamUrl;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public Integer getCoverResId() {
-        return coverResId;
-    }
-
-    public void setCoverResId(Integer coverResId) {
-        this.coverResId = coverResId;
-    }
-
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
+    public String getStreamUrl() { return streamUrl; }
+    public String getCoverUrl() { return coverUrl; }
 }
+

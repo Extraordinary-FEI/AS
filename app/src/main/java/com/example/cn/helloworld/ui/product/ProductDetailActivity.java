@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.ProductReview;
-import com.example.cn.helloworld.data.repository.InMemoryReviewRepository;
+import com.example.cn.helloworld.data.repository.DatabaseReviewRepository;
 import com.example.cn.helloworld.data.repository.ReviewSubmitCallback;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private EditText commentEditText;
     private RatingBar ratingBar;
 
-    private InMemoryReviewRepository reviewRepository;
+    private DatabaseReviewRepository reviewRepository;
     private boolean isFavorite;
     private String productId;
     private String productName;
@@ -54,7 +54,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         commentEditText = (EditText) findViewById(R.id.edit_comment_content);
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
 
-        reviewRepository = new InMemoryReviewRepository();
+        reviewRepository = new DatabaseReviewRepository(this);
 
         Intent intent = getIntent();
         if (intent != null) {

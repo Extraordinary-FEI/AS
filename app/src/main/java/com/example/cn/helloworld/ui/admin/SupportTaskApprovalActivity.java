@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +35,13 @@ public class SupportTaskApprovalActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_support_tasks);
-        setTitle(R.string.title_admin_support_tasks);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.title_admin_support_tasks);
+        }
 
         sessionManager = new SessionManager(this);
         if (!sessionManager.isAdmin()) {
@@ -43,7 +50,7 @@ public class SupportTaskApprovalActivity extends AppCompatActivity {
             return;
         }
 
-        repository = new SupportTaskRepository();
+        repository = new SupportTaskRepository(this);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerSupportTasks);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -63,6 +70,12 @@ public class SupportTaskApprovalActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         loadTasks();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     private void loadTasks() {
@@ -126,6 +139,17 @@ public class SupportTaskApprovalActivity extends AppCompatActivity {
             );
 
             holder.timeView.setText(DateFormat.format("MM-dd HH:mm", new Date(task.getUpdatedAt())));
+            if (holder.priorityView != null) {
+                holder.priorityView.setText(holder.itemView.getContext().getString(
+                        R.string.support_task_priority_format, task.getPriority()));
+            }
+
+            if (holder.approvalButtons != null) {
+                holder.approvalButtons.setVisibility(View.VISIBLE);
+            }
+            if (holder.manageButtons != null) {
+                holder.manageButtons.setVisibility(View.GONE);
+            }
 
             boolean isPending = SupportTaskRepository.STATUS_PENDING.equals(task.getStatus());
             holder.approveButton.setEnabled(isPending);
@@ -163,8 +187,11 @@ public class SupportTaskApprovalActivity extends AppCompatActivity {
             final TextView statusView;
             final TextView assigneeView;
             final TextView timeView;
+            final TextView priorityView;
             final Button approveButton;
             final Button rejectButton;
+            final View approvalButtons;
+            final View manageButtons;
 
             ViewHolder(View itemView) {
                 super(itemView);
@@ -173,8 +200,11 @@ public class SupportTaskApprovalActivity extends AppCompatActivity {
                 statusView = (TextView) itemView.findViewById(R.id.textTaskStatus);
                 assigneeView = (TextView) itemView.findViewById(R.id.textTaskAssignee);
                 timeView = (TextView) itemView.findViewById(R.id.textTaskTime);
+                priorityView = (TextView) itemView.findViewById(R.id.textTaskPriority);
                 approveButton = (Button) itemView.findViewById(R.id.buttonApproveTask);
                 rejectButton = (Button) itemView.findViewById(R.id.buttonRejectTask);
+                approvalButtons = itemView.findViewById(R.id.groupApprovalButtons);
+                manageButtons = itemView.findViewById(R.id.groupManageButtons);
             }
         }
     }

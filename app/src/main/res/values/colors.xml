@@ -23,6 +23,8 @@
     <color name="homeTaskBackground">#FCEBFF</color>
     <color name="homeTextPrimary">#1F1A3D</color>
     <color name="homeTextSecondary">#5A5576</color>
+    <!-- 悬浮音乐栏背景（显式不透明） -->
+    <color name="floatingMusicBackground">#FF2D2E6F</color>
     <color name="homeTaskDeadline">#FF8A65</color>
 
     <!-- 首页 Banner 和 Playlist 渐变色 -->

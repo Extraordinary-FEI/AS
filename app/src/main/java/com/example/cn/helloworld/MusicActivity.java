@@ -5,29 +5,33 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.cn.helloworld.ui.main.MainActivity;
+
 public class MusicActivity extends Activity {
 
-    private ImageButton btnPlayPause, btnStop, btnNext, btnPrev;
+    public static final String EXTRA_PLAYLIST_ID = "extra_playlist_id";
+    public static final String EXTRA_SONG_ID = "extra_song_id";
+
+    private ImageButton btnPlayPause, btnStop, btnNext, btnPrev, btnBack;
     private ImageView imgCover;
     private TextView tvSongName;
 
-    // 当前播放状态
     private boolean isPlaying = false;
-
-    // 封面图资源数组
-    private int[] coverRes = {
-            R.drawable.cover_playlist_stage,
-            R.drawable.cover_playlist_healing,
-            R.drawable.cover_playlist_city
-    };
-
     private BroadcastReceiver uiUpdateReceiver;
+
+    public static Intent createIntent(Context context, String playlistId, String songId) {
+        Intent intent = new Intent(context, MusicActivity.class);
+        intent.putExtra(EXTRA_PLAYLIST_ID, playlistId);
+        intent.putExtra(EXTRA_SONG_ID, songId);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +42,25 @@ public class MusicActivity extends Activity {
         btnStop = (ImageButton) findViewById(R.id.btn_stop);
         btnNext = (ImageButton) findViewById(R.id.btn_next);
         btnPrev = (ImageButton) findViewById(R.id.btn_prev);
+        btnBack = (ImageButton) findViewById(R.id.btn_back);
         imgCover = (ImageView) findViewById(R.id.img_cover);
         tvSongName = (TextView) findViewById(R.id.tv_song_name);
 
-        startService(new Intent(this, MusicService.class));
+        String playlistId = getIntent().getStringExtra(EXTRA_PLAYLIST_ID);
+        String songId = getIntent().getStringExtra(EXTRA_SONG_ID);
+
+        // 启动音乐服务
+        Intent serviceIntent;
+        if (playlistId != null || songId != null) {
+            serviceIntent = MusicService.createPlaySongIntent(this, playlistId, songId);
+        } else {
+            serviceIntent = new Intent(this, MusicService.class);
+        }
+        startServiceCompat(serviceIntent);
+
         registerUIReceiver();
 
-        // 点击播放/暂停键
+        // 播放/暂停
         btnPlayPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,6 +72,7 @@ public class MusicActivity extends Activity {
             }
         });
 
+        // 停止
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,6 +80,7 @@ public class MusicActivity extends Activity {
             }
         });
 
+        // 下一曲
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,42 +88,75 @@ public class MusicActivity extends Activity {
             }
         });
 
+        // 上一曲
         btnPrev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendBroadcast(new Intent("ACTION_PREV"));
             }
         });
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MusicActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                finish();
+            }
+        });
+    }
+
+    /**
+     * 兼容 API 25 项目结构的 startForegroundService
+     */
+    private void startServiceCompat(Intent intent) {
+        if (Build.VERSION.SDK_INT >= 26) {
+            try {
+                Activity.class.getMethod("startForegroundService", Intent.class).invoke(this, intent);
+                return;
+            } catch (Exception ignored) {}
+        }
+        startService(intent);
     }
 
     private void registerUIReceiver() {
         uiUpdateReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if ("ACTION_UPDATE_UI".equals(intent.getAction())) {
+                if (MusicService.ACTION_UPDATE_UI.equals(intent.getAction())) {
+
                     String title = intent.getStringExtra("title");
+                    String artist = intent.getStringExtra("artist");
                     int index = intent.getIntExtra("index", 0);
                     int total = intent.getIntExtra("total", 1);
+                    int coverResId = intent.getIntExtra("coverResId",
+                            R.drawable.cover_playlist_placeholder);
+
                     isPlaying = intent.getBooleanExtra("playing", false);
 
-                    if (index < 0 || index >= coverRes.length) index = 0;
-
                     String prefix = isPlaying ? "正在播放：" : "已暂停：";
-                    tvSongName.setText(prefix + title + " (" + (index + 1) + "/" + total + ")");
-                    imgCover.setImageResource(coverRes[index]);
+                    String safeTitle = (title == null ? getString(R.string.app_name) : title);
+                    String subtitle = (artist == null ? "" : " - " + artist);
 
-                    // ✅ 根据播放状态更新图标
-                    if (isPlaying) {
-                        btnPlayPause.setImageResource(R.drawable.pause); // 替换为你的暂停图标
-                    } else {
-                        btnPlayPause.setImageResource(R.drawable.play);  // 替换为你的播放图标
+                    if (index < 0 || total <= 0) {
+                        index = 0;
+                        total = 1;
                     }
+
+                    tvSongName.setText(
+                            prefix + safeTitle + subtitle + " (" + (index + 1) + "/" + total + ")"
+                    );
+                    imgCover.setImageResource(coverResId);
+
+                    btnPlayPause.setImageResource(
+                            isPlaying ? R.drawable.pause : R.drawable.play
+                    );
                 }
             }
         };
 
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("ACTION_UPDATE_UI");
+        IntentFilter filter = new IntentFilter(MusicService.ACTION_UPDATE_UI);
         registerReceiver(uiUpdateReceiver, filter);
     }
 

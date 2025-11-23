@@ -74,7 +74,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
                         android:layout_weight="1"
-                        android:text="@string/role_admin" />
+                        android:text="@string/role_admin"
+                        android:layout_marginLeft="12dp" />
                 </RadioGroup>
 
                 <TextView
@@ -131,8 +132,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/hint_verification_code"
-                        android:inputType="number"
-                        android:maxLength="6" />
+                        android:inputType="textVisiblePassword"
+                        android:maxLength="20" />
                 </android.support.design.widget.TextInputLayout>
 
                 <TextView
