@@ -40,6 +40,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private TextView summaryText;
     private Button btnProducts;
     private Button btnPlaylists;
+    private Button btnManageBanners;
     private Button btnViewOrders;
     private Button btnManageSupportTasks;
     private Button btnTaskApproval;
@@ -75,6 +76,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         summaryText = (TextView) findViewById(R.id.text_dashboard_summary);
         btnProducts = (Button) findViewById(R.id.btnManageProducts);
         btnPlaylists = (Button) findViewById(R.id.btnManagePlaylists);
+        btnManageBanners = (Button) findViewById(R.id.btnManageBanners);
         btnViewOrders = (Button) findViewById(R.id.btnViewOrders);
         btnManageSupportTasks = (Button) findViewById(R.id.btnManageSupportTasks);
         btnTaskApproval = (Button) findViewById(R.id.btnTaskApproval);
@@ -138,6 +140,12 @@ public class AdminDashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(AdminDashboardActivity.this, PlaylistManagementActivity.class));
+            }
+        });
+        btnManageBanners.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AdminDashboardActivity.this, BannerManagementActivity.class));
             }
         });
         btnViewOrders.setOnClickListener(new View.OnClickListener() {

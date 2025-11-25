@@ -36,8 +36,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:contentDescription="@string/app_name"
-                android:tint="@color/colorPrimary"
-                android:scaleType="centerInside"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_category_ticket"
                 tools:ignore="ContentDescription" />
         </FrameLayout>

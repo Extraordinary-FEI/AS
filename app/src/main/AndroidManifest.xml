@@ -85,6 +85,15 @@
             android:label="@string/title_admin_manage_playlists" />
 
         <activity
+            android:name="com.example.cn.helloworld.ui.admin.BannerManagementActivity"
+            android:label="@string/title_admin_manage_banners"
+            android:parentActivityName="com.example.cn.helloworld.ui.admin.AdminDashboardActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.cn.helloworld.ui.admin.AdminDashboardActivity" />
+        </activity>
+
+        <activity
             android:name="com.example.cn.helloworld.ui.admin.PlaylistEditorActivity"
             android:label="@string/title_admin_manage_playlists" />
 

@@ -5,17 +5,21 @@ import android.content.Context;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.data.model.Product;
+import com.example.cn.helloworld.data.model.Banner;
 import com.example.cn.helloworld.data.model.SupportTask;
 import com.example.cn.helloworld.data.playlist.PlaylistRepository;
+import com.example.cn.helloworld.data.repository.BannerRepository;
 import com.example.cn.helloworld.data.repository.ProductRepository;
 import com.example.cn.helloworld.data.repository.support.LocalSupportTaskDataSource;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 /**
  * 暂时使用的假数据实现，便于后续替换为真实服务。
@@ -26,6 +30,7 @@ public class FakeHomeDataSource implements HomeDataSource {
     private final PlaylistRepository playlistRepository;
     private final com.example.cn.helloworld.data.repository.SupportTaskRepository adminSupportTaskRepository;
     private final ProductRepository productRepository;
+    private final BannerRepository bannerRepository;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault());
 
     /**
@@ -41,56 +46,89 @@ public class FakeHomeDataSource implements HomeDataSource {
         playlistRepository = PlaylistRepository.getInstance(this.context);
         adminSupportTaskRepository = new com.example.cn.helloworld.data.repository.SupportTaskRepository(this.context);
         productRepository = new ProductRepository(this.context);
+        bannerRepository = new BannerRepository(this.context);
     }
     @Override
     public List<HomeModels.BannerItem> loadBanners() {
-        return Arrays.asList(
-                new HomeModels.BannerItem("千玺生日月冲刺", "每日打卡累计生贺能量", R.drawable.cover_nishuo),
-                new HomeModels.BannerItem("公益舞台回顾", "重温他与山城孩子的约定", R.drawable.cover_baobei),
-                new HomeModels.BannerItem("线下巡礼报名", "和小橙灯一起打卡地标应援点", R.drawable.song_cover)
-        );
+        List<HomeModels.BannerItem> bannerItems = new ArrayList<HomeModels.BannerItem>();
+        List<Banner> storedBanners = bannerRepository.getAllBanners();
+        if (storedBanners != null) {
+            for (int i = 0; i < storedBanners.size(); i++) {
+                Banner banner = storedBanners.get(i);
+                if (banner != null) {
+                    bannerItems.add(new HomeModels.BannerItem(
+                            banner.getTitle(),
+                            banner.getDescription(),
+                            banner.getImageResId()
+                    ));
+                }
+            }
+        }
+        return bannerItems;
     }
 
     @Override
     public List<HomeModels.HomeCategory> loadCategories() {
+        final List<Integer> randomIcons = buildRandomCategoryIcons();
         return Arrays.asList(
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_ticket),
                         context.getString(R.string.category_subtitle_ticket),
-                        R.drawable.ic_category_ticket,
+                        pickIcon(randomIcons, 0),
                         "action_stage_review"
                 ),
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_merch),
                         context.getString(R.string.category_subtitle_merch),
-                        R.drawable.ic_category_merch,
+                        pickIcon(randomIcons, 1),
                         "action_new_arrival"
                 ),
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_support),
                         context.getString(R.string.home_task_subtitle),
-                        R.drawable.ic_category_signed,
+                        pickIcon(randomIcons, 2),
                         "action_calendar"
                 ),
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_playlist),
                         context.getString(R.string.home_playlist_subtitle),
-                        R.drawable.ic_category_signed,
+                        pickIcon(randomIcons, 3),
                         "action_review_wall"
                 ),
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_cart),
                         context.getString(R.string.category_subtitle_signed),
-                        R.drawable.ic_category_ticket,
+                        pickIcon(randomIcons, 4),
                         "action_news"
                 ),
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_profile),
                         context.getString(R.string.home_task_subtitle),
-                        R.drawable.ic_category_merch,
+                        pickIcon(randomIcons, 5),
                         "action_profile"
                 )
         );
+    }
+
+    private List<Integer> buildRandomCategoryIcons() {
+        List<Integer> icons = new ArrayList<Integer>(Arrays.asList(
+                R.drawable.cover_nishuo,
+                R.drawable.cover_baobei,
+                R.drawable.cover_friend,
+                R.drawable.cover_fenwuhai,
+                R.drawable.cover_lisao,
+                R.drawable.song_cover
+        ));
+        Collections.shuffle(icons, new Random(System.currentTimeMillis()));
+        return icons;
+    }
+
+    private int pickIcon(List<Integer> icons, int index) {
+        if (icons == null || icons.isEmpty()) {
+            return R.drawable.ic_category_ticket;
+        }
+        int safeIndex = Math.abs(index) % icons.size();
+        return icons.get(safeIndex);
     }
 
     /**

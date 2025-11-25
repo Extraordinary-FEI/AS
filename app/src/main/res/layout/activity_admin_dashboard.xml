@@ -146,6 +146,16 @@
                         android:textColor="@color/colorOnPrimary" />
 
                     <Button
+                        android:id="@+id/btnManageBanners"
+                        style="@style/Widget.AppCompat.Button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/bg_admin_action"
+                        android:text="@string/dashboard_action_banners"
+                        android:textColor="@color/colorOnPrimary" />
+
+                    <Button
                         android:id="@+id/btnViewOrders"
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="match_parent"
