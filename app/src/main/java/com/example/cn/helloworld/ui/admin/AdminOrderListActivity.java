@@ -27,6 +27,7 @@ import com.example.cn.helloworld.data.repository.AdminOrderRepository;
 import com.example.cn.helloworld.data.session.SessionManager;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,6 +36,13 @@ import java.util.Locale;
 public class AdminOrderListActivity extends AppCompatActivity implements AdminOrderListActivity.OrderAdapter.Callback {
 
     public static final String EXTRA_ORDERS = "extra_orders";
+    private static final String[] DEFAULT_STATUSES = new String[]{
+            "CREATED",
+            "PAID",
+            "SHIPPED",
+            "FULFILLED",
+            "CANCELLED"
+    };
 
     public static Intent createIntent(Context context, ArrayList<Order> orders) {
         Intent intent = new Intent(context, AdminOrderListActivity.class);
@@ -106,8 +114,14 @@ public class AdminOrderListActivity extends AppCompatActivity implements AdminOr
         final EditText addressInput = (EditText) dialogView.findViewById(R.id.editOrderAddress);
         final Spinner statusSpinner = (Spinner) dialogView.findViewById(R.id.spinnerOrderStatus);
 
-        ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(this,
-                R.array.admin_order_statuses, android.R.layout.simple_spinner_item);
+        ArrayAdapter<String> statusAdapter;
+        try {
+            statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
+                    Arrays.asList(getResources().getStringArray(R.array.admin_order_statuses)));
+        } catch (android.content.res.Resources.NotFoundException e) {
+            statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
+                    Arrays.asList(DEFAULT_STATUSES));
+        }
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         statusSpinner.setAdapter(statusAdapter);
 
