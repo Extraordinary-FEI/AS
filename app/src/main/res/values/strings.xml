@@ -148,6 +148,7 @@
     <string name="dashboard_chart_description">管理员统计图，显示订单、任务、粉丝等数据</string>
     <string name="dashboard_tip">及时关注任务审批状态，确保应援计划顺利推进。</string>
     <string name="dashboard_action_orders">查看订单列表</string>
+    <string name="dashboard_action_banners">管理首页横幅</string>
     <string name="dashboard_action_manage_support">管理应援任务</string>
     <string name="dashboard_action_approval">应援任务审批</string>
     <string name="admin_action_edit">编辑</string>
@@ -256,6 +257,13 @@
     <string name="support_task_priority_format">优先级：%1$d</string>
     <string name="support_task_updated_time_format">更新时间：%1$s</string>
     <string name="orders_empty">暂无订单记录</string>
+
+    <!-- Banner 管理 -->
+    <string name="banner_hint_title">横幅标题</string>
+    <string name="banner_hint_description">横幅描述</string>
+    <string name="banner_label_image">选择展示图片</string>
+    <string name="action_edit">编辑</string>
+    <string name="action_delete">删除</string>
 
     <string name="category_header_title">千玺应援好物</string>
     <string name="category_header_subtitle">挑选巡演门票、限定周边与签名纪念</string>
