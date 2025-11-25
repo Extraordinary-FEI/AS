@@ -16,6 +16,7 @@ public class Song implements Serializable {
 
     private String streamUrl;   // 线上播放 URL
     private String coverUrl;    // 线上封面 URL
+    private String localFilePath; // 本地上传的音频路径
 
     /** 本地资源构造器 */
     public Song(String id,
@@ -37,6 +38,7 @@ public class Song implements Serializable {
 
         this.streamUrl = null;
         this.coverUrl = null;
+        this.localFilePath = null;
     }
 
     /** 在线编辑用构造器 */
@@ -60,6 +62,30 @@ public class Song implements Serializable {
         this.coverResId = coverResId != null ? coverResId : 0;
 
         this.audioResId = 0; // 线上歌曲没有本地 mp3
+        this.localFilePath = null;
+    }
+
+    /** 本地文件上传构造器 */
+    public Song(String id,
+                String title,
+                String artist,
+                String description,
+                long durationMs,
+                String localFilePath,
+                Integer coverResId) {
+
+        this.id = id;
+        this.title = title;
+        this.artist = artist;
+        this.description = description;
+        this.durationMs = durationMs;
+
+        this.localFilePath = localFilePath;
+        this.coverResId = coverResId != null ? coverResId : 0;
+
+        this.audioResId = 0;
+        this.streamUrl = null;
+        this.coverUrl = null;
     }
 
     // ===== getter =====
@@ -75,5 +101,6 @@ public class Song implements Serializable {
 
     public String getStreamUrl() { return streamUrl; }
     public String getCoverUrl() { return coverUrl; }
+    public String getLocalFilePath() { return localFilePath; }
 }
 

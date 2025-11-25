@@ -2,6 +2,7 @@ package com.example.cn.helloworld.data.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +38,7 @@ public class Product implements Serializable {
                    List<String> strings, List<String> stringList, boolean active) {
         this.tags = new ArrayList<String>();
         this.starEvents = new ArrayList<String>();
+        this.featuredOnHome = false;
     }
 
     // 简化版构造器
@@ -49,10 +51,10 @@ public class Product implements Serializable {
             String category,
             int rating,
             List<String> tags,
-            List<String> starEvents
-    ) {
+            List<String> starEvents,
+            boolean b, String s, String s1, HashMap<String, String> attributes, boolean b1) {
         this(id, name, description, price, inventory, category, rating,
-                tags, starEvents, true, null, null, null, 0, "", null);
+                tags, starEvents, true, null, null, null, 0, "", null, false);
     }
 
     // 完整构造器（仓库里在用）

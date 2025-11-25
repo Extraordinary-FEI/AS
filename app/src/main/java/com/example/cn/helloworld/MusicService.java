@@ -6,6 +6,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
@@ -200,22 +201,43 @@ public class MusicService extends Service {
             return;
         }
 
-        if (currentSong.getAudioResId() == 0) {
-            Toast.makeText(this, R.string.error_song_not_found, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         try {
-            player = MediaPlayer.create(this, currentSong.getAudioResId());
-            if (player == null) {
-                throw new Exception("无法加载音频文件，请检查格式");
-            }
-            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    nextMusic();
+            String localPath = currentSong.getLocalFilePath();
+            if (!TextUtils.isEmpty(localPath)) {
+                player = new MediaPlayer();
+                player.setDataSource(this, Uri.parse(localPath));
+                player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        nextMusic();
+                    }
+                });
+                player.prepare();
+            } else if (currentSong.getAudioResId() != 0) {
+                player = MediaPlayer.create(this, currentSong.getAudioResId());
+                if (player == null) {
+                    throw new Exception("无法加载音频文件，请检查格式");
                 }
-            });
+                player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        nextMusic();
+                    }
+                });
+            } else if (!TextUtils.isEmpty(currentSong.getStreamUrl())) {
+                player = new MediaPlayer();
+                player.setDataSource(currentSong.getStreamUrl());
+                player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        nextMusic();
+                    }
+                });
+                player.prepare();
+            } else {
+                Toast.makeText(this, R.string.error_song_not_found, Toast.LENGTH_SHORT).show();
+                return;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "音乐加载失败", Toast.LENGTH_SHORT).show();

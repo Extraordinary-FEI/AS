@@ -49,10 +49,14 @@ public class PlaylistEditorActivity extends AppCompatActivity {
     private List<Song> songs = new ArrayList<>();
     private SongAdapter songAdapter;
 
+    private TextView activeAudioPathView;
+    private String pendingAudioPath;
+
     // 封面 URI（可为空）
     private String coverUri = null;
 
     private static final int REQUEST_CODE_PICK_COVER = 2001;
+    private static final int REQUEST_CODE_PICK_AUDIO = 2002;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -144,6 +148,12 @@ public class PlaylistEditorActivity extends AppCompatActivity {
         startActivityForResult(intent, REQUEST_CODE_PICK_COVER);
     }
 
+    private void pickAudioFile() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("audio/*");
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.song_action_pick_local)), REQUEST_CODE_PICK_AUDIO);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_PICK_COVER && resultCode == RESULT_OK && data != null) {
@@ -153,8 +163,29 @@ public class PlaylistEditorActivity extends AppCompatActivity {
                 coverPreview.setImageURI(uri);
                 coverHint.setText(coverUri);
             }
+        } else if (requestCode == REQUEST_CODE_PICK_AUDIO && resultCode == RESULT_OK && data != null) {
+            Uri uri = data.getData();
+            if (uri != null) {
+                pendingAudioPath = uri.toString();
+                updateAudioLabel(activeAudioPathView, pendingAudioPath);
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void updateAudioLabel(@Nullable TextView textView, @Nullable String path) {
+        if (textView == null) {
+            return;
+        }
+        if (TextUtils.isEmpty(path)) {
+            textView.setText(R.string.song_hint_no_file);
+            return;
+        }
+        String fileName = Uri.parse(path).getLastPathSegment();
+        if (TextUtils.isEmpty(fileName)) {
+            fileName = path;
+        }
+        textView.setText(getString(R.string.song_selected_file, fileName));
     }
 
     // ===================== 歌曲管理 =====================
@@ -186,12 +217,29 @@ public class PlaylistEditorActivity extends AppCompatActivity {
         final EditText titleInput = (EditText) view.findViewById(R.id.editSongTitle);
         final EditText artistInput = (EditText) view.findViewById(R.id.editSongArtist);
         final EditText durationInput = (EditText) view.findViewById(R.id.editSongDuration);
+        final EditText streamInput = (EditText) view.findViewById(R.id.editSongStreamUrl);
+        final TextView localFileText = (TextView) view.findViewById(R.id.textSongLocalFile);
+
+        pendingAudioPath = oldSong != null ? oldSong.getLocalFilePath() : null;
+        activeAudioPathView = localFileText;
+        updateAudioLabel(localFileText, pendingAudioPath);
 
         if (oldSong != null) {
             titleInput.setText(oldSong.getTitle());
             artistInput.setText(oldSong.getArtist());
             durationInput.setText(String.valueOf(oldSong.getDurationMs() / 1000));
+            if (!TextUtils.isEmpty(oldSong.getStreamUrl())) {
+                streamInput.setText(oldSong.getStreamUrl());
+            }
         }
+
+        View pickAudioButton = view.findViewById(R.id.buttonPickLocalAudio);
+        pickAudioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickAudioFile();
+            }
+        });
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(oldSong == null ? "添加歌曲" : "编辑歌曲")
@@ -199,6 +247,14 @@ public class PlaylistEditorActivity extends AppCompatActivity {
                 .setPositiveButton("确定", null)
                 .setNegativeButton("取消", null)
                 .create();
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                activeAudioPathView = null;
+                pendingAudioPath = null;
+            }
+        });
 
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
@@ -211,6 +267,7 @@ public class PlaylistEditorActivity extends AppCompatActivity {
                         String title = titleInput.getText().toString().trim();
                         String artist = artistInput.getText().toString().trim();
                         String durText = durationInput.getText().toString().trim();
+                        String streamUrl = streamInput.getText().toString().trim();
 
                         if (TextUtils.isEmpty(title)) {
                             titleInput.setError("请输入歌曲名");
@@ -225,15 +282,46 @@ public class PlaylistEditorActivity extends AppCompatActivity {
                             return;
                         }
 
-                        Song newSong = new Song(
-                                oldSong == null ? System.currentTimeMillis() + "" : oldSong.getId(),
-                                title,
-                                artist,
-                                "",
-                                duration,
-                                0,      // audioResId 本地 mp3 你可以自己扩展
-                                0       // coverResId 本地封面
-                        );
+                        boolean hasBuiltInAudio = oldSong != null && oldSong.getAudioResId() != 0;
+                        if (TextUtils.isEmpty(pendingAudioPath) && TextUtils.isEmpty(streamUrl) && !hasBuiltInAudio) {
+                            streamInput.setError(getString(R.string.error_song_source_required));
+                            return;
+                        }
+
+                        Song newSong;
+                        String id = oldSong == null ? System.currentTimeMillis() + "" : oldSong.getId();
+                        if (!TextUtils.isEmpty(pendingAudioPath)) {
+                            newSong = new Song(
+                                    id,
+                                    title,
+                                    artist,
+                                    "",
+                                    duration,
+                                    pendingAudioPath,
+                                    oldSong != null ? oldSong.getCoverResId() : null
+                            );
+                        } else if (!TextUtils.isEmpty(streamUrl)) {
+                            newSong = new Song(
+                                    id,
+                                    title,
+                                    artist,
+                                    "",
+                                    duration,
+                                    streamUrl,
+                                    oldSong != null ? oldSong.getCoverUrl() : null,
+                                    oldSong != null ? oldSong.getCoverResId() : null
+                            );
+                        } else {
+                            newSong = new Song(
+                                    id,
+                                    title,
+                                    artist,
+                                    "",
+                                    duration,
+                                    oldSong != null ? oldSong.getAudioResId() : 0,
+                                    oldSong != null ? oldSong.getCoverResId() : 0
+                            );
+                        }
 
                         if (oldSong == null) songs.add(newSong);
                         else {
@@ -347,7 +435,7 @@ public class PlaylistEditorActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull ViewHolder h, int pos) {
             final Song s = songs.get(pos);
             h.title.setText(s.getTitle());
-            h.subtitle.setText(s.getArtist() + " · " + (s.getDurationMs() / 1000) + "秒");
+            h.subtitle.setText(buildSubtitle(s));
 
             h.edit.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
@@ -364,6 +452,23 @@ public class PlaylistEditorActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() { return songs.size(); }
+
+        private String buildSubtitle(Song song) {
+            StringBuilder builder = new StringBuilder();
+            builder.append(song.getArtist())
+                    .append(" · ")
+                    .append(song.getDurationMs() / 1000)
+                    .append("秒");
+
+            if (!TextUtils.isEmpty(song.getLocalFilePath())) {
+                builder.append(" · 本地音频");
+            } else if (!TextUtils.isEmpty(song.getStreamUrl())) {
+                builder.append(" · 流媒体链接");
+            } else if (song.getAudioResId() != 0) {
+                builder.append(" · 内置音频");
+            }
+            return builder.toString();
+        }
 
         static class ViewHolder extends RecyclerView.ViewHolder {
             TextView title;

@@ -248,6 +248,7 @@ public final class PlaylistRepository {
             object.put("coverResId", song.getCoverResId());
             object.put("streamUrl", song.getStreamUrl());
             object.put("coverUrl", song.getCoverUrl());
+            object.put("localFilePath", song.getLocalFilePath());
         } catch (JSONException ignored) {
         }
         return object;
@@ -270,10 +271,14 @@ public final class PlaylistRepository {
         int coverResId = object.optInt("coverResId");
         String streamUrl = object.optString("streamUrl", null);
         String coverUrl = object.optString("coverUrl", null);
+        String localFilePath = object.optString("localFilePath", null);
         String id = object.optString("id");
         String title = object.optString("title");
         String artist = object.optString("artist");
         String description = object.optString("description");
+        if (!TextUtils.isEmpty(localFilePath)) {
+            return new Song(id, title, artist, description, duration, localFilePath, coverResId);
+        }
         if (audioResId > 0) {
             return new Song(id, title, artist, description, duration, audioResId, coverResId);
         }

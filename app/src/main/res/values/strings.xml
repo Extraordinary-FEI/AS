@@ -195,6 +195,12 @@
     <string name="hint_song_artist">演唱者</string>
     <string name="hint_song_duration">时长（秒）</string>
     <string name="hint_song_stream">流媒体链接</string>
+    <string name="song_info_basic">基础信息</string>
+    <string name="song_info_audio_source">音频来源</string>
+    <string name="song_action_pick_local">从本地选择</string>
+    <string name="song_hint_no_file">未选择本地音频</string>
+    <string name="song_hint_stream_or_local">支持上传本地文件或填写在线播放链接。</string>
+    <string name="song_selected_file">已选择：%1$s</string>
     <string name="dialog_title_add_song">新增曲目</string>
     <string name="dialog_title_edit_song">编辑曲目</string>
     <string name="dialog_title_delete_song">删除曲目</string>
@@ -202,6 +208,7 @@
     <string name="error_song_title_required">请输入曲目名称</string>
     <string name="error_song_duration_invalid">请输入正确的时长（秒）</string>
     <string name="error_song_stream_required">请输入有效的播放链接</string>
+    <string name="error_song_source_required">请上传本地文件或提供播放链接</string>
     <string name="error_playlist_title_required">请输入歌单名称</string>
     <string name="toast_playlist_saved">歌单已保存</string>
 
