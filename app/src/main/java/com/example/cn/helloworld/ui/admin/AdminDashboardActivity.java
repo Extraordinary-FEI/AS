@@ -14,6 +14,7 @@ import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.AdminMetrics;
 import com.example.cn.helloworld.data.model.Order;
 import com.example.cn.helloworld.data.model.Permission;
+import com.example.cn.helloworld.data.repository.AdminOrderRepository;
 import com.example.cn.helloworld.data.repository.AdminMetricsRepository;
 import com.example.cn.helloworld.data.repository.SupportTaskRepository;
 import com.example.cn.helloworld.data.session.SessionManager;
@@ -33,6 +34,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private AdminMetricsRepository metricsRepository;
     private SupportTaskRepository supportTaskRepository;
+    private AdminOrderRepository orderRepository;
     private TextView tvWelcome;
     private TextView tvToken;
     private TextView summaryText;
@@ -58,7 +60,8 @@ public class AdminDashboardActivity extends AppCompatActivity {
         }
 
         supportTaskRepository = new SupportTaskRepository(this);
-        metricsRepository = new AdminMetricsRepository(supportTaskRepository);
+        orderRepository = new AdminOrderRepository(this);
+        metricsRepository = new AdminMetricsRepository(supportTaskRepository, orderRepository);
 
         bindViews();
         populateInfo();

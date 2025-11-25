@@ -163,11 +163,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void navigateByRole(UserRole role) {
-        if (role == UserRole.ADMIN) {
-            startActivity(new Intent(this, AdminDashboardActivity.class));
-        } else {
-            startActivity(new Intent(this, MainActivity.class));
-        }
+        startActivity(new Intent(this, MainActivity.class));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)

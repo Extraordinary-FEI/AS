@@ -24,6 +24,7 @@ import com.example.cn.helloworld.data.repository.DatabaseReviewRepository;
 import com.example.cn.helloworld.data.repository.ProductRepository;
 import com.example.cn.helloworld.data.repository.ReviewSubmitCallback;
 import com.example.cn.helloworld.data.storage.CartStorage;
+import com.example.cn.helloworld.data.session.SessionManager;
 import com.example.cn.helloworld.ui.product.ReviewWallActivity;
 
 import java.util.Locale;
@@ -41,6 +42,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private Button submitButton;
     private Button commentEntryButton;
     private Button addToCartButton;
+    private SessionManager sessionManager;
 
     public static void start(Context context, String productId) {
         Intent intent = new Intent(context, ProductDetailActivity.class);
@@ -71,6 +73,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         reviewRepository = new DatabaseReviewRepository(this);
         cartStorage = CartStorage.getInstance(this);
+        sessionManager = new SessionManager(this);
 
         ImageView imageView = (ImageView) findViewById(R.id.detailProductImage);
         TextView nameView = (TextView) findViewById(R.id.detailProductName);
@@ -128,12 +131,17 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
         });
 
-        addToCartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addProductToCart();
-            }
-        });
+        if (sessionManager.isAdmin()) {
+            addToCartButton.setVisibility(View.GONE);
+            Toast.makeText(this, R.string.admin_add_to_cart_hidden, Toast.LENGTH_SHORT).show();
+        } else {
+            addToCartButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addProductToCart();
+                }
+            });
+        }
     }
 
     @Override

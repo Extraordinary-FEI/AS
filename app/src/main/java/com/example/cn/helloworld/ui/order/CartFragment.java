@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.CartItem;
 import com.example.cn.helloworld.data.storage.CartStorage;
+import com.example.cn.helloworld.data.session.SessionManager;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartChan
     private CartItemAdapter adapter;
     private List<CartItem> cartItems = new ArrayList<CartItem>();
     private CartStorage cartStorage;
+    private SessionManager sessionManager;
 
     @Nullable
     @Override
@@ -41,12 +43,20 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartChan
         totalTextView = (TextView) view.findViewById(R.id.text_total_price);
         checkoutButton = (Button) view.findViewById(R.id.button_checkout);
 
+        sessionManager = new SessionManager(view.getContext());
         Context context = view.getContext();
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter = new CartItemAdapter(cartItems, this);
         recyclerView.setAdapter(adapter);
 
         cartStorage = CartStorage.getInstance(context);
+
+        if (sessionManager.isAdmin()) {
+            recyclerView.setVisibility(View.GONE);
+            checkoutButton.setVisibility(View.GONE);
+            totalTextView.setText(R.string.admin_cart_hidden);
+            return view;
+        }
 
         checkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override

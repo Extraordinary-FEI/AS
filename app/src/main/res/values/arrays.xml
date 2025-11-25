@@ -15,4 +15,12 @@
         <item>控评组</item>
         <item>摄影组</item>
     </string-array>
+
+    <string-array name="admin_order_statuses">
+        <item>CREATED</item>
+        <item>PAID</item>
+        <item>SHIPPED</item>
+        <item>FULFILLED</item>
+        <item>CANCELLED</item>
+    </string-array>
 </resources>

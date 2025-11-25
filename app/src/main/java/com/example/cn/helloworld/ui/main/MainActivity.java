@@ -28,6 +28,7 @@ import com.example.cn.helloworld.util.BottomNavigationViewHelper;
 import com.example.cn.helloworld.ui.order.CartFragment;
 import com.example.cn.helloworld.ui.playlist.PlaylistLibraryFragment;
 import com.example.cn.helloworld.ui.user.UserCenterFragment;
+import com.example.cn.helloworld.data.session.SessionManager;
 
 public class MainActivity extends AppCompatActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -49,6 +50,9 @@ public class MainActivity extends AppCompatActivity
     private Fragment activeFragment;
 
     private int selectedNavId = R.id.navigation_home;
+
+    private SessionManager sessionManager;
+    private boolean isAdmin = false;
 
     private View floatingMusicContainer;
     private View floatingMusicCard;
@@ -72,6 +76,9 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sessionManager = new SessionManager(this);
+        isAdmin = sessionManager.isAdmin();
 
         // 顶部栏
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -135,6 +142,18 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         selectedNavId = item.getItemId();
 
+        if (isAdmin && item.getItemId() == R.id.navigation_cart) {
+            BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+            if (bottomNavigationView != null) {
+                int currentNav = getActiveNavId();
+                bottomNavigationView.setSelectedItemId(currentNav);
+                selectedNavId = currentNav;
+                updateTitleForNav(currentNav);
+            }
+            android.widget.Toast.makeText(this, R.string.admin_cart_hidden, android.widget.Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         switch (item.getItemId()) {
             case R.id.navigation_home:
                 switchFragment(homeFragment, TAG_HOME);
@@ -185,6 +204,42 @@ public class MainActivity extends AppCompatActivity
 
         ft.commitAllowingStateLoss();
         activeFragment = target;
+    }
+
+    private int getActiveNavId() {
+        if (activeFragment == supportFragment) {
+            return R.id.navigation_support;
+        }
+        if (activeFragment == playlistFragment) {
+            return R.id.navigation_playlist;
+        }
+        if (activeFragment == profileFragment) {
+            return R.id.navigation_profile;
+        }
+        if (activeFragment == cartFragment) {
+            return R.id.navigation_cart;
+        }
+        return R.id.navigation_home;
+    }
+
+    private void updateTitleForNav(int navId) {
+        switch (navId) {
+            case R.id.navigation_support:
+                setTitle(R.string.nav_support);
+                break;
+            case R.id.navigation_playlist:
+                setTitle(R.string.nav_playlist);
+                break;
+            case R.id.navigation_profile:
+                setTitle(R.string.title_user_profile);
+                break;
+            case R.id.navigation_cart:
+                setTitle(R.string.nav_cart);
+                break;
+            default:
+                setTitle(R.string.title_main);
+                break;
+        }
     }
 
     @Override

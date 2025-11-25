@@ -150,6 +150,23 @@
     <string name="dashboard_action_orders">查看订单列表</string>
     <string name="dashboard_action_manage_support">管理应援任务</string>
     <string name="dashboard_action_approval">应援任务审批</string>
+    <string name="admin_action_edit">编辑</string>
+    <string name="admin_action_delete">删除</string>
+    <string name="admin_order_id">订单编号</string>
+    <string name="admin_order_amount">订单金额</string>
+    <string name="admin_order_shipping">收货地址</string>
+    <string name="admin_order_new">新增订单</string>
+    <string name="admin_order_save">保存订单</string>
+    <string name="admin_order_delete_confirm">确定要删除该订单吗？</string>
+    <string name="admin_order_status_placeholder">选择订单状态</string>
+    <string name="admin_order_forbidden">管理员视图不支持购物车和下单</string>
+    <string name="admin_entry_only">仅管理员可访问</string>
+    <string name="admin_order_saved">订单已保存</string>
+    <string name="admin_order_deleted">订单已删除</string>
+    <string name="admin_cart_hidden">管理员无需购物车功能</string>
+    <string name="admin_add_to_cart_hidden">管理员无法下单</string>
+    <string name="admin_center_title">管理员专区</string>
+    <string name="admin_center_subtitle">集中处理商品、歌单、应援任务与订单</string>
     <string name="admin_access_denied">仅管理员可访问后台功能</string>
 
     <!-- 商品管理表单 -->
