@@ -256,6 +256,7 @@ public class MainActivity extends AppCompatActivity
             floatingMusicClose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    sendBroadcast(new Intent("ACTION_PAUSE"));
                     hideFloatingMusic();
                 }
             });
