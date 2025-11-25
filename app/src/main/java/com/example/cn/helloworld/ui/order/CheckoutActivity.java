@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.CartItem;
@@ -45,7 +46,13 @@ public class CheckoutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
-        setTitle(R.string.checkout_title);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.checkout_title);
+        }
 
         itemsContainer = (LinearLayout) findViewById(R.id.layout_checkout_items);
         totalTextView = (TextView) findViewById(R.id.text_checkout_total);
@@ -79,6 +86,12 @@ public class CheckoutActivity extends AppCompatActivity {
                 submitOrder();
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     private void bindSummary() {

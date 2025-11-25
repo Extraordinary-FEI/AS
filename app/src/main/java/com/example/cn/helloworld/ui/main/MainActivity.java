@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity
     private ImageButton floatingMusicPlayPause;
     private ImageButton floatingMusicClose;
     private boolean floatingMusicPlaying = false;
+    private boolean floatingMusicManuallyClosed = false;
     private BroadcastReceiver floatingMusicReceiver;
     private boolean floatingMusicReceiverRegistered = false;
     private boolean floatingMusicCollapsed = false;
@@ -257,6 +258,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     sendBroadcast(new Intent("ACTION_PAUSE"));
+                    floatingMusicManuallyClosed = true;
                     hideFloatingMusic();
                 }
             });
@@ -299,6 +301,14 @@ public class MainActivity extends AppCompatActivity
         }
 
         floatingMusicPlaying = intent.getBooleanExtra("playing", false);
+        if (floatingMusicPlaying) {
+            floatingMusicManuallyClosed = false;
+        }
+
+        if (floatingMusicManuallyClosed && !floatingMusicPlaying) {
+            hideFloatingMusic();
+            return;
+        }
         String title = intent.getStringExtra("title");
         String artist = intent.getStringExtra("artist");
         String playlistTitle = intent.getStringExtra("playlistTitle");
