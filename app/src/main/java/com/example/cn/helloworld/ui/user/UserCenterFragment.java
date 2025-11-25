@@ -32,20 +32,26 @@ import com.example.cn.helloworld.ui.playlist.PlaylistOverviewActivity;
  */
 public class UserCenterFragment extends Fragment {
 
+    private Context appContext;
     private SessionManager sessionManager;
     private HomeDataSource homeDataSource;
     private RecyclerView playlistList;
     private View viewAllPlaylistsButton;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        // 记录 applicationContext，避免在 onCreateView 中因临时 Context 为空导致崩溃
+        appContext = context.getApplicationContext();
+        sessionManager = new SessionManager(appContext);
+        homeDataSource = new FakeHomeDataSource(appContext);
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_user_center, container, false);
-
-        sessionManager = new SessionManager(root.getContext());
-        // ⭐ 关键修改：传入 Context
-        homeDataSource = new FakeHomeDataSource(root.getContext());
 
         ImageView avatar = (ImageView) root.findViewById(R.id.avatarImage);
         TextView username = (TextView) root.findViewById(R.id.tvUsername);

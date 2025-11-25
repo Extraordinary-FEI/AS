@@ -324,5 +324,12 @@
     <string name="user_action_address_desc">常用地址一键管理</string>
     <string name="user_action_settings">设置</string>
     <string name="user_action_settings_desc">账号安全 / 消息偏好</string>
+    <string name="user_checkin_title">线下打卡</string>
+    <string name="user_checkin_subtitle">前往地标应援点，完成线下任务领取徽章</string>
+    <string name="user_checkin_task_route">路线指引：重庆来福士「登月舞台」→ 洪崖洞光影墙 → 解放碑主题展柜</string>
+    <string name="user_checkin_task_reward">集齐 3 个地点盖章，可兑换「巡礼纪念票」和限定贴纸</string>
+    <string name="user_checkin_task_time">开放时间：每日 10:00-22:00，志愿者 14:00-20:00 在场协助</string>
+    <string name="user_checkin_task_tips">小贴士：记得打开蓝牙提交现场留影，方便记录你的足迹</string>
+    <string name="user_checkin_action">查看线下地图</string>
 
 </resources>
