@@ -29,6 +29,7 @@ public class MusicFloatingWidget {
     private final ImageButton playPauseButton;
     private BroadcastReceiver uiReceiver;
     private boolean isPlaying = false;
+    private boolean manuallyClosed = false;
 
     public MusicFloatingWidget(Activity activity) {
         this.activity = activity;
@@ -67,6 +68,7 @@ public class MusicFloatingWidget {
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                manuallyClosed = true;
                 stopPlayback();
                 container.setVisibility(View.GONE);
             }
@@ -127,6 +129,13 @@ public class MusicFloatingWidget {
         String playlistTitle = intent.getStringExtra("playlistTitle");
         int coverResId = intent.getIntExtra("coverResId", R.drawable.cover_playlist_placeholder);
         isPlaying = intent.getBooleanExtra("playing", false);
+
+        if (isPlaying) {
+            manuallyClosed = false;
+        } else if (manuallyClosed) {
+            container.setVisibility(View.GONE);
+            return;
+        }
 
         if (titleView != null) {
             titleView.setText(title == null ? activity.getString(R.string.app_name) : title);
