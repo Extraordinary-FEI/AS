@@ -108,6 +108,7 @@ public class ProductManagementActivity extends AppCompatActivity {
         final EditText inventoryInput = (EditText) dialogView.findViewById(R.id.editProductInventory);
         final EditText descriptionInput = (EditText) dialogView.findViewById(R.id.editProductDescription);
         final CheckBox activeCheckBox = (CheckBox) dialogView.findViewById(R.id.checkboxProductActive);
+        final CheckBox homeSwitchCheckBox = (CheckBox) dialogView.findViewById(R.id.checkboxProductHomeSwitch);
         final Spinner categorySpinner = (Spinner) dialogView.findViewById(R.id.spinnerProductCategory);
 
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
@@ -122,12 +123,14 @@ public class ProductManagementActivity extends AppCompatActivity {
             inventoryInput.setText(String.valueOf(product.getInventory()));
             descriptionInput.setText(product.getDescription());
             activeCheckBox.setChecked(product.isActive());
+            homeSwitchCheckBox.setChecked(product.isFeaturedOnHome());
             int index = findCategoryIndex(product.getCategoryId());
             if (index >= 0) {
                 categorySpinner.setSelection(index);
             }
         } else {
             activeCheckBox.setChecked(true);
+            homeSwitchCheckBox.setChecked(true);
         }
 
         AlertDialog dialog = new AlertDialog.Builder(this)
@@ -150,6 +153,7 @@ public class ProductManagementActivity extends AppCompatActivity {
                         String inventoryText = inventoryInput.getText() == null ? "" : inventoryInput.getText().toString().trim();
                         String description = descriptionInput.getText() == null ? "" : descriptionInput.getText().toString().trim();
                         boolean active = activeCheckBox.isChecked();
+                        boolean featuredOnHome = homeSwitchCheckBox.isChecked();
                         String categoryId = categories.isEmpty() ? null : categories.get(categorySpinner.getSelectedItemPosition()).getId();
                         String resolvedCategoryId = (categoryId == null && !categories.isEmpty())
                                 ? categories.get(0).getId()
@@ -192,7 +196,8 @@ public class ProductManagementActivity extends AppCompatActivity {
                                     null,
                                     0,
                                     "",
-                                    null
+                                    null,
+                                    featuredOnHome
                             );
                             productRepository.saveProduct(newProduct);
                         } else {
@@ -202,7 +207,8 @@ public class ProductManagementActivity extends AppCompatActivity {
                                     price,
                                     inventory,
                                     active,
-                                    resolvedCategoryId);
+                                    resolvedCategoryId,
+                                    featuredOnHome);
                         }
                         dialogInterface.dismiss();
                         loadProducts();
@@ -302,7 +308,14 @@ public class ProductManagementActivity extends AppCompatActivity {
                 nameView.setText(product.getName());
                 descriptionView.setText(product.getDescription());
                 priceView.setText(String.format(Locale.getDefault(), "¥%.2f · %d", product.getPrice(), product.getInventory()));
-                statusView.setText(product.isActive() ? R.string.product_status_online : R.string.product_status_offline);
+                String onlineStatus = itemView.getContext().getString(
+                        product.isActive() ? R.string.product_status_online : R.string.product_status_offline);
+                String homeSwitchStatus = itemView.getContext().getString(
+                        product.isFeaturedOnHome() ? R.string.product_home_switch_on : R.string.product_home_switch_off);
+                statusView.setText(itemView.getContext().getString(
+                        R.string.product_status_with_home_switch,
+                        onlineStatus,
+                        homeSwitchStatus));
                 toggleButton.setText(product.isActive() ? R.string.product_action_offline : R.string.product_action_online);
 
                 editButton.setOnClickListener(new View.OnClickListener() {

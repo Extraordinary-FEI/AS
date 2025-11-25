@@ -158,6 +158,7 @@
     <string name="hint_product_inventory">库存数量</string>
     <string name="hint_product_description">商品简介</string>
     <string name="hint_product_active">立即上架</string>
+    <string name="hint_product_home_switch">显示在首页顶部切换</string>
     <string name="product_category_default">默认分类</string>
     <string name="dialog_title_add_product">新增商品</string>
     <string name="dialog_title_edit_product">编辑商品</string>
@@ -166,6 +167,9 @@
     <string name="error_product_inventory_invalid">请输入正确的库存数量</string>
     <string name="product_status_online">已上架</string>
     <string name="product_status_offline">已下架</string>
+    <string name="product_home_switch_on">首页切换：已展示</string>
+    <string name="product_home_switch_off">首页切换：未展示</string>
+    <string name="product_status_with_home_switch">%1$s · %2$s</string>
     <string name="product_action_edit">编辑</string>
     <string name="product_action_online">上架</string>
     <string name="product_action_offline">下架</string>

@@ -113,7 +113,7 @@ public class FakeHomeDataSource implements HomeDataSource {
         List<Product> all = productRepository.getAll();
         for (int i = 0; i < all.size(); i++) {
             Product product = all.get(i);
-            if (product != null && product.isActive()) {
+            if (product != null && product.isActive() && product.isFeaturedOnHome()) {
                 activeProducts.add(product);
             }
             if (activeProducts.size() >= 6) {

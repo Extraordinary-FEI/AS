@@ -23,6 +23,9 @@ public class Product implements Serializable {
     private String releaseTime;
     private Map<String, String> attributes;
 
+    // 是否展示在首页上方的切换位
+    private boolean featuredOnHome;
+
     // 供详情页使用的扩展字段
     private int imageResId;                       // 图片资源
     private String limitedQuantity = "";          // 限购/限量信息
@@ -70,7 +73,7 @@ public class Product implements Serializable {
     ) {
         this(id, name, description, price, inventory, category, rating,
                 tags, starEvents, active, coverUrl, releaseTime, attributes,
-                0, "", null);
+                0, "", null, false);
     }
 
     // 最终大构造器
@@ -90,7 +93,8 @@ public class Product implements Serializable {
             Map<String, String> attributes,
             int imageResId,
             String limitedQuantity,
-            Map<String, String> categoryAttributes
+            Map<String, String> categoryAttributes,
+            boolean featuredOnHome
     ) {
         this.id = id;
         this.name = name;
@@ -111,6 +115,7 @@ public class Product implements Serializable {
         this.imageResId = imageResId;
         this.limitedQuantity = limitedQuantity != null ? limitedQuantity : "";
         this.categoryAttributes = categoryAttributes;
+        this.featuredOnHome = featuredOnHome;
     }
 
     // ---------- getter / setter ----------
@@ -169,4 +174,7 @@ public class Product implements Serializable {
     public void setCategoryAttributes(Map<String, String> categoryAttributes) {
         this.categoryAttributes = categoryAttributes;
     }
+
+    public boolean isFeaturedOnHome() { return featuredOnHome; }
+    public void setFeaturedOnHome(boolean featuredOnHome) { this.featuredOnHome = featuredOnHome; }
 }

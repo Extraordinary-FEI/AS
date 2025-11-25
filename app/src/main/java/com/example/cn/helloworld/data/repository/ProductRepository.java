@@ -54,7 +54,8 @@ public class ProductRepository {
                 true,
                 "android.resource://com.example.cn.helloworld/drawable/cover_nishuo",
                 "2025-01-01",
-                createAttributes("区域", "A1", "座位类型", "VIP")
+                createAttributes("区域", "A1", "座位类型", "VIP"),
+                true
         ));
 
         products.add(new Product(
@@ -70,7 +71,8 @@ public class ProductRepository {
                 true,
                 "android.resource://com.example.cn.helloworld/drawable/song_cover",
                 "2025-01-05",
-                createAttributes("颜色", "白色", "灯光", "三档可调")
+                createAttributes("颜色", "白色", "灯光", "三档可调"),
+                true
         ));
 
         products.add(new Product(
@@ -86,7 +88,8 @@ public class ProductRepository {
                 true,
                 "android.resource://com.example.cn.helloworld/drawable/cover_baobei",
                 "2025-01-10",
-                createAttributes("签字笔颜色", "黑色")
+                createAttributes("签字笔颜色", "黑色"),
+                true
         ));
     }
 
@@ -232,7 +235,8 @@ public class ProductRepository {
             double price,
             int inventory,
             boolean active,
-            String categoryId
+            String categoryId,
+            boolean featuredOnHome
     ) {
         for (Product p : products) {
             if (p.getId().equals(productId)) {
@@ -241,6 +245,7 @@ public class ProductRepository {
                 p.setPrice(price);
                 p.setInventory(inventory);
                 p.setActive(active);
+                p.setFeaturedOnHome(featuredOnHome);
                 if (!TextUtils.isEmpty(categoryId)) {
                     p.setCategory(categoryId);
                 }
@@ -294,6 +299,7 @@ public class ProductRepository {
             object.put("imageResId", product.getImageResId());
             object.put("limitedQuantity", product.getLimitedQuantity());
             object.put("categoryAttributes", mapToJson(product.getCategoryAttributes()));
+            object.put("featuredOnHome", product.isFeaturedOnHome());
         } catch (JSONException ignored) {
         }
         return object;
@@ -324,7 +330,8 @@ public class ProductRepository {
                 attributes,
                 cursor.getInt(cursor.getColumnIndexOrThrow(AdminProductDbHelper.ProductColumns.IMAGE_RES_ID)),
                 cursor.getString(cursor.getColumnIndexOrThrow(AdminProductDbHelper.ProductColumns.LIMITED_QUANTITY)),
-                categoryAttributes
+                categoryAttributes,
+                cursor.getInt(cursor.getColumnIndexOrThrow(AdminProductDbHelper.ProductColumns.FEATURED_ON_HOME)) == 1
         );
         return product;
     }
@@ -348,6 +355,7 @@ public class ProductRepository {
         values.put(AdminProductDbHelper.ProductColumns.LIMITED_QUANTITY, product.getLimitedQuantity());
         values.put(AdminProductDbHelper.ProductColumns.CATEGORY_ATTRIBUTES,
                 mapToJson(product.getCategoryAttributes()).toString());
+        values.put(AdminProductDbHelper.ProductColumns.FEATURED_ON_HOME, product.isFeaturedOnHome() ? 1 : 0);
         values.put(AdminProductDbHelper.ProductColumns.UPDATED_AT, System.currentTimeMillis());
         return values;
     }
@@ -375,7 +383,8 @@ public class ProductRepository {
                 attributes,
                 object.optInt("imageResId", 0),
                 object.optString("limitedQuantity", ""),
-                categoryAttributes
+                categoryAttributes,
+                object.optBoolean("featuredOnHome", false)
         );
         return product;
     }

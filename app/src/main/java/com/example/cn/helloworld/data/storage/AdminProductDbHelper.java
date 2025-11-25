@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class AdminProductDbHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "admin_products.db";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
     public interface Tables {
         String PRODUCTS = "admin_products";
@@ -34,6 +34,7 @@ public class AdminProductDbHelper extends SQLiteOpenHelper {
         String IMAGE_RES_ID = "image_res_id";
         String LIMITED_QUANTITY = "limited_quantity";
         String CATEGORY_ATTRIBUTES = "category_attributes";
+        String FEATURED_ON_HOME = "featured_on_home";
         String UPDATED_AT = "updated_at";
     }
 
@@ -69,6 +70,7 @@ public class AdminProductDbHelper extends SQLiteOpenHelper {
                 + ProductColumns.IMAGE_RES_ID + " INTEGER,"
                 + ProductColumns.LIMITED_QUANTITY + " TEXT,"
                 + ProductColumns.CATEGORY_ATTRIBUTES + " TEXT,"
+                + ProductColumns.FEATURED_ON_HOME + " INTEGER DEFAULT 0,"
                 + ProductColumns.UPDATED_AT + " INTEGER"
                 + ")";
 
