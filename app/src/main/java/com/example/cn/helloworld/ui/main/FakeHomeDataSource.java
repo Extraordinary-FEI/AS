@@ -5,13 +5,17 @@ import android.content.Context;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.data.model.Product;
+import com.example.cn.helloworld.data.model.SupportTask;
 import com.example.cn.helloworld.data.playlist.PlaylistRepository;
 import com.example.cn.helloworld.data.repository.ProductRepository;
-import com.example.cn.helloworld.data.repository.support.SupportTaskRepository;
+import com.example.cn.helloworld.data.repository.support.LocalSupportTaskDataSource;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * 暂时使用的假数据实现，便于后续替换为真实服务。
@@ -20,8 +24,9 @@ public class FakeHomeDataSource implements HomeDataSource {
 
     private final Context context;
     private final PlaylistRepository playlistRepository;
-    private final SupportTaskRepository supportTaskRepository = new SupportTaskRepository();
+    private final com.example.cn.helloworld.data.repository.SupportTaskRepository adminSupportTaskRepository;
     private final ProductRepository productRepository;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault());
 
     /**
      * 正确写法：
@@ -34,6 +39,7 @@ public class FakeHomeDataSource implements HomeDataSource {
         }
         this.context = context.getApplicationContext();
         playlistRepository = PlaylistRepository.getInstance(this.context);
+        adminSupportTaskRepository = new com.example.cn.helloworld.data.repository.SupportTaskRepository(this.context);
         productRepository = new ProductRepository(this.context);
     }
     @Override
@@ -98,7 +104,7 @@ public class FakeHomeDataSource implements HomeDataSource {
 
     @Override
     public List<HomeModels.SupportTask> loadSupportTasks() {
-        return supportTaskRepository.getSupportTasks();
+        return adaptSupportTasks();
     }
 
     @Override
@@ -115,5 +121,98 @@ public class FakeHomeDataSource implements HomeDataSource {
             }
         }
         return activeProducts;
+    }
+
+    private List<HomeModels.SupportTask> adaptSupportTasks() {
+        List<HomeModels.SupportTask> tasks = new ArrayList<HomeModels.SupportTask>();
+
+        List<SupportTask> adminTasks = adminSupportTaskRepository.getAll();
+        if (adminTasks != null) {
+            for (int i = 0; i < adminTasks.size(); i++) {
+                SupportTask task = adminTasks.get(i);
+                if (task != null) {
+                    tasks.add(toHomeTask(task));
+                }
+            }
+        }
+
+        // 如果管理员端暂时没有数据，继续显示内置示例，避免用户界面为空
+        if (tasks.isEmpty()) {
+            LocalSupportTaskDataSource local = new LocalSupportTaskDataSource();
+            tasks.addAll(local.getSupportTasks());
+        }
+
+        return tasks;
+    }
+
+    private HomeModels.SupportTask toHomeTask(SupportTask task) {
+        int maxParticipants = 100;
+        int enrolled = task.getPriority();
+        if (enrolled < 0) {
+            enrolled = 0;
+        }
+        if (enrolled > maxParticipants) {
+            enrolled = maxParticipants;
+        }
+
+        return new HomeModels.SupportTask(
+                task.getTaskId(),
+                task.getTitle(),
+                context.getString(R.string.support_task_type_admin),
+                formatTimeRange(task.getCreatedAt(), task.getUpdatedAt()),
+                context.getString(R.string.support_task_location_default),
+                task.getDescription(),
+                context.getString(R.string.support_task_admin_guide),
+                buildContact(task),
+                buildProgressNote(task),
+                maxParticipants,
+                enrolled,
+                mapTaskStatus(task.getStatus()),
+                mapRegistrationStatus(task.getStatus())
+        );
+    }
+
+    private String buildContact(SupportTask task) {
+        if (task.getAssignedAdmin() == null || task.getAssignedAdmin().trim().isEmpty()) {
+            return context.getString(R.string.support_task_unassigned);
+        }
+        return context.getString(R.string.support_task_assigned_format, task.getAssignedAdmin());
+    }
+
+    private String buildProgressNote(SupportTask task) {
+        return context.getString(R.string.support_task_progress_note_format,
+                getReadableStatus(task.getStatus()),
+                task.getPriority());
+    }
+
+    private String formatTimeRange(long createdAt, long updatedAt) {
+        return dateFormat.format(new Date(createdAt)) + " - " + dateFormat.format(new Date(updatedAt));
+    }
+
+    private String getReadableStatus(String status) {
+        if (com.example.cn.helloworld.data.repository.SupportTaskRepository.STATUS_APPROVED.equals(status)) {
+            return context.getString(R.string.support_task_status_approved);
+        }
+        if (com.example.cn.helloworld.data.repository.SupportTaskRepository.STATUS_REJECTED.equals(status)) {
+            return context.getString(R.string.support_task_status_rejected);
+        }
+        return context.getString(R.string.support_task_status_pending);
+    }
+
+    private HomeModels.SupportTask.TaskStatus mapTaskStatus(String status) {
+        if (com.example.cn.helloworld.data.repository.SupportTaskRepository.STATUS_APPROVED.equals(status)) {
+            return HomeModels.SupportTask.TaskStatus.ONGOING;
+        }
+        if (com.example.cn.helloworld.data.repository.SupportTaskRepository.STATUS_REJECTED.equals(status)) {
+            return HomeModels.SupportTask.TaskStatus.COMPLETED;
+        }
+        return HomeModels.SupportTask.TaskStatus.UPCOMING;
+    }
+
+    private HomeModels.SupportTask.RegistrationStatus mapRegistrationStatus(String status) {
+        if (com.example.cn.helloworld.data.repository.SupportTaskRepository.STATUS_REJECTED.equals(status)) {
+            return HomeModels.SupportTask.RegistrationStatus.CLOSED;
+        }
+        return HomeModels.SupportTask.RegistrationStatus.OPEN;
     }
 }

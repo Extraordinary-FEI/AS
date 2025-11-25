@@ -210,6 +210,10 @@
     <string name="support_task_status_pending">待审批</string>
     <string name="support_task_status_approved">已通过</string>
     <string name="support_task_status_rejected">已驳回</string>
+    <string name="support_task_type_admin">管理员发布</string>
+    <string name="support_task_location_default">线上/后台</string>
+    <string name="support_task_admin_guide">管理员发布的应援任务，请查看说明完成操作。</string>
+    <string name="support_task_progress_note_format">%1$s · 优先级 %2$d</string>
     <string name="hint_support_task_title">任务标题</string>
     <string name="hint_support_task_desc">任务描述</string>
     <string name="hint_support_task_priority">优先级（数字越大越紧急）</string>
