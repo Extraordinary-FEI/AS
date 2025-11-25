@@ -15,6 +15,7 @@ import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.data.model.Song;
 import com.example.cn.helloworld.data.playlist.PlaylistRepository;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class MusicService extends Service {
     private Playlist currentPlaylist;
     private List<Song> currentSongs = Collections.emptyList();
     private int currentIndex = 0;
+    private String currentPlaylistTitle = "";
 
     @Override
     public void onCreate() {
@@ -143,7 +145,7 @@ public class MusicService extends Service {
         uiIntent.putExtra("coverResId", currentSong != null ? currentSong.getCoverResId() : R.drawable.cover_playlist_placeholder);
         uiIntent.putExtra("index", currentSong != null ? currentIndex : -1);
         uiIntent.putExtra("total", currentSongs != null ? currentSongs.size() : 0);
-        uiIntent.putExtra("playlistTitle", currentPlaylist != null ? currentPlaylist.getTitle() : "");
+        uiIntent.putExtra("playlistTitle", currentPlaylistTitle);
         uiIntent.putExtra("playing", player != null && player.isPlaying());
         sendBroadcast(uiIntent);
     }
@@ -173,6 +175,22 @@ public class MusicService extends Service {
     private void setCurrentPlaylist(Playlist playlist) {
         currentPlaylist = playlist;
         currentSongs = playlist.getSongs() == null ? Collections.<Song>emptyList() : playlist.getSongs();
+        currentPlaylistTitle = playlist.getTitle();
+        currentIndex = 0;
+    }
+
+    private void setAllSongsPlaylist() {
+        List<Playlist> all = playlistRepository.getAllPlaylists();
+        List<Song> songs = new ArrayList<>();
+        for (int i = 0; i < all.size(); i++) {
+            Playlist playlist = all.get(i);
+            if (playlist != null && playlist.getSongs() != null) {
+                songs.addAll(playlist.getSongs());
+            }
+        }
+        currentPlaylist = null;
+        currentSongs = songs;
+        currentPlaylistTitle = getString(R.string.playlist_all_songs);
         currentIndex = 0;
     }
 
@@ -238,11 +256,15 @@ public class MusicService extends Service {
             }
             setCurrentPlaylist(playlist);
         } else {
-            ensureDefaultPlaylist();
+            setAllSongsPlaylist();
         }
 
         if (!TextUtils.isEmpty(songId)) {
             int index = findSongIndex(songId);
+            if (index == -1 && currentPlaylist != null) {
+                setAllSongsPlaylist();
+                index = findSongIndex(songId);
+            }
             if (index == -1) {
                 Toast.makeText(this, R.string.error_song_not_found, Toast.LENGTH_SHORT).show();
                 return;

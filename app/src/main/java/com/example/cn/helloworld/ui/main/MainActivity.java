@@ -13,7 +13,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -48,13 +51,21 @@ public class MainActivity extends AppCompatActivity
     private int selectedNavId = R.id.navigation_home;
 
     private View floatingMusicContainer;
+    private View floatingMusicCard;
     private ImageView floatingMusicCover;
+    private ImageView floatingMusicBubble;
     private TextView floatingMusicTitle;
     private TextView floatingMusicSubtitle;
     private ImageButton floatingMusicPlayPause;
+    private ImageButton floatingMusicClose;
     private boolean floatingMusicPlaying = false;
     private BroadcastReceiver floatingMusicReceiver;
     private boolean floatingMusicReceiverRegistered = false;
+    private boolean floatingMusicCollapsed = false;
+    private float lastFloatingX;
+    private float lastFloatingY;
+    private boolean floatingDragging = false;
+    private int floatingTouchSlop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,15 +197,51 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
+        floatingTouchSlop = ViewConfiguration.get(this).getScaledTouchSlop();
+        floatingMusicCard = floatingMusicContainer.findViewById(R.id.card_floating_music);
         floatingMusicCover = (ImageView) floatingMusicContainer.findViewById(R.id.image_floating_cover);
+        floatingMusicBubble = (ImageView) floatingMusicContainer.findViewById(R.id.view_floating_bubble);
         floatingMusicTitle = (TextView) floatingMusicContainer.findViewById(R.id.text_floating_title);
         floatingMusicSubtitle = (TextView) floatingMusicContainer.findViewById(R.id.text_floating_subtitle);
         floatingMusicPlayPause = (ImageButton) floatingMusicContainer.findViewById(R.id.button_floating_play);
+        floatingMusicClose = (ImageButton) floatingMusicContainer.findViewById(R.id.button_floating_close);
 
-        floatingMusicContainer.setOnClickListener(new View.OnClickListener() {
+        floatingMusicContainer.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, MusicActivity.class));
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN:
+                        lastFloatingX = event.getRawX();
+                        lastFloatingY = event.getRawY();
+                        floatingDragging = false;
+                        return true;
+                    case MotionEvent.ACTION_MOVE:
+                        float dx = event.getRawX() - lastFloatingX;
+                        float dy = event.getRawY() - lastFloatingY;
+                        if (!floatingDragging && (Math.abs(dx) > floatingTouchSlop || Math.abs(dy) > floatingTouchSlop)) {
+                            floatingDragging = true;
+                        }
+                        if (floatingDragging) {
+                            moveFloatingWidget(v, dx, dy);
+                            if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > floatingTouchSlop) {
+                                collapseFloatingMusic();
+                            }
+                        }
+                        lastFloatingX = event.getRawX();
+                        lastFloatingY = event.getRawY();
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        if (!floatingDragging) {
+                            expandFloatingMusic();
+                            startActivity(new Intent(MainActivity.this, MusicActivity.class));
+                        } else {
+                            keepFloatingInsideParent(v);
+                        }
+                        floatingDragging = false;
+                        return true;
+                    default:
+                        return false;
+                }
             }
         });
 
@@ -204,6 +251,25 @@ public class MainActivity extends AppCompatActivity
                 toggleFloatingPlayback();
             }
         });
+
+        if (floatingMusicClose != null) {
+            floatingMusicClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    hideFloatingMusic();
+                }
+            });
+        }
+
+        if (floatingMusicBubble != null) {
+            floatingMusicBubble.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    expandFloatingMusic();
+                    startActivity(new Intent(MainActivity.this, MusicActivity.class));
+                }
+            });
+        }
 
         floatingMusicReceiver = new BroadcastReceiver() {
             @Override
@@ -255,15 +321,74 @@ public class MainActivity extends AppCompatActivity
         }
 
         floatingMusicCover.setImageResource(coverResId);
+        if (floatingMusicBubble != null) {
+            floatingMusicBubble.setImageResource(coverResId);
+        }
         floatingMusicPlayPause.setImageResource(floatingMusicPlaying ? R.drawable.pause : R.drawable.play);
         floatingMusicContainer.setVisibility(View.VISIBLE);
+
+        if (floatingMusicCollapsed) {
+            collapseFloatingMusic();
+        } else {
+            expandFloatingMusic();
+        }
     }
 
     private void hideFloatingMusic() {
         if (floatingMusicContainer != null) {
             floatingMusicContainer.setVisibility(View.GONE);
+            if (floatingMusicBubble != null) {
+                floatingMusicBubble.setVisibility(View.GONE);
+            }
+            if (floatingMusicCard != null) {
+                floatingMusicCard.setVisibility(View.GONE);
+            }
         }
+        floatingMusicCollapsed = false;
         floatingMusicPlaying = false;
+    }
+
+    private void collapseFloatingMusic() {
+        floatingMusicCollapsed = true;
+        if (floatingMusicCard != null) {
+            floatingMusicCard.setVisibility(View.GONE);
+        }
+        if (floatingMusicBubble != null) {
+            floatingMusicBubble.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void expandFloatingMusic() {
+        floatingMusicCollapsed = false;
+        if (floatingMusicCard != null) {
+            floatingMusicCard.setVisibility(View.VISIBLE);
+        }
+        if (floatingMusicBubble != null) {
+            floatingMusicBubble.setVisibility(View.GONE);
+        }
+    }
+
+    private void moveFloatingWidget(View target, float dx, float dy) {
+        float newX = target.getX() + dx;
+        float newY = target.getY() + dy;
+
+        if (target.getParent() instanceof ViewGroup) {
+            ViewGroup parent = (ViewGroup) target.getParent();
+            int parentWidth = parent.getWidth();
+            int parentHeight = parent.getHeight();
+            int viewWidth = target.getWidth();
+            int viewHeight = target.getHeight();
+
+            newX = Math.max(0, Math.min(newX, parentWidth - viewWidth));
+            newY = Math.max(0, Math.min(newY, parentHeight - viewHeight));
+        }
+
+        target.setX(newX);
+        target.setY(newY);
+    }
+
+    private void keepFloatingInsideParent(View target) {
+        moveFloatingWidget(target, 0, 0);
     }
 
     private void registerFloatingMusicReceiver() {

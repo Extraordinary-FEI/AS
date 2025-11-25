@@ -51,7 +51,6 @@ public class PlaylistLibraryFragment extends Fragment {
                 if (context != null) {
                     Intent intent = new Intent(context, MusicActivity.class);
                     intent.putExtra(MusicActivity.EXTRA_SONG_ID, song.getId());
-                    intent.putExtra(MusicActivity.EXTRA_PLAYLIST_ID, findPlaylistIdForSong(song.getId()));
                     context.startActivity(intent);
                 }
             }
@@ -69,25 +68,6 @@ public class PlaylistLibraryFragment extends Fragment {
             }
         }
         return songs;
-    }
-
-    private String findPlaylistIdForSong(String songId) {
-        if (TextUtils.isEmpty(songId)) {
-            return null;
-        }
-        List<Playlist> playlists = playlistRepository.getAllPlaylists();
-        for (int i = 0; i < playlists.size(); i++) {
-            Playlist playlist = playlists.get(i);
-            if (playlist != null && playlist.getSongs() != null) {
-                for (int j = 0; j < playlist.getSongs().size(); j++) {
-                    Song song = playlist.getSongs().get(j);
-                    if (song != null && songId.equals(song.getId())) {
-                        return playlist.getId();
-                    }
-                }
-            }
-        }
-        return null;
     }
 
     private static class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> {
