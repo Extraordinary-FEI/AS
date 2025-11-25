@@ -196,6 +196,13 @@ public class HomeFragment extends Fragment {
                     nav.setSelectedItemId(R.id.navigation_support);
                 }
             }
+        } else if ("action_profile".equals(action)) {
+            if (getActivity() != null) {
+                BottomNavigationView nav = (BottomNavigationView) getActivity().findViewById(R.id.bottom_navigation);
+                if (nav != null) {
+                    nav.setSelectedItemId(R.id.navigation_profile);
+                }
+            }
         } else if ("action_review_wall".equals(action)) {
             startActivity(ReviewWallActivity.createIntent(context, null, null));
         } else if ("action_news".equals(action)) {

@@ -82,7 +82,7 @@ public class FakeHomeDataSource implements HomeDataSource {
                         context.getString(R.string.home_category_profile),
                         context.getString(R.string.home_task_subtitle),
                         R.drawable.ic_category_merch,
-                        "action_check_in"
+                        "action_profile"
                 )
         );
     }

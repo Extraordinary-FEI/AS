@@ -69,8 +69,7 @@ public class MusicFloatingWidget {
             @Override
             public void onClick(View v) {
                 manuallyClosed = true;
-                stopPlayback();
-                container.setVisibility(View.GONE);
+                pauseAndClose();
             }
         });
     }
@@ -176,8 +175,14 @@ public class MusicFloatingWidget {
         }
     }
 
-    private void stopPlayback() {
-        activity.sendBroadcast(new Intent("ACTION_STOP"));
+    private void pauseAndClose() {
+        manuallyClosed = true;
+        isPlaying = false;
+        updatePlayButton();
+        if (container != null) {
+            container.setVisibility(View.GONE);
+        }
+        activity.sendBroadcast(new Intent("ACTION_PAUSE"));
     }
 
     private void openFullPlayer() {
