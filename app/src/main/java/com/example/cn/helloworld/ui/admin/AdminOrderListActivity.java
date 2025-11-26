@@ -33,7 +33,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class AdminOrderListActivity extends AppCompatActivity implements OrderAdapter.Callback {
+public class AdminOrderListActivity extends AppCompatActivity implements AdminOrderListActivity.OrderAdapter.Callback {
 
     public static final String EXTRA_ORDERS = "extra_orders";
     private static final String[] DEFAULT_STATUSES = new String[]{
