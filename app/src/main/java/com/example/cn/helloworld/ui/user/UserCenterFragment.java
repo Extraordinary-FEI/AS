@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -52,13 +51,14 @@ public class UserCenterFragment extends Fragment {
     private RecyclerView playlistList;
     private View viewAllPlaylistsButton;
     private View adminCard;
+    private View checkinCard;
     private StatsBarView adminStatsView;
     private TextView adminSummary;
-    private Button btnAdminProducts;
-    private Button btnAdminPlaylists;
-    private Button btnAdminSupportTasks;
-    private Button btnAdminTaskApproval;
-    private Button btnAdminOrders;
+    private View btnAdminProducts;
+    private View btnAdminPlaylists;
+    private View btnAdminSupportTasks;
+    private View btnAdminTaskApproval;
+    private View btnAdminOrders;
     private AdminMetricsRepository adminMetricsRepository;
     private SupportTaskRepository supportTaskRepository;
     private AdminOrderRepository adminOrderRepository;
@@ -88,13 +88,14 @@ public class UserCenterFragment extends Fragment {
         playlistList = (RecyclerView) root.findViewById(R.id.playlistList);
         viewAllPlaylistsButton = root.findViewById(R.id.button_view_all_playlists);
         adminCard = root.findViewById(R.id.card_admin_center);
+        checkinCard = root.findViewById(R.id.card_checkin);
         adminStatsView = (StatsBarView) root.findViewById(R.id.adminStatsView);
         adminSummary = (TextView) root.findViewById(R.id.textAdminSummary);
-        btnAdminProducts = (Button) root.findViewById(R.id.buttonAdminManageProducts);
-        btnAdminPlaylists = (Button) root.findViewById(R.id.buttonAdminManagePlaylists);
-        btnAdminSupportTasks = (Button) root.findViewById(R.id.buttonAdminSupportTasks);
-        btnAdminTaskApproval = (Button) root.findViewById(R.id.buttonAdminTaskApproval);
-        btnAdminOrders = (Button) root.findViewById(R.id.buttonAdminOrders);
+        btnAdminProducts = root.findViewById(R.id.buttonAdminManageProducts);
+        btnAdminPlaylists = root.findViewById(R.id.buttonAdminManagePlaylists);
+        btnAdminSupportTasks = root.findViewById(R.id.buttonAdminSupportTasks);
+        btnAdminTaskApproval = root.findViewById(R.id.buttonAdminTaskApproval);
+        btnAdminOrders = root.findViewById(R.id.buttonAdminOrders);
 
         avatar.setImageResource(R.drawable.ic_user_default);
         username.setText(sessionManager.getUsername());
@@ -183,10 +184,16 @@ public class UserCenterFragment extends Fragment {
 
         if (!sessionManager.isAdmin()) {
             adminCard.setVisibility(View.GONE);
+            if (checkinCard != null) {
+                checkinCard.setVisibility(View.VISIBLE);
+            }
             return;
         }
 
         adminCard.setVisibility(View.VISIBLE);
+        if (checkinCard != null) {
+            checkinCard.setVisibility(View.GONE);
+        }
 
         AdminMetrics metrics = adminMetricsRepository.loadMetrics();
         if (adminStatsView != null && metrics != null) {

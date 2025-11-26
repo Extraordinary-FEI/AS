@@ -48,7 +48,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_marginLeft="16dp">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -73,7 +74,8 @@
                                 android:paddingRight="10dp"
                                 android:text="@string/user_membership_label"
                                 android:textColor="@color/colorOnPrimary"
-                                android:textSize="12sp" />
+                                android:textSize="12sp"
+                                android:layout_marginLeft="10dp" />
                         </LinearLayout>
 
                         <TextView
@@ -201,6 +203,7 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
+            android:id="@+id/card_checkin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -279,7 +282,8 @@
                             android:layout_weight="1"
                             android:text="@string/user_checkin_task_route"
                             android:textColor="@android:color/white"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:layout_marginLeft="12dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -304,7 +308,8 @@
                             android:layout_weight="1"
                             android:text="@string/user_checkin_task_reward"
                             android:textColor="@android:color/white"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:layout_marginLeft="12dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -329,7 +334,8 @@
                             android:layout_weight="1"
                             android:text="@string/user_checkin_task_time"
                             android:textColor="@android:color/white"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:layout_marginLeft="12dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -354,7 +360,8 @@
                             android:layout_weight="1"
                             android:text="@string/user_checkin_task_tips"
                             android:textColor="@android:color/white"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:layout_marginLeft="12dp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -421,7 +428,8 @@
                         android:background="@drawable/bg_user_quick_entry"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:padding="12dp">
+                        android:padding="12dp"
+                        android:layout_marginRight="8dp">
 
                         <ImageView
                             android:layout_width="44dp"
@@ -435,7 +443,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:layout_marginLeft="12dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -464,7 +473,8 @@
                         android:background="@drawable/bg_user_quick_entry"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:padding="12dp">
+                        android:padding="12dp"
+                        android:layout_marginLeft="8dp">
 
                         <ImageView
                             android:layout_width="44dp"
@@ -478,7 +488,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:layout_marginLeft="12dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -508,7 +519,8 @@
                         android:background="@drawable/bg_user_quick_entry"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:padding="12dp">
+                        android:padding="12dp"
+                        android:layout_marginRight="8dp">
 
                         <ImageView
                             android:layout_width="44dp"
@@ -522,7 +534,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:layout_marginLeft="12dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -552,7 +565,8 @@
                         android:background="@drawable/bg_user_quick_entry"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:padding="12dp">
+                        android:padding="12dp"
+                        android:layout_marginLeft="8dp">
 
                         <ImageView
                             android:layout_width="44dp"
@@ -566,7 +580,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:layout_marginLeft="12dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -684,73 +699,192 @@
                     android:layout_marginTop="4dp"
                     android:text="@string/admin_center_subtitle" />
 
-                <com.example.cn.helloworld.ui.admin.StatsBarView
-                    android:id="@+id/adminStatsView"
-                    android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    android:layout_marginTop="12dp"
-                    android:background="@android:color/white" />
-
-                <TextView
-                    android:id="@+id/textAdminSummary"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:textColor="@color/homeTextSecondary"
-                    android:textSize="14sp"
-                    android:text="@string/dashboard_summary" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:orientation="vertical">
+                    android:background="@drawable/bg_admin_panel"
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
-                    <Button
-                        android:id="@+id/buttonAdminManageProducts"
+                    <com.example.cn.helloworld.ui.admin.StatsBarView
+                        android:id="@+id/adminStatsView"
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:background="@android:color/transparent" />
+
+                    <TextView
+                        android:id="@+id/textAdminSummary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@color/colorPrimary"
-                        android:text="@string/title_admin_manage_products"
-                        android:textColor="@android:color/white" />
-
-                    <Button
-                        android:id="@+id/buttonAdminManagePlaylists"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:backgroundTint="@color/colorPrimary"
-                        android:text="@string/playlist_action_manage"
-                        android:textColor="@android:color/white" />
-
-                    <Button
-                        android:id="@+id/buttonAdminOrders"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:backgroundTint="@color/colorPrimary"
-                        android:text="@string/dashboard_action_orders"
-                        android:textColor="@android:color/white" />
-
-                    <Button
-                        android:id="@+id/buttonAdminSupportTasks"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:backgroundTint="@color/colorPrimary"
-                        android:text="@string/dashboard_action_manage_support"
-                        android:textColor="@android:color/white" />
-
-                    <Button
-                        android:id="@+id/buttonAdminTaskApproval"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:backgroundTint="@color/colorPrimary"
-                        android:text="@string/dashboard_action_approval"
-                        android:textColor="@android:color/white" />
-
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/homeTextSecondary"
+                        android:textSize="14sp"
+                        android:text="@string/dashboard_summary" />
                 </LinearLayout>
+
+                <TextView
+                    style="@style/HomeSectionSubtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/dashboard_action_section" />
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:columnCount="2"
+                    android:rowOrderPreserved="false">
+
+                    <LinearLayout
+                        android:id="@+id/buttonAdminManageProducts"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_marginEnd="8dp"
+                        android:layout_rowWeight="1"
+                        android:background="@drawable/bg_admin_action"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="12dp"
+                        android:layout_marginRight="8dp">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/ic_category_merch" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="@string/title_admin_manage_products"
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="10dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/buttonAdminManagePlaylists"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_marginStart="8dp"
+                        android:layout_rowWeight="1"
+                        android:background="@drawable/bg_admin_action"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="12dp"
+                        android:layout_marginLeft="8dp">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/ic_category_music" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="@string/playlist_action_manage"
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="10dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/buttonAdminOrders"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_rowWeight="1"
+                        android:background="@drawable/bg_admin_action"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="12dp"
+                        android:layout_marginRight="8dp">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/ic_category_ticket" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="@string/dashboard_action_orders"
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="10dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/buttonAdminSupportTasks"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_rowWeight="1"
+                        android:background="@drawable/bg_admin_action"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="12dp"
+                        android:layout_marginLeft="8dp">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/ic_category_signed" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="@string/dashboard_action_manage_support"
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="10dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/buttonAdminTaskApproval"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_rowWeight="1"
+                        android:background="@drawable/bg_admin_action"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="12dp"
+                        android:layout_marginRight="8dp">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/ic_category_task" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="@string/dashboard_action_approval"
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="10dp" />
+                    </LinearLayout>
+                </GridLayout>
             </LinearLayout>
 
         </android.support.v7.widget.CardView>

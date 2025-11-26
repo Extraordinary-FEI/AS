@@ -168,6 +168,7 @@
     <string name="admin_add_to_cart_hidden">管理员无法下单</string>
     <string name="admin_center_title">管理员专区</string>
     <string name="admin_center_subtitle">集中处理商品、歌单、应援任务与订单</string>
+    <string name="dashboard_action_section">管理员常用操作</string>
     <string name="admin_access_denied">仅管理员可访问后台功能</string>
 
     <!-- 商品管理表单 -->
