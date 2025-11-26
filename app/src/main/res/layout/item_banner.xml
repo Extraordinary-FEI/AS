@@ -12,19 +12,17 @@
         android:contentDescription="@string/app_name"
         android:src="@drawable/cover_nishuo" />
 
+    <!-- 移除背景，让渐变直接作用于整个FrameLayout -->
     <LinearLayout
         android:id="@+id/banner_text_container"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_margin="16dp"
-        android:background="@drawable/bg_banner_text_card"
-        android:elevation="2dp"
+        android:layout_gravity="bottom"
         android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingTop="12dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="12dp">
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="20dp"
+        android:paddingTop="10dp">
 
         <TextView
             android:id="@+id/banner_title"
@@ -42,5 +40,11 @@
             android:text="Banner description" />
 
     </LinearLayout>
+
+    <!-- 新增一个FrameLayout用于放置渐变遮罩 -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_banner_foreground" />
 
 </FrameLayout>
