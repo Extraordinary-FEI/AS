@@ -82,7 +82,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:textColor="@color/colorOnPrimary"
-                            android:textSize="13sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -90,22 +90,22 @@
                             android:layout_marginTop="6dp"
                             android:text="@string/user_membership_desc"
                             android:textColor="@color/colorOnPrimary"
-                            android:textSize="13sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/btnLogout"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_category_chip"
-                            android:gravity="center"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:textAllCaps="false"
-                            android:textColor="@color/homeTextPrimary"
-                            android:textSize="13sp"
-                            android:clickable="true"
-                            android:focusable="true" />
+                    <TextView
+                        android:id="@+id/btnLogout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:gravity="center"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp"
+                        android:clickable="true"
+                        android:focusable="true" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -127,7 +127,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/user_stat_level"
                             android:textColor="@color/colorOnPrimary"
-                            android:textSize="13sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -156,7 +156,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/user_stat_fans"
                             android:textColor="@color/colorOnPrimary"
-                            android:textSize="13sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -185,7 +185,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/user_stat_active_days"
                             android:textColor="@color/colorOnPrimary"
-                            android:textSize="13sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -232,13 +232,13 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_category_chip"
+                        android:background="@android:color/transparent"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:paddingTop="4dp"
                         android:paddingBottom="4dp"
                         android:text="@string/user_checkin_action"
-                        android:textColor="@color/homeTextPrimary"
+                        android:textColor="@android:color/white"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -278,8 +278,8 @@
                             android:layout_marginStart="12dp"
                             android:layout_weight="1"
                             android:text="@string/user_checkin_task_route"
-                            android:textColor="@color/homeTextPrimary"
-                            android:textSize="13sp" />
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -303,8 +303,8 @@
                             android:layout_marginStart="12dp"
                             android:layout_weight="1"
                             android:text="@string/user_checkin_task_reward"
-                            android:textColor="@color/homeTextPrimary"
-                            android:textSize="13sp" />
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -328,8 +328,8 @@
                             android:layout_marginStart="12dp"
                             android:layout_weight="1"
                             android:text="@string/user_checkin_task_time"
-                            android:textColor="@color/homeTextPrimary"
-                            android:textSize="13sp" />
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -353,8 +353,8 @@
                             android:layout_marginStart="12dp"
                             android:layout_weight="1"
                             android:text="@string/user_checkin_task_tips"
-                            android:textColor="@color/homeTextPrimary"
-                            android:textSize="13sp" />
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -441,7 +441,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/user_action_orders"
-                                android:textColor="@color/homeTextPrimary"
+                                android:textColor="@android:color/white"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -484,7 +484,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/user_action_collection"
-                                android:textColor="@color/homeTextPrimary"
+                                android:textColor="@android:color/white"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -528,7 +528,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/user_action_address"
-                                android:textColor="@color/homeTextPrimary"
+                                android:textColor="@android:color/white"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -572,7 +572,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/user_action_settings"
-                                android:textColor="@color/homeTextPrimary"
+                                android:textColor="@android:color/white"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -622,7 +622,7 @@
                         android:id="@+id/button_view_all_playlists"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_category_chip"
+                        android:background="@android:color/transparent"
                         android:clickable="true"
                         android:focusable="true"
                         android:paddingLeft="12dp"
@@ -630,7 +630,7 @@
                         android:paddingTop="6dp"
                         android:paddingBottom="6dp"
                         android:text="@string/home_playlist_view_all"
-                        android:textColor="@color/homeTextPrimary"
+                        android:textColor="@android:color/white"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -697,7 +697,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:textColor="@color/homeTextSecondary"
-                    android:textSize="13sp"
+                    android:textSize="14sp"
                     android:text="@string/dashboard_summary" />
 
                 <LinearLayout
