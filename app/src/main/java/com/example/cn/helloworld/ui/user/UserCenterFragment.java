@@ -84,7 +84,7 @@ public class UserCenterFragment extends Fragment {
         ImageView avatar = (ImageView) root.findViewById(R.id.avatarImage);
         TextView username = (TextView) root.findViewById(R.id.tvUsername);
         TextView userId = (TextView) root.findViewById(R.id.tvUserId);
-        View logout = root.findViewById(R.id.btnLogout);
+        TextView logout = (TextView) root.findViewById(R.id.btnLogout);
         playlistList = (RecyclerView) root.findViewById(R.id.playlistList);
         viewAllPlaylistsButton = root.findViewById(R.id.button_view_all_playlists);
         adminCard = root.findViewById(R.id.card_admin_center);
@@ -99,6 +99,8 @@ public class UserCenterFragment extends Fragment {
         avatar.setImageResource(R.drawable.ic_user_default);
         username.setText(sessionManager.getUsername());
         userId.setText("UID: " + sessionManager.getUserId());
+
+        logout.setText(R.string.logout);
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -93,20 +93,19 @@
                             android:textSize="13sp" />
                     </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/btnLogout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_category_chip"
-                        android:gravity="center"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp"
-                        android:text="@string/logout"
-                        android:textAllCaps="false"
-                        android:textColor="@color/homeTextPrimary"
-                        android:textSize="13sp"
-                        android:clickable="true"
-                        android:focusable="true" />
+                        <TextView
+                            android:id="@+id/btnLogout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_category_chip"
+                            android:gravity="center"
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp"
+                            android:textAllCaps="false"
+                            android:textColor="@color/homeTextPrimary"
+                            android:textSize="13sp"
+                            android:clickable="true"
+                            android:focusable="true" />
                 </LinearLayout>
 
                 <LinearLayout
