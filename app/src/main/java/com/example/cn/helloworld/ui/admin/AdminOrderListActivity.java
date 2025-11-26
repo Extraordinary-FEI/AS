@@ -31,8 +31,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminOrderListActivity extends AppCompatActivity implements AdminOrderListActivity.OrderAdapter.Callback {
-
+public class AdminOrderListActivity extends AppCompatActivity implements OrderAdapter.Callback {
     public static final String EXTRA_ORDERS = "extra_orders";
     private static final String[] DEFAULT_STATUSES = new String[]{
             "CREATED",
