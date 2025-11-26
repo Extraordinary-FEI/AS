@@ -56,6 +56,7 @@ public class SessionManager {
     public void saveSession(String token, UserRole role, boolean remember) {
         editor.putString(KEY_TOKEN, token);
         editor.putString(KEY_ROLE, String.valueOf(role));
+        editor.putBoolean(KEY_IS_ADMIN, role == UserRole.ADMIN);
         editor.putBoolean(KEY_REMEMBER, remember);
         editor.apply();
     }
@@ -67,7 +68,10 @@ public class SessionManager {
     }
 
     public boolean isAdmin() {
-        return prefs.getBoolean(KEY_IS_ADMIN, false);
+        // 兼容旧版本：如果未写入 is_admin 标记，则根据角色兜底判断
+        String role = prefs.getString(KEY_ROLE, UserRole.USER.name());
+        return prefs.getBoolean(KEY_IS_ADMIN, false)
+                || UserRole.ADMIN.name().equalsIgnoreCase(role);
     }
 
     public String getUserId() {

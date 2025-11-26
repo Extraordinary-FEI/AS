@@ -84,7 +84,7 @@ public class UserCenterFragment extends Fragment {
         ImageView avatar = (ImageView) root.findViewById(R.id.avatarImage);
         TextView username = (TextView) root.findViewById(R.id.tvUsername);
         TextView userId = (TextView) root.findViewById(R.id.tvUserId);
-        Button logout = (Button) root.findViewById(R.id.btnLogout);
+        View logout = root.findViewById(R.id.btnLogout);
         playlistList = (RecyclerView) root.findViewById(R.id.playlistList);
         viewAllPlaylistsButton = root.findViewById(R.id.button_view_all_playlists);
         adminCard = root.findViewById(R.id.card_admin_center);
