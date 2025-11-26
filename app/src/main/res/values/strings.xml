@@ -262,6 +262,19 @@
     <string name="banner_hint_title">横幅标题</string>
     <string name="banner_hint_description">横幅描述</string>
     <string name="banner_label_image">选择展示图片</string>
+    <string name="title_admin_manage_banners">首页横幅管理</string>
+    <string name="dialog_title_delete_banner">删除横幅</string>
+    <string name="dialog_confirm_delete_banner">确定要删除“%1$s”吗？</string>
+    <string name="dialog_title_add_banner">新增横幅</string>
+    <string name="dialog_title_edit_banner">编辑横幅</string>
+    <string name="error_banner_title_required">请输入横幅标题</string>
+    <string name="error_banner_description_required">请输入横幅描述</string>
+    <string name="banner_image_birthday">生日舞台主题</string>
+    <string name="banner_image_public">公益影像主题</string>
+    <string name="banner_image_friend">舞台《朋友》</string>
+    <string name="banner_image_fenwuhai">演出《奋无海》</string>
+    <string name="banner_image_lisao">演出《离骚》</string>
+    <string name="banner_image_song_cover">精选歌曲封面</string>
     <string name="action_edit">编辑</string>
     <string name="action_delete">删除</string>
 
