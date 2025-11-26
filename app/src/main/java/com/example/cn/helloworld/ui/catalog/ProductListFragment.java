@@ -136,7 +136,11 @@ public class ProductListFragment extends android.support.v4.app.Fragment {
             void bind(final Product product, final OnProductClickListener listener) {
                 nameView.setText(product.getName());
                 priceView.setText(String.format(Locale.getDefault(), "¥%.2f", product.getPrice()));
-                imageView.setImageResource(product.getImageResId());
+                if (product.getImageResId() > 0) {
+                    imageView.setImageResource(product.getImageResId());
+                } else {
+                    imageView.setImageResource(R.drawable.song_cover);
+                }
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

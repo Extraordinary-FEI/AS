@@ -55,6 +55,9 @@ public class ProductRepository {
                 "android.resource://com.example.cn.helloworld/drawable/cover_nishuo",
                 "2025-01-01",
                 createAttributes("区域", "A1", "座位类型", "VIP"),
+                R.drawable.cover_nishuo,
+                "",
+                null,
                 true
         ));
 
@@ -72,6 +75,9 @@ public class ProductRepository {
                 "android.resource://com.example.cn.helloworld/drawable/song_cover",
                 "2025-01-05",
                 createAttributes("颜色", "白色", "灯光", "三档可调"),
+                R.drawable.cover_friend,
+                "",
+                null,
                 true
         ));
 
@@ -89,6 +95,9 @@ public class ProductRepository {
                 "android.resource://com.example.cn.helloworld/drawable/cover_baobei",
                 "2025-01-10",
                 createAttributes("签字笔颜色", "黑色"),
+                R.drawable.cover_baobei,
+                "限量20份",
+                null,
                 true
         ));
     }
@@ -236,7 +245,8 @@ public class ProductRepository {
             int inventory,
             boolean active,
             String categoryId,
-            boolean featuredOnHome
+            boolean featuredOnHome,
+            int imageResId
     ) {
         for (Product p : products) {
             if (p.getId().equals(productId)) {
@@ -246,6 +256,7 @@ public class ProductRepository {
                 p.setInventory(inventory);
                 p.setActive(active);
                 p.setFeaturedOnHome(featuredOnHome);
+                p.setImageResId(imageResId);
                 if (!TextUtils.isEmpty(categoryId)) {
                     p.setCategory(categoryId);
                 }

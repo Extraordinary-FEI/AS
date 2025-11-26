@@ -89,7 +89,11 @@ public class ProductListActivity extends AppCompatActivity {
             final Product product = products.get(position);
             holder.nameView.setText(product.getName());
             holder.priceView.setText(String.format(Locale.getDefault(), "¥%.2f", product.getPrice()));
-            holder.imageView.setImageResource(product.getImageResId());
+            if (product.getImageResId() > 0) {
+                holder.imageView.setImageResource(product.getImageResId());
+            } else {
+                holder.imageView.setImageResource(R.drawable.song_cover);
+            }
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

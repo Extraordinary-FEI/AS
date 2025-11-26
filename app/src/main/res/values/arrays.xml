@@ -23,4 +23,13 @@
         <item>FULFILLED</item>
         <item>CANCELLED</item>
     </string-array>
+
+    <string-array name="product_image_names">
+        <item>《你说》舞台</item>
+        <item>《宝贝》封面</item>
+        <item>《朋友，请听好》</item>
+        <item>《粉雾海》</item>
+        <item>《离骚》</item>
+        <item>通用主图</item>
+    </string-array>
 </resources>

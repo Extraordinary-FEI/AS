@@ -27,6 +27,7 @@ import com.example.cn.helloworld.data.storage.CartStorage;
 import com.example.cn.helloworld.data.session.SessionManager;
 import com.example.cn.helloworld.ui.product.ReviewWallActivity;
 
+import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 
@@ -91,7 +92,11 @@ public class ProductDetailActivity extends AppCompatActivity {
         addToCartButton = (Button) findViewById(R.id.button_add_to_cart);
         TextView attributesView = (TextView) findViewById(R.id.detailProductAttributes);
 
-        imageView.setImageResource(product.getImageResId());
+        if (product.getImageResId() > 0) {
+            imageView.setImageResource(product.getImageResId());
+        } else {
+            imageView.setImageResource(R.drawable.song_cover);
+        }
         nameView.setText(product.getName());
         priceView.setText(String.format(Locale.getDefault(), "¥%.2f", product.getPrice()));
         inventoryView.setText(getString(R.string.product_inventory_format, product.getInventory()));
@@ -109,10 +114,14 @@ public class ProductDetailActivity extends AppCompatActivity {
         } else {
             limitView.setVisibility(View.GONE);
         }
-        if (product.getCategoryAttributes().isEmpty()) {
+        Map<String, String> categoryAttributes = product.getCategoryAttributes();
+        if (categoryAttributes == null) {
+            categoryAttributes = Collections.emptyMap();
+        }
+        if (categoryAttributes.isEmpty()) {
             attributesView.setVisibility(View.GONE);
         } else {
-            attributesView.setText(getString(R.string.product_attributes_format, formatAttributes((Map<String, String>) product.getCategoryAttributes())));
+            attributesView.setText(getString(R.string.product_attributes_format, formatAttributes(categoryAttributes)));
             attributesView.setVisibility(View.VISIBLE);
         }
         descriptionView.setText(product.getDescription());

@@ -15,9 +15,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +43,14 @@ public class ProductManagementActivity extends AppCompatActivity {
     private ProductAdapter adapter;
     private FloatingActionButton fabAdd;
     private List<Category> categories = new ArrayList<>();
+    private final int[] imageOptions = new int[]{
+            R.drawable.cover_nishuo,
+            R.drawable.cover_baobei,
+            R.drawable.cover_friend,
+            R.drawable.cover_fenwuhai,
+            R.drawable.cover_lisao,
+            R.drawable.song_cover
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,12 +120,20 @@ public class ProductManagementActivity extends AppCompatActivity {
         final CheckBox activeCheckBox = (CheckBox) dialogView.findViewById(R.id.checkboxProductActive);
         final CheckBox homeSwitchCheckBox = (CheckBox) dialogView.findViewById(R.id.checkboxProductHomeSwitch);
         final Spinner categorySpinner = (Spinner) dialogView.findViewById(R.id.spinnerProductCategory);
+        final Spinner imageSpinner = (Spinner) dialogView.findViewById(R.id.spinnerProductImage);
+        final ImageView imagePreview = (ImageView) dialogView.findViewById(R.id.imageProductPreview);
 
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item,
                 buildCategoryNames());
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(spinnerAdapter);
+
+        ArrayAdapter<String> imageAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item,
+                getResources().getStringArray(R.array.product_image_names));
+        imageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        imageSpinner.setAdapter(imageAdapter);
 
         if (product != null) {
             nameInput.setText(product.getName());
@@ -128,10 +146,28 @@ public class ProductManagementActivity extends AppCompatActivity {
             if (index >= 0) {
                 categorySpinner.setSelection(index);
             }
+            int imageIndex = findImageIndex(product.getImageResId());
+            if (imageIndex >= 0) {
+                imageSpinner.setSelection(imageIndex);
+                imagePreview.setImageResource(product.getImageResId());
+            }
         } else {
             activeCheckBox.setChecked(true);
             homeSwitchCheckBox.setChecked(true);
+            imagePreview.setImageResource(imageOptions[0]);
         }
+
+        imageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                imagePreview.setImageResource(imageOptions[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // no-op
+            }
+        });
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(product == null ? R.string.dialog_title_add_product : R.string.dialog_title_edit_product)
@@ -158,6 +194,7 @@ public class ProductManagementActivity extends AppCompatActivity {
                         String resolvedCategoryId = (categoryId == null && !categories.isEmpty())
                                 ? categories.get(0).getId()
                                 : categoryId;
+                        int imageResId = imageOptions[imageSpinner.getSelectedItemPosition()];
 
                         if (TextUtils.isEmpty(name)) {
                             nameInput.setError(getString(R.string.error_product_name_required));
@@ -194,7 +231,7 @@ public class ProductManagementActivity extends AppCompatActivity {
                                     null,
                                     null,
                                     null,
-                                    0,
+                                    imageResId,
                                     "",
                                     null,
                                     featuredOnHome
@@ -208,7 +245,8 @@ public class ProductManagementActivity extends AppCompatActivity {
                                     inventory,
                                     active,
                                     resolvedCategoryId,
-                                    featuredOnHome);
+                                    featuredOnHome,
+                                    imageResId);
                         }
                         dialogInterface.dismiss();
                         loadProducts();
@@ -241,6 +279,15 @@ public class ProductManagementActivity extends AppCompatActivity {
             }
         }
         return -1;
+    }
+
+    private int findImageIndex(int imageResId) {
+        for (int i = 0; i < imageOptions.length; i++) {
+            if (imageOptions[i] == imageResId) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     private static class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
