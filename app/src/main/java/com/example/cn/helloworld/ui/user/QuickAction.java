@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.ui.user.AddressManagementActivity;
+import com.example.cn.helloworld.ui.user.FavoritesActivity;
+import com.example.cn.helloworld.ui.user.UserOrderListActivity;
 import com.example.cn.helloworld.ui.admin.SupportTaskManagementActivity;
 import com.example.cn.helloworld.ui.playlist.PlaylistOverviewActivity;
 
@@ -33,6 +35,18 @@ public class QuickAction {
             @Override
             public Intent buildIntent(Context context) {
                 return new Intent(context, AddressManagementActivity.class);
+            }
+        },
+        FAVORITE("favorite", R.string.user_action_favorites, R.drawable.ic_category_merch) {
+            @Override
+            public Intent buildIntent(Context context) {
+                return new Intent(context, FavoritesActivity.class);
+            }
+        },
+        ORDER("orders", R.string.user_action_orders, R.drawable.ic_category_ticket) {
+            @Override
+            public Intent buildIntent(Context context) {
+                return new Intent(context, UserOrderListActivity.class);
             }
         },
         SUPPORT("support", R.string.quick_action_type_support, R.drawable.ic_category_task) {

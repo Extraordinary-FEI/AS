@@ -1,13 +1,11 @@
 package com.example.cn.helloworld.ui.user;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,50 +23,37 @@ import java.util.List;
 public class AddressManagementActivity extends AppCompatActivity {
 
     private AddressRepository repository;
+    private List<Address> addresses = new ArrayList<>();
     private AddressAdapter adapter;
-    private List<Address> addresses = new ArrayList<Address>();
-    private View emptyView;
+    private TextView emptyView;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address_management);
 
-        setTitle(R.string.title_address_management);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("地址管理");
         }
 
         repository = new AddressRepository(this);
-        List<Address> loaded = repository.loadAddresses();
-        if (loaded != null) {
-            addresses = new ArrayList<Address>(loaded);
-        } else {
-            addresses = new ArrayList<Address>();
-        }
+        addresses = repository.loadAddresses();
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_addresses);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new AddressAdapter(addresses, new AddressAdapter.Listener() {
-            @Override
-            public void onEdit(Address address) {
-                showEditor(address);
-            }
+        emptyView = (TextView) findViewById(R.id.empty_addresses);
 
-            @Override
-            public void onDelete(Address address) {
-                confirmDelete(address);
-            }
-        });
-        recyclerView.setAdapter(adapter);
+        RecyclerView recycler = (RecyclerView) findViewById(R.id.recycler_addresses);
+        recycler.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new AddressAdapter(addresses);
+        recycler.setAdapter(adapter);
 
-        emptyView = findViewById(R.id.empty_addresses);
         updateEmptyState();
 
+        // 新增地址
         findViewById(R.id.button_add_address).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showEditor(null);
+                showAddressEditor(null);
             }
         });
     }
@@ -82,108 +67,85 @@ public class AddressManagementActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void showEditor(@Nullable final Address origin) {
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_address_editor, null, false);
+    private void updateEmptyState() {
+        emptyView.setVisibility(addresses.isEmpty() ? View.VISIBLE : View.GONE);
+    }
+
+    // ============================================================================
+    // 编辑 / 新增 弹窗
+    // ============================================================================
+
+    private void showAddressEditor(final Address origin) {
+
+        View view = LayoutInflater.from(this)
+                .inflate(R.layout.dialog_address_editor, null, false);
+
         final EditText nameInput = (EditText) view.findViewById(R.id.input_address_name);
         final EditText phoneInput = (EditText) view.findViewById(R.id.input_address_phone);
         final EditText detailInput = (EditText) view.findViewById(R.id.input_address_detail);
 
-        if (origin != null) {
+        boolean isEdit = origin != null;
+
+        // 如果是编辑模式，填入原数据
+        if (isEdit) {
             nameInput.setText(origin.getContactName());
             phoneInput.setText(origin.getPhone());
             detailInput.setText(origin.getDetail());
         }
 
         new AlertDialog.Builder(this)
-                .setTitle(origin == null ? R.string.action_add_address : R.string.action_edit_address)
+                .setTitle(isEdit ? "编辑地址" : "新增地址")
                 .setView(view)
-                .setPositiveButton(R.string.action_save, new DialogInterface.OnClickListener() {
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
                         String name = nameInput.getText().toString().trim();
                         String phone = phoneInput.getText().toString().trim();
                         String detail = detailInput.getText().toString().trim();
-                        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(detail)) {
-                            // 输入不完整，不保存（也可弹出提示）
+
+                        if (name.isEmpty() || detail.isEmpty()) {
                             return;
                         }
 
-                        Address newAddress;
                         if (origin == null) {
-                            newAddress = Address.create(name, phone, detail);
-                            addresses.add(newAddress);
+                            // 新地址
+                            Address newAddr = new Address(
+                                    "id-" + System.currentTimeMillis(),
+                                    name,
+                                    phone,
+                                    detail
+                            );
+                            addresses.add(newAddr);
+                            repository.saveAddresses(addresses);
+
                         } else {
-                            newAddress = origin.withContent(name, phone, detail);
-                            int index = findIndex(origin.getId());
-                            if (index >= 0) {
-                                addresses.set(index, newAddress);
-                            } else {
-                                addresses.add(newAddress);
-                            }
+                            // 更新地址
+                            origin.setContactName(name);
+                            origin.setPhone(phone);
+                            origin.setDetail(detail);
+
+                            repository.updateAddress(origin);
                         }
-                        persist();
+
+                        adapter.notifyDataSetChanged();
+                        updateEmptyState();
                     }
                 })
-                .setNegativeButton(android.R.string.cancel, null)
+                .setNegativeButton("取消", null)
                 .show();
     }
 
-    private void confirmDelete(final Address address) {
-        new AlertDialog.Builder(this)
-                .setMessage(getString(R.string.address_delete_confirm, address.getContactName()))
-                .setPositiveButton(R.string.action_delete, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        int index = findIndex(address.getId());
-                        if (index >= 0) {
-                            addresses.remove(index);
-                        }
-                        persist();
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, null)
-                .show();
-    }
+    // ============================================================================
+    // Adapter
+    // ============================================================================
 
-    private int findIndex(String id) {
-        for (int i = 0; i < addresses.size(); i++) {
-            Address addr = addresses.get(i);
-            if (addr.getId() != null && addr.getId().equals(id)) {
-                return i;
-            }
-        }
-        return -1;
-    }
+    private class AddressAdapter extends RecyclerView.Adapter<AddressViewHolder> {
 
-    private void persist() {
-        repository.saveAddresses(addresses);
-        adapter.update(addresses);
-        updateEmptyState();
-    }
+        private List<Address> list;
 
-    private void updateEmptyState() {
-        if (emptyView != null) {
-            if (addresses.isEmpty()) {
-                emptyView.setVisibility(View.VISIBLE);
-            } else {
-                emptyView.setVisibility(View.GONE);
-            }
-        }
-    }
-
-    private static class AddressAdapter extends RecyclerView.Adapter<AddressViewHolder> {
-
-        interface Listener {
-            void onEdit(Address address);
-            void onDelete(Address address);
-        }
-
-        private final Listener listener;
-        private List<Address> addresses;
-
-        AddressAdapter(List<Address> addresses, Listener listener) {
-            this.addresses = new ArrayList<Address>(addresses);
-            this.listener = listener;
+        AddressAdapter(List<Address> list) {
+            this.list = list;
         }
 
         @Override
@@ -195,56 +157,69 @@ public class AddressManagementActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(AddressViewHolder holder, int position) {
-            final Address address = addresses.get(position);
-            holder.bind(address, listener);
+            holder.bind(list.get(position));
         }
 
         @Override
         public int getItemCount() {
-            return addresses.size();
-        }
-
-        void update(List<Address> newAddresses) {
-            this.addresses.clear();
-            this.addresses.addAll(newAddresses);
-            notifyDataSetChanged();
+            return list.size();
         }
     }
 
-    private static class AddressViewHolder extends RecyclerView.ViewHolder {
+    // ============================================================================
+    // ViewHolder
+    // ============================================================================
 
-        private final TextView titleView;
-        private final TextView detailView;
-        private final View editButton;
-        private final View deleteButton;
+    private class AddressViewHolder extends RecyclerView.ViewHolder {
 
-        AddressViewHolder(View itemView) {
+        private TextView titleView;
+        private TextView detailView;
+        private View editBtn;
+        private View deleteBtn;
+
+        public AddressViewHolder(View itemView) {
             super(itemView);
+
             titleView = (TextView) itemView.findViewById(R.id.text_address_title);
             detailView = (TextView) itemView.findViewById(R.id.text_address_detail);
-            editButton = itemView.findViewById(R.id.button_edit_address);
-            deleteButton = itemView.findViewById(R.id.button_delete_address);
+            editBtn = itemView.findViewById(R.id.button_edit_address);
+            deleteBtn = itemView.findViewById(R.id.button_delete_address);
         }
 
-        void bind(final Address address, final AddressAdapter.Listener listener) {
-            titleView.setText(address.getContactName());
-            String phone = address.getPhone();
-            if (TextUtils.isEmpty(phone)) {
-                detailView.setText(address.getDetail());
-            } else {
-                detailView.setText(phone + " · " + address.getDetail());
-            }
+        public void bind(final Address address) {
 
-            editButton.setOnClickListener(new View.OnClickListener() {
+            titleView.setText(address.getContactName());
+            detailView.setText(
+                    "电话：" + address.getPhone() + "\n地址：" + address.getDetail()
+            );
+
+            editBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onEdit(address);
+                    showAddressEditor(address);
                 }
             });
-            deleteButton.setOnClickListener(new View.OnClickListener() {
+
+            deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onDelete(address);
+
+                    new AlertDialog.Builder(AddressManagementActivity.this)
+                            .setTitle("删除地址")
+                            .setMessage("确定删除此地址？")
+                            .setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    addresses.remove(address);
+                                    repository.saveAddresses(addresses);
+
+                                    adapter.notifyDataSetChanged();
+                                    updateEmptyState();
+                                }
+                            })
+                            .setNegativeButton("取消", null)
+                            .show();
                 }
             });
         }

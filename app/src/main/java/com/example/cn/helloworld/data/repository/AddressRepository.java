@@ -75,9 +75,8 @@ public class AddressRepository {
                 JSONObject obj = array.getJSONObject(i);
                 result.add(new Address(
                         obj.optString("id", ""),
-                        obj.optString("name", ""),
-                        obj.optString("phone", ""),
-                        obj.optString("detail", "")));
+                        obj.optString("name", "")
+                ));
             }
             return result;
         } catch (JSONException e) {
@@ -110,7 +109,7 @@ public class AddressRepository {
 
     private List<Address> createDefault() {
         List<Address> demo = new ArrayList<Address>();
-        demo.add(new Address("demo-1", "默认联系人", "13800001234", "北京市朝阳区应援大道 1 号"));
+        demo.add(new Address("demo-1", "默认联系人"));
         return demo;
     }
 
@@ -130,4 +129,35 @@ public class AddressRepository {
     private void clearCorruptedData() {
         sharedPreferences.edit().remove(addressesKey).remove(KEY_ADDRESSES).apply();
     }
+
+    // 在 AddressRepository 类中加入以下三个方法：
+
+    public void addAddress(Address address) {
+        List<Address> list = loadAddresses();
+        list.add(address);
+        saveAddresses(list);
+    }
+
+    public void removeAddress(String id) {
+        List<Address> list = loadAddresses();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getId().equals(id)) {
+                list.remove(i);
+                break;
+            }
+        }
+        saveAddresses(list);
+    }
+
+    public void updateAddress(Address target) {
+        List<Address> list = loadAddresses();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getId().equals(target.getId())) {
+                list.set(i, target);
+                break;
+            }
+        }
+        saveAddresses(list);
+    }
+
 }

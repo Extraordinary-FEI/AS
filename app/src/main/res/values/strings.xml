@@ -397,6 +397,7 @@
     <string name="user_action_orders_desc">查物流 / 售后服务</string>
     <string name="user_action_collection">我的收藏</string>
     <string name="user_action_collection_desc">心动歌单与专属周边</string>
+    <string name="user_action_favorites">我的收藏</string>
     <string name="user_action_address">收货地址</string>
     <string name="user_action_address_desc">常用地址一键管理</string>
     <string name="title_address_management">收货地址管理</string>
@@ -406,6 +407,12 @@
     <string name="action_add_address">新增地址</string>
     <string name="action_edit_address">编辑地址</string>
     <string name="address_delete_confirm">确定删除 %1$s 的地址吗？</string>
+    <string name="favorite_section_songs">歌曲收藏</string>
+    <string name="favorite_section_products">商品收藏</string>
+    <string name="favorite_section_tasks">应援任务收藏</string>
+    <string name="favorite_empty_songs">还没有收藏歌曲</string>
+    <string name="favorite_empty_products">还没有收藏商品</string>
+    <string name="favorite_empty_tasks">还没有收藏应援任务</string>
     <string name="hint_address_name">联系人姓名</string>
     <string name="hint_address_phone">联系电话（可选）</string>
     <string name="hint_address_detail">详细地址</string>

@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -20,6 +21,7 @@ import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.CartItem;
 import com.example.cn.helloworld.data.model.Product;
 import com.example.cn.helloworld.data.model.ProductReview;
+import com.example.cn.helloworld.data.repository.FavoriteRepository;
 import com.example.cn.helloworld.data.repository.DatabaseReviewRepository;
 import com.example.cn.helloworld.data.repository.ProductRepository;
 import com.example.cn.helloworld.data.repository.ReviewSubmitCallback;
@@ -43,7 +45,9 @@ public class ProductDetailActivity extends AppCompatActivity {
     private Button submitButton;
     private Button commentEntryButton;
     private Button addToCartButton;
+    private ImageButton favoriteButton;
     private SessionManager sessionManager;
+    private FavoriteRepository favoriteRepository;
 
     public static void start(Context context, String productId) {
         Intent intent = new Intent(context, ProductDetailActivity.class);
@@ -75,6 +79,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         reviewRepository = new DatabaseReviewRepository(this);
         cartStorage = CartStorage.getInstance(this);
         sessionManager = new SessionManager(this);
+        favoriteRepository = new FavoriteRepository(this);
 
         ImageView imageView = (ImageView) findViewById(R.id.detailProductImage);
         TextView nameView = (TextView) findViewById(R.id.detailProductName);
@@ -90,6 +95,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         submitButton = (Button) findViewById(R.id.button_submit_comment);
         commentEntryButton = (Button) findViewById(R.id.button_open_comments);
         addToCartButton = (Button) findViewById(R.id.button_add_to_cart);
+        favoriteButton = (ImageButton) findViewById(R.id.button_favorite);
         TextView attributesView = (TextView) findViewById(R.id.detailProductAttributes);
 
         if (product.getImageResId() > 0) {
@@ -132,6 +138,14 @@ public class ProductDetailActivity extends AppCompatActivity {
                 startActivity(ReviewWallActivity.createIntent(ProductDetailActivity.this, product.getId(), product.getName()));
             }
         });
+
+        favoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleFavorite();
+            }
+        });
+        updateFavoriteState();
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -195,6 +209,27 @@ public class ProductDetailActivity extends AppCompatActivity {
                 product.getCoverUrl(), true);
         cartStorage.addOrIncrease(item);
         Toast.makeText(this, R.string.cart_added_success, Toast.LENGTH_SHORT).show();
+    }
+
+    private void toggleFavorite() {
+        if (product == null) {
+            return;
+        }
+        boolean current = favoriteRepository.isProductFavorite(product.getId());
+        favoriteRepository.setProductFavorite(product.getId(), !current);
+        updateFavoriteState();
+    }
+
+    private void updateFavoriteState() {
+        if (product == null || favoriteButton == null) {
+            return;
+        }
+        boolean favored = favoriteRepository.isProductFavorite(product.getId());
+        favoriteButton.setImageResource(favored ? android.R.drawable.btn_star_big_on
+                : android.R.drawable.btn_star_big_off);
+        favoriteButton.setContentDescription(getString(
+                favored ? R.string.favorite_added : R.string.favorite_removed
+        ));
     }
 
     private String joinWithSeparator(Iterable<String> values) {

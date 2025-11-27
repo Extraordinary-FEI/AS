@@ -28,14 +28,22 @@ class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
         void onEdit(Order order);
 
         void onDelete(Order order);
+
+        void onView(Order order);
     }
 
     private final List<Order> orders = new ArrayList<>();
     private final SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault());
     private final Callback callback;
+    private final boolean manageEnabled;
 
     OrderAdapter(Callback callback) {
+        this(callback, true);
+    }
+
+    OrderAdapter(Callback callback, boolean manageEnabled) {
         this.callback = callback;
+        this.manageEnabled = manageEnabled;
     }
 
     void submit(List<Order> list) {
@@ -95,18 +103,31 @@ class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
             timeView.setText(context.getString(R.string.order_created_template, formatter.format(date)));
 
             if (callback != null) {
-                editButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        callback.onEdit(order);
-                    }
-                });
-                deleteButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        callback.onDelete(order);
-                    }
-                });
+                if (manageEnabled) {
+                    editButton.setVisibility(View.VISIBLE);
+                    deleteButton.setVisibility(View.VISIBLE);
+                    editButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            callback.onEdit(order);
+                        }
+                    });
+                    deleteButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            callback.onDelete(order);
+                        }
+                    });
+                } else {
+                    editButton.setVisibility(View.GONE);
+                    deleteButton.setVisibility(View.GONE);
+                    itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            callback.onView(order);
+                        }
+                    });
+                }
             }
         }
     }

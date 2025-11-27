@@ -37,11 +37,11 @@
             android:gravity="end"
             android:orientation="horizontal">
 
-            <Button
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/button_edit_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@android:drawable/btn_default"
+                android:backgroundTint="@color/homeCardBackground"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
                 android:paddingTop="6dp"
@@ -55,11 +55,11 @@
                 android:layout_width="8dp"
                 android:layout_height="1dp" />
 
-            <Button
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/button_delete_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@android:drawable/btn_default"
+                android:backgroundTint="@color/homeCardBackground"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
                 android:paddingTop="6dp"

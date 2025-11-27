@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/homeBackground"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_user_orders"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/text_empty_user_orders"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="@string/orders_empty"
+        android:textColor="@color/homeTextSecondary"
+        android:visibility="gone" />
+
+</LinearLayout>
+

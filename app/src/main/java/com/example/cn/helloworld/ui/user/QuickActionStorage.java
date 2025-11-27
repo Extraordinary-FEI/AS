@@ -73,14 +73,14 @@ class QuickActionStorage {
 
     private List<QuickAction> createDefaultActions() {
         List<QuickAction> actions = new ArrayList<QuickAction>();
-        actions.add(new QuickAction("orders", QuickAction.Type.PLAYLISTS,
+        actions.add(new QuickAction("orders", QuickAction.Type.ORDER,
                 context.getString(R.string.user_action_orders),
                 context.getString(R.string.user_action_orders_desc),
-                QuickAction.Type.PLAYLISTS.getIconRes()));
-        actions.add(new QuickAction("collection", QuickAction.Type.PROFILE,
+                QuickAction.Type.ORDER.getIconRes()));
+        actions.add(new QuickAction("collection", QuickAction.Type.FAVORITE,
                 context.getString(R.string.user_action_collection),
                 context.getString(R.string.user_action_collection_desc),
-                QuickAction.Type.PROFILE.getIconRes()));
+                QuickAction.Type.FAVORITE.getIconRes()));
         actions.add(new QuickAction("address", QuickAction.Type.ADDRESS,
                 context.getString(R.string.user_action_address),
                 context.getString(R.string.user_action_address_desc),
