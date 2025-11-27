@@ -36,6 +36,10 @@
     <color name="homePlaylistColor3">#FFE0B2</color>
     <color name="homePlaylistColor4">#D1C4E9</color>
 
+    <!-- 个人中心细节优化 -->
+    <color name="personalBackground">#F3F1FB</color>
+    <color name="personalCardStroke">#E6E3F3</color>
+
     <!-- 状态配色 -->
     <color name="taskStatusOngoing">#FF6B8B</color>
     <color name="taskStatusUpcoming">#5BC0EB</color>

@@ -176,6 +176,25 @@
                 android:value="com.example.cn.helloworld.ui.main.MainActivity" />
         </activity>
 
+        <!-- 收藏与订单（用户侧） -->
+        <activity
+            android:name="com.example.cn.helloworld.ui.user.FavoritesActivity"
+            android:label="@string/user_action_favorites"
+            android:parentActivityName="com.example.cn.helloworld.ui.user.UserProfileActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.cn.helloworld.ui.user.UserProfileActivity" />
+        </activity>
+
+        <activity
+            android:name="com.example.cn.helloworld.ui.user.UserOrderListActivity"
+            android:label="@string/user_action_orders"
+            android:parentActivityName="com.example.cn.helloworld.ui.user.UserProfileActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.cn.helloworld.ui.user.UserProfileActivity" />
+        </activity>
+
         <!-- 音乐后台服务 -->
         <service
             android:name="com.example.cn.helloworld.MusicService"
