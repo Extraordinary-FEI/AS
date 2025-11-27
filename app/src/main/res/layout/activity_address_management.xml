@@ -2,26 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/homeBackground"
+    android:background="#FFFFFF"
     android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- 标题：地址管理 -->
     <TextView
         android:id="@+id/address_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/address_header"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:textColor="@color/homeTextPrimary"
+        android:text="地址管理"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#222222"
         android:paddingBottom="8dp" />
 
+    <!-- 副标题 -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/address_subtitle"
-        android:textColor="@color/homeTextSecondary"
+        android:text="保存你的收货信息，结算时快速选择。"
+        android:textColor="#666666"
         android:textSize="14sp" />
 
+    <!-- 空列表提示 -->
     <TextView
         android:id="@+id/empty_addresses"
         android:layout_width="match_parent"
@@ -29,10 +33,11 @@
         android:layout_marginTop="12dp"
         android:gravity="center"
         android:padding="12dp"
-        android:text="@string/address_empty"
-        android:textColor="@color/homeTextSecondary"
+        android:text="暂无收货地址，点击下方按钮新增。"
+        android:textColor="#666666"
         android:visibility="gone" />
 
+    <!-- 地址列表 -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_addresses"
         android:layout_width="match_parent"
@@ -42,17 +47,18 @@
         android:clipToPadding="false"
         android:paddingBottom="12dp" />
 
+    <!-- 新增地址按钮 -->
     <TextView
         android:id="@+id/button_add_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:background="@drawable/bg_admin_action"
+        android:background="#FF4081"
         android:gravity="center"
         android:padding="14dp"
-        android:text="@string/action_add_address"
+        android:text="新增地址"
         android:textAllCaps="false"
-        android:textColor="@android:color/white"
+        android:textColor="#FFFFFF"
         android:textSize="16sp" />
 
 </LinearLayout>
