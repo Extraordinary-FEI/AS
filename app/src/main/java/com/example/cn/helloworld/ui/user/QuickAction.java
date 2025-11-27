@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.ui.admin.SupportTaskManagementActivity;
-import com.example.cn.helloworld.ui.main.PlaylistOverviewActivity;
+import com.example.cn.helloworld.ui.playlist.PlaylistOverviewActivity;
 
 /**
  * Model for a user configurable quick action entry.

@@ -192,7 +192,7 @@ public class UserCenterFragment extends Fragment {
         }
     }
 
-    private void setupQuickActions(LayoutInflater inflater) {
+    private void setupQuickActions(final LayoutInflater inflater) {
         if (quickActionList == null || quickActionStorage == null) {
             return;
         }
