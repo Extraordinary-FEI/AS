@@ -82,6 +82,13 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartChan
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadCartItems();
+        updateTotal();
+    }
+
     private void loadCartItems() {
         cartItems.clear();
         cartItems.addAll(cartStorage.getItems());
