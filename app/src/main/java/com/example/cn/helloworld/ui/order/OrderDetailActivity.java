@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.CartItem;
 import com.example.cn.helloworld.data.model.Order;
+import com.example.cn.helloworld.util.OrderStatusFormatter;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -70,7 +71,8 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     private void bindOrder(Order order) {
         orderIdTextView.setText(getString(R.string.order_id_template, order.getOrderId()));
-        statusTextView.setText(getString(R.string.order_status_template, order.getStatus()));
+        String statusLabel = OrderStatusFormatter.format(this, order.getStatus());
+        statusTextView.setText(getString(R.string.order_status_template, statusLabel));
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
         totalTextView.setText(getString(R.string.order_total_template,
                 decimalFormat.format(order.getTotalAmount())));

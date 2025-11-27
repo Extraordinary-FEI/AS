@@ -18,7 +18,7 @@ public class Order implements Serializable {
     private long createdAt;
 
     public Order(String orderId) {
-        this(orderId, new ArrayList<CartItem>(), 0.0, "CREATED", null, System.currentTimeMillis());
+        this(orderId, new ArrayList<CartItem>(), 0.0, "已创建", null, System.currentTimeMillis());
     }
 
     public Order(String orderId, List<CartItem> items, double totalAmount, String status,

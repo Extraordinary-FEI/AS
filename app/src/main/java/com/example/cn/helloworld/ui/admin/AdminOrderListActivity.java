@@ -26,6 +26,7 @@ import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Order;
 import com.example.cn.helloworld.data.repository.AdminOrderRepository;
 import com.example.cn.helloworld.data.session.SessionManager;
+import com.example.cn.helloworld.util.OrderStatusFormatter;
 
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -34,11 +35,11 @@ import java.util.List;
 public class AdminOrderListActivity extends AppCompatActivity implements OrderAdapter.Callback {
     public static final String EXTRA_ORDERS = "extra_orders";
     private static final String[] DEFAULT_STATUSES = new String[]{
-            "CREATED",
-            "PAID",
-            "SHIPPED",
-            "FULFILLED",
-            "CANCELLED"
+            "已创建",
+            "已付款",
+            "已发货",
+            "已完成",
+            "已取消"
     };
 
     public static Intent createIntent(Context context, ArrayList<Order> orders) {
@@ -127,7 +128,8 @@ public class AdminOrderListActivity extends AppCompatActivity implements OrderAd
             idInput.setText(origin.getOrderId());
             amountInput.setText(String.valueOf(origin.getTotalAmount()));
             addressInput.setText(origin.getShippingAddress());
-            int statusIndex = statusAdapter.getPosition(origin.getStatus());
+            int statusIndex = statusAdapter.getPosition(
+                    OrderStatusFormatter.format(this, origin.getStatus()));
             if (statusIndex >= 0) {
                 statusSpinner.setSelection(statusIndex);
             }

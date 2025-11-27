@@ -31,7 +31,7 @@
         android:clipToPadding="false"
         android:paddingBottom="12dp" />
 
-    <TextView
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/button_add_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

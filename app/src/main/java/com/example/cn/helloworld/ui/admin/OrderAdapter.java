@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Order;
+import com.example.cn.helloworld.util.OrderStatusFormatter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -86,7 +87,8 @@ class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
         void bind(final Order order, SimpleDateFormat formatter, final Callback callback) {
             Context context = itemView.getContext();
             orderIdView.setText(context.getString(R.string.order_id_template, order.getOrderId()));
-            statusView.setText(context.getString(R.string.order_status_template, order.getStatus()));
+            String statusLabel = OrderStatusFormatter.format(context, order.getStatus());
+            statusView.setText(context.getString(R.string.order_status_template, statusLabel));
             amountView.setText(context.getString(R.string.order_total_template,
                     String.format(Locale.getDefault(), "%.2f", order.getTotalAmount())));
             Date date = new Date(order.getCreatedAt());

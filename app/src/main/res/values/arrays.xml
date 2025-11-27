@@ -17,11 +17,11 @@
     </string-array>
 
     <string-array name="admin_order_statuses">
-        <item>CREATED</item>
-        <item>PAID</item>
-        <item>SHIPPED</item>
-        <item>FULFILLED</item>
-        <item>CANCELLED</item>
+        <item>@string/order_status_created</item>
+        <item>@string/order_status_paid</item>
+        <item>@string/order_status_shipped</item>
+        <item>@string/order_status_fulfilled</item>
+        <item>@string/order_status_cancelled</item>
     </string-array>
 
     <string-array name="product_image_names">

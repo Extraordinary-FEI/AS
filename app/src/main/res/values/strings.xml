@@ -88,6 +88,12 @@
     <string name="title_order_detail">订单详情</string>
     <string name="order_id_template">订单号：%1$s</string>
     <string name="order_status_template">订单状态：%1$s</string>
+    <string name="order_status_created">已创建</string>
+    <string name="order_status_paid">已付款</string>
+    <string name="order_status_shipped">已发货</string>
+    <string name="order_status_fulfilled">已完成</string>
+    <string name="order_status_cancelled">已取消</string>
+    <string name="order_status_unknown">未知状态</string>
     <string name="order_total_template">订单总额：¥%1$s</string>
     <string name="order_address_template">收货地址：%1$s</string>
     <string name="order_created_template">下单时间：%1$s</string>

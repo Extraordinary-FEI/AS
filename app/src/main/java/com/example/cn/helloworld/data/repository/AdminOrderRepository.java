@@ -14,7 +14,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * 持久化管理员订单，用于在后台完成增删改查。
@@ -30,12 +29,7 @@ public class AdminOrderRepository {
     }
 
     public synchronized List<Order> getOrders() {
-        List<Order> orders = readOrders();
-        if (orders.isEmpty()) {
-            seedSampleOrders();
-            orders = readOrders();
-        }
-        return orders;
+        return readOrders();
     }
 
     public synchronized void saveOrUpdate(Order order) {
@@ -76,19 +70,6 @@ public class AdminOrderRepository {
 
     public synchronized int count() {
         return readOrders().size();
-    }
-
-    private void seedSampleOrders() {
-        long now = System.currentTimeMillis();
-        List<Order> samples = new ArrayList<Order>();
-        for (int i = 0; i < 6; i++) {
-            Order order = new Order(String.format(Locale.getDefault(), "order-%d", 1000 + i));
-            order.setTotalAmount(128 + (i * 25));
-            order.setStatus(i % 2 == 0 ? "PAID" : "CREATED");
-            order.setCreatedAt(now - i * 60L * 60L * 1000L);
-            samples.add(order);
-        }
-        persistOrders(samples);
     }
 
     private void persistOrders(List<Order> orders) {

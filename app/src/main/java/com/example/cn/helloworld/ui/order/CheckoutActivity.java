@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.CartItem;
 import com.example.cn.helloworld.data.model.Order;
+import com.example.cn.helloworld.data.repository.AdminOrderRepository;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -136,10 +137,13 @@ public class CheckoutActivity extends AppCompatActivity {
         Order order = new Order(UUID.randomUUID().toString(),
                 new ArrayList<CartItem>(selectedItems),
                 totalAmount,
-                "PENDING_PAYMENT",
+                "CREATED",
                 finalAddress,
                 System.currentTimeMillis());
         order.recalculateTotal();
+
+        AdminOrderRepository orderRepository = new AdminOrderRepository(this);
+        orderRepository.saveOrUpdate(order);
 
         OrderDetailActivity.start(this, order);
         finish();
