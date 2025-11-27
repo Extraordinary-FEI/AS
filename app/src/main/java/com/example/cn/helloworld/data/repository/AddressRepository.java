@@ -2,8 +2,10 @@ package com.example.cn.helloworld.data.repository;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import com.example.cn.helloworld.data.model.Address;
+import com.example.cn.helloworld.data.session.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,16 +18,34 @@ public class AddressRepository {
 
     private static final String PREF_NAME = "user_addresses";
     private static final String KEY_ADDRESSES = "addresses";
+    private static final String KEY_ADDRESSES_PREFIX = "addresses_";
 
     private final SharedPreferences sharedPreferences;
+    private final String addressesKey;
 
     public AddressRepository(Context context) {
-        this.sharedPreferences = context.getApplicationContext()
-                .getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        Context appContext = context.getApplicationContext();
+        this.sharedPreferences = appContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+
+        SessionManager sessionManager = new SessionManager(appContext);
+        String roleSuffix = sessionManager.isAdmin() ? "admin" : "user";
+        String userIdentity = sessionManager.getUserId();
+        if (TextUtils.isEmpty(userIdentity)) {
+            userIdentity = sessionManager.getUsername();
+        }
+        if (TextUtils.isEmpty(userIdentity)) {
+            this.addressesKey = KEY_ADDRESSES_PREFIX + roleSuffix;
+        } else {
+            this.addressesKey = KEY_ADDRESSES_PREFIX + roleSuffix + "_" + userIdentity;
+        }
     }
 
     public List<Address> loadAddresses() {
-        String raw = sharedPreferences.getString(KEY_ADDRESSES, null);
+        String raw = sharedPreferences.getString(addressesKey, null);
+        // 兼容旧版本数据：如果当前用户没有单独的地址数据，尝试读取公共的存储键
+        if (raw == null) {
+            raw = sharedPreferences.getString(KEY_ADDRESSES, null);
+        }
         if (raw == null) {
             return createDefault();
         }
@@ -60,7 +80,7 @@ public class AddressRepository {
             } catch (JSONException ignored) {
             }
         }
-        sharedPreferences.edit().putString(KEY_ADDRESSES, array.toString()).apply();
+        sharedPreferences.edit().putString(addressesKey, array.toString()).apply();
     }
 
     private List<Address> createDefault() {
