@@ -204,4 +204,9 @@ public class AdminOrderListActivity extends AppCompatActivity implements OrderAd
                 .show();
     }
 
+    @Override
+    public void onView(Order order) {
+        showOrderEditor(order);
+    }
+
 }

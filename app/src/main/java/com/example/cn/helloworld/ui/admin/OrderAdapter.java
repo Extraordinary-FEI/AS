@@ -22,9 +22,9 @@ import java.util.Locale;
 /**
  * Adapter for displaying orders in the admin order list.
  */
-class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
+public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
 
-    interface Callback {
+    public interface Callback {
         void onEdit(Order order);
 
         void onDelete(Order order);
@@ -37,16 +37,16 @@ class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
     private final Callback callback;
     private final boolean manageEnabled;
 
-    OrderAdapter(Callback callback) {
+    public OrderAdapter(Callback callback) {
         this(callback, true);
     }
 
-    OrderAdapter(Callback callback, boolean manageEnabled) {
+    public OrderAdapter(Callback callback, boolean manageEnabled) {
         this.callback = callback;
         this.manageEnabled = manageEnabled;
     }
 
-    void submit(List<Order> list) {
+    public void submit(List<Order> list) {
         orders.clear();
         if (list != null) {
             orders.addAll(list);
@@ -65,7 +65,7 @@ class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Order order = orders.get(position);
-        holder.bind(order, formatter, callback);
+        holder.bind(order, formatter, callback, manageEnabled);
     }
 
     @Override
@@ -92,7 +92,7 @@ class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
             deleteButton = (Button) itemView.findViewById(R.id.buttonDeleteOrder);
         }
 
-        void bind(final Order order, SimpleDateFormat formatter, final Callback callback) {
+        void bind(final Order order, SimpleDateFormat formatter, final Callback callback, final boolean manageEnabled) {
             Context context = itemView.getContext();
             orderIdView.setText(context.getString(R.string.order_id_template, order.getOrderId()));
             String statusLabel = OrderStatusFormatter.format(context, order.getStatus());
