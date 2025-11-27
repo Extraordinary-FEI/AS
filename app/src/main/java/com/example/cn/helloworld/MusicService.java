@@ -147,6 +147,7 @@ public class MusicService extends Service {
         uiIntent.putExtra("index", currentSong != null ? currentIndex : -1);
         uiIntent.putExtra("total", currentSongs != null ? currentSongs.size() : 0);
         uiIntent.putExtra("playlistTitle", currentPlaylistTitle);
+        uiIntent.putExtra("songId", currentSong != null ? currentSong.getId() : "");
         uiIntent.putExtra("playing", player != null && player.isPlaying());
         sendBroadcast(uiIntent);
     }

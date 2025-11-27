@@ -5,7 +5,7 @@
     android:weightSum="3"
     android:background="@drawable/song_cover">
 
-    <!-- 半透明蒙层，让背景更柔和 -->
+    <!-- 半透明蒙层 -->
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,23 +22,40 @@
         android:layout_marginTop="24dp"
         android:background="@android:color/transparent"
         android:padding="8dp"
-        android:src="@android:drawable/ic_media_previous"
+        android:src="@drawable/ic_arrow_back_line"
         android:tint="@android:color/white"
         android:contentDescription="返回"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="16dp" />
+        android:layout_marginLeft="16dp"
+        android:layout_alignParentLeft="true" />
 
-    <!-- 封面图 -->
-    <ImageView
-        android:id="@+id/img_cover"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+    <!-- 封面图 + 收藏按钮 -->
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
-        android:src="@drawable/cover_playlist_stage"
-        android:scaleType="centerCrop"
-        android:background="@drawable/song_cover"
-        android:elevation="8dp" />
+        android:layout_marginTop="60dp">
+
+        <ImageView
+            android:id="@+id/img_cover"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:src="@drawable/cover_playlist_stage"
+            android:scaleType="centerCrop"
+            android:background="@drawable/song_cover"
+            android:elevation="8dp" />
+
+        <ImageButton
+            android:id="@+id/btn_favorite_song"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="12dp"
+            android:background="@drawable/bg_favorite_circle"
+            android:contentDescription="@string/user_action_favorites"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_heart_outline_white"
+            android:tint="@android:color/white" />
+    </FrameLayout>
 
     <!-- 歌曲标题 -->
     <TextView
@@ -57,7 +74,7 @@
         android:shadowDy="2"
         android:shadowRadius="3" />
 
-    <!-- 控制按钮区域 -->
+    <!-- 控制按钮区 -->
     <LinearLayout
         android:id="@+id/control_layout"
         android:layout_width="wrap_content"
@@ -74,8 +91,6 @@
             android:layout_height="60dp"
             android:src="@drawable/prev"
             android:background="@null"
-            android:layout_weight="1"
-            android:layout_gravity="center"
             android:tint="@android:color/white"
             android:layout_margin="12dp"
             android:contentDescription="上一首" />
@@ -86,8 +101,6 @@
             android:layout_height="70dp"
             android:src="@drawable/play"
             android:background="@null"
-            android:layout_weight="1"
-            android:layout_gravity="center"
             android:tint="@android:color/white"
             android:layout_margin="12dp"
             android:contentDescription="播放" />
@@ -98,8 +111,6 @@
             android:layout_height="60dp"
             android:src="@drawable/stop"
             android:background="@null"
-            android:layout_weight="1"
-            android:layout_gravity="center"
             android:tint="@android:color/white"
             android:layout_margin="12dp"
             android:contentDescription="停止" />
@@ -110,8 +121,6 @@
             android:layout_height="60dp"
             android:src="@drawable/next"
             android:background="@null"
-            android:layout_weight="1"
-            android:layout_gravity="center"
             android:tint="@android:color/white"
             android:layout_margin="12dp"
             android:contentDescription="下一首" />

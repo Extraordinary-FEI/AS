@@ -145,7 +145,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                 toggleFavorite();
             }
         });
-        updateFavoriteState();
+        updateFavoriteState(false);
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,19 +217,35 @@ public class ProductDetailActivity extends AppCompatActivity {
         }
         boolean current = favoriteRepository.isProductFavorite(product.getId());
         favoriteRepository.setProductFavorite(product.getId(), !current);
-        updateFavoriteState();
+        updateFavoriteState(true);
     }
 
-    private void updateFavoriteState() {
+    private void updateFavoriteState(boolean animate) {
         if (product == null || favoriteButton == null) {
             return;
         }
         boolean favored = favoriteRepository.isProductFavorite(product.getId());
-        favoriteButton.setImageResource(favored ? android.R.drawable.btn_star_big_on
-                : android.R.drawable.btn_star_big_off);
+        favoriteButton.setImageResource(favored ? R.drawable.ic_heart_filled_purple
+                : R.drawable.ic_heart_outline_gray);
         favoriteButton.setContentDescription(getString(
                 favored ? R.string.favorite_added : R.string.favorite_removed
         ));
+        if (animate) {
+            favoriteButton.animate().cancel();
+            favoriteButton.setScaleX(0.85f);
+            favoriteButton.setScaleY(0.85f);
+            favoriteButton.animate()
+                    .scaleX(1.1f)
+                    .scaleY(1.1f)
+                    .setDuration(150)
+                    .withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            favoriteButton.animate().scaleX(1f).scaleY(1f).setDuration(120).start();
+                        }
+                    })
+                    .start();
+        }
     }
 
     private String joinWithSeparator(Iterable<String> values) {

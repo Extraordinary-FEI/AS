@@ -27,14 +27,31 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-        <!-- 商品图片 -->
-        <ImageView
-            android:id="@+id/detailProductImage"
+        <!-- 商品图片 + 收藏按钮 -->
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:contentDescription="@string/app_name"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_launcher" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/detailProductImage"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:contentDescription="@string/app_name"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_launcher" />
+
+            <ImageButton
+                android:id="@+id/button_favorite"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="top|end"
+                android:layout_margin="12dp"
+                android:background="@drawable/bg_favorite_circle"
+                android:contentDescription="@string/favorite_removed"
+                android:padding="6dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_heart_outline_gray" />
+        </FrameLayout>
 
         <!-- 商品名称 -->
         <TextView
@@ -124,30 +141,13 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             tools:text="精美限量周边，粉丝必备收藏。" />
 
-        <!-- 收藏与查看评论 -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <!-- 查看评论 -->
+        <Button
+            android:id="@+id/button_open_comments"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/button_favorite"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/favorite_removed"
-                android:padding="8dp"
-                android:src="@android:drawable/btn_star_big_off" />
-
-            <Button
-                android:id="@+id/button_open_comments"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:text="@string/button_view_comments" />
-        </LinearLayout>
+            android:text="@string/button_view_comments" />
 
         <Button
             android:id="@+id/button_add_to_cart"

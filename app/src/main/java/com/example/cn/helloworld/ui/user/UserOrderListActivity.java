@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -32,10 +33,19 @@ public class UserOrderListActivity extends AppCompatActivity implements OrderAda
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_order_list);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_user_orders);
+        setSupportActionBar(toolbar);
         setTitle(R.string.user_action_orders);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_line);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_user_orders);
         emptyView = (TextView) findViewById(R.id.text_empty_user_orders);
@@ -45,11 +55,16 @@ public class UserOrderListActivity extends AppCompatActivity implements OrderAda
         recyclerView.setAdapter(adapter);
 
         repository = new AdminOrderRepository(this);
+        bindOrders();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        bindOrders();
+    }
+
+    private void bindOrders() {
         List<Order> orders = repository.getOrders();
         adapter.submit(orders);
         emptyView.setVisibility(orders == null || orders.isEmpty() ? View.VISIBLE : View.GONE);

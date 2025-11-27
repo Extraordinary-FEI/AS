@@ -72,7 +72,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         productDescriptionTextView.setText(getString(R.string.default_product_description, productName));
 
         loadFavoriteState();
-        updateFavoriteIcon();
+        updateFavoriteIcon(false);
 
         favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,19 +112,31 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private void toggleFavorite() {
         isFavorite = !isFavorite;
-        updateFavoriteIcon();
+        updateFavoriteIcon(true);
         saveFavoriteState();
         Toast.makeText(this,
                 isFavorite ? R.string.favorite_added : R.string.favorite_removed,
                 Toast.LENGTH_SHORT).show();
     }
 
-    private void updateFavoriteIcon() {
-        favoriteButton.setImageResource(isFavorite ? android.R.drawable.btn_star_big_on
-                : android.R.drawable.btn_star_big_off);
+    private void updateFavoriteIcon(boolean animate) {
+        favoriteButton.setImageResource(isFavorite ? R.drawable.ic_heart_filled_purple
+                : R.drawable.ic_heart_outline_gray);
         favoriteButton.setContentDescription(getString(isFavorite
                 ? R.string.favorite_added
                 : R.string.favorite_removed));
+        if (animate) {
+            favoriteButton.animate().cancel();
+            favoriteButton.setScaleX(0.85f);
+            favoriteButton.setScaleY(0.85f);
+            favoriteButton.animate().scaleX(1.1f).scaleY(1.1f).setDuration(150)
+                    .withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            favoriteButton.animate().scaleX(1f).scaleY(1f).setDuration(120).start();
+                        }
+                    }).start();
+        }
     }
 
     private void showExistingComments() {
