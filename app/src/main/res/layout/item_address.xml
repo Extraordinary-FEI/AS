@@ -37,36 +37,36 @@
             android:gravity="end"
             android:orientation="horizontal">
 
-            <TextView
+            <Button
                 android:id="@+id/button_edit_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_admin_action"
+                android:background="@android:drawable/btn_default"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp"
                 android:text="@string/action_edit"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"
+                android:textColor="@color/homeTextPrimary"
                 android:textSize="12sp" />
 
             <View
                 android:layout_width="8dp"
                 android:layout_height="1dp" />
 
-            <TextView
+            <Button
                 android:id="@+id/button_delete_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_admin_action"
+                android:background="@android:drawable/btn_default"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp"
                 android:text="@string/action_delete"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"
+                android:textColor="@color/homeTextPrimary"
                 android:textSize="12sp" />
         </LinearLayout>
 

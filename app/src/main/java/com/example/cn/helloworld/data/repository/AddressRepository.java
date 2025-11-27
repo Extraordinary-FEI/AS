@@ -27,12 +27,28 @@ public class AddressRepository {
         Context appContext = context.getApplicationContext();
         this.sharedPreferences = appContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 
-        SessionManager sessionManager = new SessionManager(appContext);
-        String roleSuffix = sessionManager.isAdmin() ? "admin" : "user";
-        String userIdentity = sessionManager.getUserId();
-        if (TextUtils.isEmpty(userIdentity)) {
-            userIdentity = sessionManager.getUsername();
+        // 安全初始化：防止 SessionManager 崩溃导致整个应用闪退
+        String roleSuffix = "user";
+        String userIdentity = "";
+
+        try {
+            SessionManager sessionManager = new SessionManager(appContext);
+            if (sessionManager.isAdmin()) {
+                roleSuffix = "admin";
+            } else {
+                roleSuffix = "user";
+            }
+            userIdentity = sessionManager.getUserId();
+            if (TextUtils.isEmpty(userIdentity)) {
+                userIdentity = sessionManager.getUsername();
+            }
+        } catch (Exception e) {
+            // 捕获任何异常，避免因 SessionManager 问题导致闪退
+            e.printStackTrace();
+            roleSuffix = "user";
+            userIdentity = "";
         }
+
         if (TextUtils.isEmpty(userIdentity)) {
             this.addressesKey = KEY_ADDRESSES_PREFIX + roleSuffix;
         } else {
@@ -42,7 +58,7 @@ public class AddressRepository {
 
     public List<Address> loadAddresses() {
         String raw = sharedPreferences.getString(addressesKey, null);
-        // 兼容旧版本数据：如果当前用户没有单独的地址数据，尝试读取公共的存储键
+        // 兼容旧版本数据
         if (raw == null) {
             raw = sharedPreferences.getString(KEY_ADDRESSES, null);
         }
@@ -63,6 +79,7 @@ public class AddressRepository {
             }
             return result;
         } catch (JSONException e) {
+            e.printStackTrace();
             return createDefault();
         }
     }
@@ -78,6 +95,7 @@ public class AddressRepository {
                 obj.put("detail", address.getDetail());
                 array.put(obj);
             } catch (JSONException ignored) {
+                // 忽略单个地址序列化失败
             }
         }
         sharedPreferences.edit().putString(addressesKey, array.toString()).apply();
@@ -89,4 +107,3 @@ public class AddressRepository {
         return demo;
     }
 }
-

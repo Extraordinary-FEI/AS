@@ -40,7 +40,12 @@ public class AddressManagementActivity extends AppCompatActivity {
         }
 
         repository = new AddressRepository(this);
-        addresses = repository.loadAddresses();
+        List<Address> loaded = repository.loadAddresses();
+        if (loaded != null) {
+            addresses = new ArrayList<Address>(loaded);
+        } else {
+            addresses = new ArrayList<Address>();
+        }
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_addresses);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -99,15 +104,21 @@ public class AddressManagementActivity extends AppCompatActivity {
                         String phone = phoneInput.getText().toString().trim();
                         String detail = detailInput.getText().toString().trim();
                         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(detail)) {
+                            // 输入不完整，不保存（也可弹出提示）
                             return;
                         }
 
+                        Address newAddress;
                         if (origin == null) {
-                            addresses.add(Address.create(name, phone, detail));
+                            newAddress = Address.create(name, phone, detail);
+                            addresses.add(newAddress);
                         } else {
+                            newAddress = origin.withContent(name, phone, detail);
                             int index = findIndex(origin.getId());
                             if (index >= 0) {
-                                addresses.set(index, origin.withContent(name, phone, detail));
+                                addresses.set(index, newAddress);
+                            } else {
+                                addresses.add(newAddress);
                             }
                         }
                         persist();
@@ -123,7 +134,10 @@ public class AddressManagementActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.action_delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        addresses.remove(address);
+                        int index = findIndex(address.getId());
+                        if (index >= 0) {
+                            addresses.remove(index);
+                        }
                         persist();
                     }
                 })
@@ -133,7 +147,8 @@ public class AddressManagementActivity extends AppCompatActivity {
 
     private int findIndex(String id) {
         for (int i = 0; i < addresses.size(); i++) {
-            if (addresses.get(i).getId().equals(id)) {
+            Address addr = addresses.get(i);
+            if (addr.getId() != null && addr.getId().equals(id)) {
                 return i;
             }
         }
@@ -148,7 +163,11 @@ public class AddressManagementActivity extends AppCompatActivity {
 
     private void updateEmptyState() {
         if (emptyView != null) {
-            emptyView.setVisibility(addresses.isEmpty() ? View.VISIBLE : View.GONE);
+            if (addresses.isEmpty()) {
+                emptyView.setVisibility(View.VISIBLE);
+            } else {
+                emptyView.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -156,7 +175,6 @@ public class AddressManagementActivity extends AppCompatActivity {
 
         interface Listener {
             void onEdit(Address address);
-
             void onDelete(Address address);
         }
 
@@ -187,7 +205,8 @@ public class AddressManagementActivity extends AppCompatActivity {
         }
 
         void update(List<Address> newAddresses) {
-            this.addresses = new ArrayList<Address>(newAddresses);
+            this.addresses.clear();
+            this.addresses.addAll(newAddresses);
             notifyDataSetChanged();
         }
     }
@@ -231,4 +250,3 @@ public class AddressManagementActivity extends AppCompatActivity {
         }
     }
 }
-
