@@ -2,6 +2,7 @@ package com.example.cn.helloworld.data.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,9 @@ public class Product implements Serializable {
     private String releaseTime;
     private Map<String, String> attributes;
 
+    // 是否展示在首页上方的切换位
+    private boolean featuredOnHome;
+
     // 供详情页使用的扩展字段
     private int imageResId;                       // 图片资源
     private String limitedQuantity = "";          // 限购/限量信息
@@ -34,6 +38,7 @@ public class Product implements Serializable {
                    List<String> strings, List<String> stringList, boolean active) {
         this.tags = new ArrayList<String>();
         this.starEvents = new ArrayList<String>();
+        this.featuredOnHome = false;
     }
 
     // 简化版构造器
@@ -46,10 +51,10 @@ public class Product implements Serializable {
             String category,
             int rating,
             List<String> tags,
-            List<String> starEvents
-    ) {
+            List<String> starEvents,
+            boolean b, String s, String s1, HashMap<String, String> attributes, boolean b1) {
         this(id, name, description, price, inventory, category, rating,
-                tags, starEvents, true, null, null, null, 0, "", null);
+                tags, starEvents, true, null, null, null, 0, "", null, false);
     }
 
     // 完整构造器（仓库里在用）
@@ -70,7 +75,7 @@ public class Product implements Serializable {
     ) {
         this(id, name, description, price, inventory, category, rating,
                 tags, starEvents, active, coverUrl, releaseTime, attributes,
-                0, "", null);
+                0, "", null, false);
     }
 
     // 最终大构造器
@@ -90,7 +95,8 @@ public class Product implements Serializable {
             Map<String, String> attributes,
             int imageResId,
             String limitedQuantity,
-            Map<String, String> categoryAttributes
+            Map<String, String> categoryAttributes,
+            boolean featuredOnHome
     ) {
         this.id = id;
         this.name = name;
@@ -111,6 +117,7 @@ public class Product implements Serializable {
         this.imageResId = imageResId;
         this.limitedQuantity = limitedQuantity != null ? limitedQuantity : "";
         this.categoryAttributes = categoryAttributes;
+        this.featuredOnHome = featuredOnHome;
     }
 
     // ---------- getter / setter ----------
@@ -169,4 +176,7 @@ public class Product implements Serializable {
     public void setCategoryAttributes(Map<String, String> categoryAttributes) {
         this.categoryAttributes = categoryAttributes;
     }
+
+    public boolean isFeaturedOnHome() { return featuredOnHome; }
+    public void setFeaturedOnHome(boolean featuredOnHome) { this.featuredOnHome = featuredOnHome; }
 }

@@ -18,4 +18,8 @@
     <dimen name="line_space">3dp</dimen>
     <dimen name="header_image_height">180dp</dimen>
 
+    <!-- 底部导航栏尺寸 -->
+    <dimen name="bottom_navigation_height">56dp</dimen>
+    <dimen name="bottom_navigation_content_padding">72dp</dimen>
+
 </resources>

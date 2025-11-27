@@ -9,14 +9,17 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,12 +43,26 @@ public class ProductManagementActivity extends AppCompatActivity {
     private ProductAdapter adapter;
     private FloatingActionButton fabAdd;
     private List<Category> categories = new ArrayList<>();
+    private final int[] imageOptions = new int[]{
+            R.drawable.cover_nishuo,
+            R.drawable.cover_baobei,
+            R.drawable.cover_friend,
+            R.drawable.cover_fenwuhai,
+            R.drawable.cover_lisao,
+            R.drawable.song_cover
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_product_management);
-        setTitle(R.string.title_admin_manage_products);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.title_admin_manage_products);
+        }
 
         sessionManager = new SessionManager(this);
         if (!sessionManager.isAdmin()) {
@@ -84,6 +101,12 @@ public class ProductManagementActivity extends AppCompatActivity {
         loadProducts();
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
+
     private void loadProducts() {
         adapter.submit(productRepository.getProductsForAdmin());
     }
@@ -95,7 +118,10 @@ public class ProductManagementActivity extends AppCompatActivity {
         final EditText inventoryInput = (EditText) dialogView.findViewById(R.id.editProductInventory);
         final EditText descriptionInput = (EditText) dialogView.findViewById(R.id.editProductDescription);
         final CheckBox activeCheckBox = (CheckBox) dialogView.findViewById(R.id.checkboxProductActive);
+        final CheckBox homeSwitchCheckBox = (CheckBox) dialogView.findViewById(R.id.checkboxProductHomeSwitch);
         final Spinner categorySpinner = (Spinner) dialogView.findViewById(R.id.spinnerProductCategory);
+        final Spinner imageSpinner = (Spinner) dialogView.findViewById(R.id.spinnerProductImage);
+        final ImageView imagePreview = (ImageView) dialogView.findViewById(R.id.imageProductPreview);
 
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item,
@@ -103,19 +129,45 @@ public class ProductManagementActivity extends AppCompatActivity {
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(spinnerAdapter);
 
+        ArrayAdapter<String> imageAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item,
+                getResources().getStringArray(R.array.product_image_names));
+        imageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        imageSpinner.setAdapter(imageAdapter);
+
         if (product != null) {
             nameInput.setText(product.getName());
             priceInput.setText(String.format(Locale.getDefault(), "%.2f", product.getPrice()));
             inventoryInput.setText(String.valueOf(product.getInventory()));
             descriptionInput.setText(product.getDescription());
             activeCheckBox.setChecked(product.isActive());
+            homeSwitchCheckBox.setChecked(product.isFeaturedOnHome());
             int index = findCategoryIndex(product.getCategoryId());
             if (index >= 0) {
                 categorySpinner.setSelection(index);
             }
+            int imageIndex = findImageIndex(product.getImageResId());
+            if (imageIndex >= 0) {
+                imageSpinner.setSelection(imageIndex);
+                imagePreview.setImageResource(product.getImageResId());
+            }
         } else {
             activeCheckBox.setChecked(true);
+            homeSwitchCheckBox.setChecked(true);
+            imagePreview.setImageResource(imageOptions[0]);
         }
+
+        imageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                imagePreview.setImageResource(imageOptions[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // no-op
+            }
+        });
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(product == null ? R.string.dialog_title_add_product : R.string.dialog_title_edit_product)
@@ -137,10 +189,12 @@ public class ProductManagementActivity extends AppCompatActivity {
                         String inventoryText = inventoryInput.getText() == null ? "" : inventoryInput.getText().toString().trim();
                         String description = descriptionInput.getText() == null ? "" : descriptionInput.getText().toString().trim();
                         boolean active = activeCheckBox.isChecked();
+                        boolean featuredOnHome = homeSwitchCheckBox.isChecked();
                         String categoryId = categories.isEmpty() ? null : categories.get(categorySpinner.getSelectedItemPosition()).getId();
                         String resolvedCategoryId = (categoryId == null && !categories.isEmpty())
                                 ? categories.get(0).getId()
                                 : categoryId;
+                        int imageResId = imageOptions[imageSpinner.getSelectedItemPosition()];
 
                         if (TextUtils.isEmpty(name)) {
                             nameInput.setError(getString(R.string.error_product_name_required));
@@ -162,17 +216,26 @@ public class ProductManagementActivity extends AppCompatActivity {
                         }
 
                         if (product == null) {
-                            String productId = productRepository.generateProductId(name.replace(" ", ""));
-                            Product newProduct = new Product(productId,
+                            String productId = productRepository.generateProductId(resolvedCategoryId);
+                            Product newProduct = new Product(
+                                    productId,
                                     name,
                                     description,
                                     price,
-                                    R.mipmap.ic_launcher,
-                                    resolvedCategoryId,
                                     inventory,
+                                    resolvedCategoryId,
+                                    5,
                                     Collections.<String>emptyList(),
                                     Collections.<String>emptyList(),
-                                    active);
+                                    active,
+                                    null,
+                                    null,
+                                    null,
+                                    imageResId,
+                                    "",
+                                    null,
+                                    featuredOnHome
+                            );
                             productRepository.saveProduct(newProduct);
                         } else {
                             productRepository.updateProductDetails(product.getId(),
@@ -181,7 +244,9 @@ public class ProductManagementActivity extends AppCompatActivity {
                                     price,
                                     inventory,
                                     active,
-                                    resolvedCategoryId);
+                                    resolvedCategoryId,
+                                    featuredOnHome,
+                                    imageResId);
                         }
                         dialogInterface.dismiss();
                         loadProducts();
@@ -214,6 +279,15 @@ public class ProductManagementActivity extends AppCompatActivity {
             }
         }
         return -1;
+    }
+
+    private int findImageIndex(int imageResId) {
+        for (int i = 0; i < imageOptions.length; i++) {
+            if (imageOptions[i] == imageResId) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     private static class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
@@ -281,7 +355,14 @@ public class ProductManagementActivity extends AppCompatActivity {
                 nameView.setText(product.getName());
                 descriptionView.setText(product.getDescription());
                 priceView.setText(String.format(Locale.getDefault(), "¥%.2f · %d", product.getPrice(), product.getInventory()));
-                statusView.setText(product.isActive() ? R.string.product_status_online : R.string.product_status_offline);
+                String onlineStatus = itemView.getContext().getString(
+                        product.isActive() ? R.string.product_status_online : R.string.product_status_offline);
+                String homeSwitchStatus = itemView.getContext().getString(
+                        product.isFeaturedOnHome() ? R.string.product_home_switch_on : R.string.product_home_switch_off);
+                statusView.setText(itemView.getContext().getString(
+                        R.string.product_status_with_home_switch,
+                        onlineStatus,
+                        homeSwitchStatus));
                 toggleButton.setText(product.isActive() ? R.string.product_action_offline : R.string.product_action_online);
 
                 editButton.setOnClickListener(new View.OnClickListener() {

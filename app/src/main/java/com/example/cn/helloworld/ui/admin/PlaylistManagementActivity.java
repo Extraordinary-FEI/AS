@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,7 @@ import android.widget.Toast;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.data.model.Song;
-import com.example.cn.helloworld.data.repository.PlaylistRepository;
+import com.example.cn.helloworld.data.playlist.PlaylistRepository;
 import com.example.cn.helloworld.data.session.SessionManager;
 
 import java.util.ArrayList;
@@ -36,7 +37,13 @@ public class PlaylistManagementActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_playlist_management);
-        setTitle(R.string.title_admin_manage_playlists);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.title_admin_manage_playlists);
+        }
 
         sessionManager = new SessionManager(this);
         if (!sessionManager.isAdmin()) {
@@ -45,7 +52,8 @@ public class PlaylistManagementActivity extends AppCompatActivity {
             return;
         }
 
-        playlistRepository = new PlaylistRepository(this);
+        // ❗ 正确写法：单例
+        playlistRepository = PlaylistRepository.getInstance(this);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerPlaylists);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -70,47 +78,41 @@ public class PlaylistManagementActivity extends AppCompatActivity {
         loadPlaylists();
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
+
     private void loadPlaylists() {
-        adapter.submit(playlistRepository.getAll());
+        // ❗ 修正这里
+        adapter.submit(playlistRepository.getAllPlaylists());
     }
 
     private void createNewPlaylist() {
         String id = String.valueOf(System.currentTimeMillis());
         String title = "新建歌单";
         String description = "完善介绍，让粉丝更了解这份歌单";
-        String playUrl = "";
-        String coverUrl = "";
-        Integer coverResId = null;
-
-        List<String> tags = new ArrayList<>();
-        List<Song> songs = new ArrayList<>();
-
-        long playCount = 0;
-        long favoriteCount = 0;
 
         Playlist playlist = new Playlist(
                 id,
                 title,
                 description,
-                playUrl,
-                coverUrl,
-                coverResId,
-                tags,
-                songs,
-                playCount,
-                favoriteCount
+                "",
+                "",
+                null,
+                new ArrayList<String>(),
+                new ArrayList<Song>(),
+                0,
+                0
         );
 
-        // ⭐ 正确行为：保存到 Repository
-        playlistRepository.savePlaylist(playlist);
+        // ❗ 正确保存
+        playlistRepository.addPlaylist(playlist);
 
-        // ⭐ 刷新列表
         loadPlaylists();
-
         Toast.makeText(this, "已创建新歌单", Toast.LENGTH_SHORT).show();
     }
-
-
 
     private void openPlaylistEditor(String playlistId) {
         Intent intent = new Intent(this, PlaylistEditorActivity.class);
@@ -125,6 +127,8 @@ public class PlaylistManagementActivity extends AppCompatActivity {
             loadPlaylists();
         }
     }
+
+    // ============================= 适配器 =============================
 
     private static class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHolder> {
 
@@ -145,9 +149,7 @@ public class PlaylistManagementActivity extends AppCompatActivity {
 
         void submit(List<Playlist> list) {
             playlists.clear();
-            if (list != null) {
-                playlists.addAll(list);
-            }
+            if (list != null) playlists.addAll(list);
             notifyDataSetChanged();
         }
 
@@ -164,14 +166,15 @@ public class PlaylistManagementActivity extends AppCompatActivity {
             final Playlist playlist = playlists.get(position);
             holder.titleView.setText(playlist.getTitle());
             holder.descriptionView.setText(playlist.getDescription());
-            holder.countView.setText(holder.itemView.getContext().getString(
-                    R.string.playlist_track_count_format, playlist.getSongs().size()));
+
+            holder.countView.setText(
+                    String.format("共 %d 首", playlist.getSongs().size())
+            );
+
             holder.manageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onManageSongs(playlist);
-                    }
+                    if (listener != null) listener.onManageSongs(playlist);
                 }
             });
         }

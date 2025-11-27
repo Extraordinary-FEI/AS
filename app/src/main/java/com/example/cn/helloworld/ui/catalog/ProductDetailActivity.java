@@ -5,21 +5,49 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.ImageButton;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.cn.helloworld.R;
+import com.example.cn.helloworld.data.model.CartItem;
 import com.example.cn.helloworld.data.model.Product;
+import com.example.cn.helloworld.data.model.ProductReview;
+import com.example.cn.helloworld.data.repository.FavoriteRepository;
+import com.example.cn.helloworld.data.repository.DatabaseReviewRepository;
 import com.example.cn.helloworld.data.repository.ProductRepository;
+import com.example.cn.helloworld.data.repository.ReviewSubmitCallback;
+import com.example.cn.helloworld.data.storage.CartStorage;
+import com.example.cn.helloworld.data.session.SessionManager;
+import com.example.cn.helloworld.ui.product.ReviewWallActivity;
 
+import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 
 public class ProductDetailActivity extends AppCompatActivity {
 
     private static final String EXTRA_PRODUCT_ID = "extra_product_id";
+
+    private Product product;
+    private DatabaseReviewRepository reviewRepository;
+    private CartStorage cartStorage;
+    private EditText commentEditText;
+    private RatingBar ratingBar;
+    private Button submitButton;
+    private Button commentEntryButton;
+    private Button addToCartButton;
+    private ImageButton favoriteButton;
+    private SessionManager sessionManager;
+    private FavoriteRepository favoriteRepository;
 
     public static void start(Context context, String productId) {
         Intent intent = new Intent(context, ProductDetailActivity.class);
@@ -32,14 +60,26 @@ public class ProductDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_product_detail);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.title_product_detail);
+        }
+
         String productId = getIntent().getStringExtra(EXTRA_PRODUCT_ID);
         ProductRepository repository = new ProductRepository(this);
-        Product product = repository.getProductById(productId);
+        product = repository.getProductById(productId);
 
         if (product == null) {
             finish();
             return;
         }
+
+        reviewRepository = new DatabaseReviewRepository(this);
+        cartStorage = CartStorage.getInstance(this);
+        sessionManager = new SessionManager(this);
+        favoriteRepository = new FavoriteRepository(this);
 
         ImageView imageView = (ImageView) findViewById(R.id.detailProductImage);
         TextView nameView = (TextView) findViewById(R.id.detailProductName);
@@ -50,9 +90,19 @@ public class ProductDetailActivity extends AppCompatActivity {
         TextView releaseView = (TextView) findViewById(R.id.detailProductReleaseTime);
         TextView limitView = (TextView) findViewById(R.id.detailProductLimited);
         TextView descriptionView = (TextView) findViewById(R.id.detailProductDescription);
+        commentEditText = (EditText) findViewById(R.id.edit_comment_content);
+        ratingBar = (RatingBar) findViewById(R.id.rating_bar);
+        submitButton = (Button) findViewById(R.id.button_submit_comment);
+        commentEntryButton = (Button) findViewById(R.id.button_open_comments);
+        addToCartButton = (Button) findViewById(R.id.button_add_to_cart);
+        favoriteButton = (ImageButton) findViewById(R.id.button_favorite);
         TextView attributesView = (TextView) findViewById(R.id.detailProductAttributes);
 
-        imageView.setImageResource(product.getImageResId());
+        if (product.getImageResId() > 0) {
+            imageView.setImageResource(product.getImageResId());
+        } else {
+            imageView.setImageResource(R.drawable.song_cover);
+        }
         nameView.setText(product.getName());
         priceView.setText(String.format(Locale.getDefault(), "¥%.2f", product.getPrice()));
         inventoryView.setText(getString(R.string.product_inventory_format, product.getInventory()));
@@ -70,13 +120,132 @@ public class ProductDetailActivity extends AppCompatActivity {
         } else {
             limitView.setVisibility(View.GONE);
         }
-        if (product.getCategoryAttributes().isEmpty()) {
+        Map<String, String> categoryAttributes = product.getCategoryAttributes();
+        if (categoryAttributes == null) {
+            categoryAttributes = Collections.emptyMap();
+        }
+        if (categoryAttributes.isEmpty()) {
             attributesView.setVisibility(View.GONE);
         } else {
-            attributesView.setText(getString(R.string.product_attributes_format, formatAttributes((Map<String, String>) product.getCategoryAttributes())));
+            attributesView.setText(getString(R.string.product_attributes_format, formatAttributes(categoryAttributes)));
             attributesView.setVisibility(View.VISIBLE);
         }
         descriptionView.setText(product.getDescription());
+
+        commentEntryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(ReviewWallActivity.createIntent(ProductDetailActivity.this, product.getId(), product.getName()));
+            }
+        });
+
+        favoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleFavorite();
+            }
+        });
+        updateFavoriteState(false);
+
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitReview();
+            }
+        });
+
+        if (sessionManager.isAdmin()) {
+            addToCartButton.setVisibility(View.GONE);
+            Toast.makeText(this, R.string.admin_add_to_cart_hidden, Toast.LENGTH_SHORT).show();
+        } else {
+            addToCartButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addProductToCart();
+                }
+            });
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void submitReview() {
+        String content = commentEditText.getText().toString();
+        if (TextUtils.isEmpty(content)) {
+            commentEditText.setError(getString(R.string.error_empty_review));
+            return;
+        }
+        float rating = ratingBar.getRating();
+        ProductReview review = new ProductReview(product.getId(), "千纸鹤小分队", content, rating);
+        reviewRepository.submitReview(review, new ReviewSubmitCallback() {
+            @Override
+            public void onSuccess(ProductReview review) {
+                Toast.makeText(ProductDetailActivity.this, R.string.review_submitted,
+                        Toast.LENGTH_SHORT).show();
+                commentEditText.setText("");
+                ratingBar.setRating(0f);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                Toast.makeText(ProductDetailActivity.this, R.string.review_submit_error,
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void addProductToCart() {
+        if (product == null) {
+            return;
+        }
+        CartItem item = new CartItem(product.getId(), product.getName(), product.getPrice(), 1,
+                product.getCoverUrl(), true);
+        cartStorage.addOrIncrease(item);
+        Toast.makeText(this, R.string.cart_added_success, Toast.LENGTH_SHORT).show();
+    }
+
+    private void toggleFavorite() {
+        if (product == null) {
+            return;
+        }
+        boolean current = favoriteRepository.isProductFavorite(product.getId());
+        favoriteRepository.setProductFavorite(product.getId(), !current);
+        updateFavoriteState(true);
+    }
+
+    private void updateFavoriteState(boolean animate) {
+        if (product == null || favoriteButton == null) {
+            return;
+        }
+        boolean favored = favoriteRepository.isProductFavorite(product.getId());
+        favoriteButton.setImageResource(favored ? R.drawable.ic_heart_filled_purple
+                : R.drawable.ic_heart_outline_gray);
+        favoriteButton.setContentDescription(getString(
+                favored ? R.string.favorite_added : R.string.favorite_removed
+        ));
+        if (animate) {
+            favoriteButton.animate().cancel();
+            favoriteButton.setScaleX(0.85f);
+            favoriteButton.setScaleY(0.85f);
+            favoriteButton.animate()
+                    .scaleX(1.1f)
+                    .scaleY(1.1f)
+                    .setDuration(150)
+                    .withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            favoriteButton.animate().scaleX(1f).scaleY(1f).setDuration(120).start();
+                        }
+                    })
+                    .start();
+        }
     }
 
     private String joinWithSeparator(Iterable<String> values) {

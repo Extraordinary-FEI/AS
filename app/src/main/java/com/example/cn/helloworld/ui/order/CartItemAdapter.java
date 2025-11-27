@@ -21,10 +21,13 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartVi
         void onQuantityChanged();
 
         void onSelectionChanged();
+
+        void onItemsChanged();
     }
 
     private List<CartItem> items;
     private OnCartChangedListener listener;
+    private boolean manageMode = false;
 
     public CartItemAdapter(List<CartItem> items, OnCartChangedListener listener) {
         this.items = items;
@@ -48,6 +51,23 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartVi
         return items == null ? 0 : items.size();
     }
 
+    public void setManageMode(boolean manageMode) {
+        this.manageMode = manageMode;
+        notifyDataSetChanged();
+    }
+
+    private void deleteItem(int position) {
+        if (items == null || position < 0 || position >= items.size()) {
+            return;
+        }
+        items.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, getItemCount() - position);
+        if (listener != null) {
+            listener.onItemsChanged();
+        }
+    }
+
     class CartViewHolder extends RecyclerView.ViewHolder {
 
         private TextView nameTextView;
@@ -55,6 +75,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartVi
         private TextView quantityTextView;
         private ImageButton minusButton;
         private ImageButton plusButton;
+        private ImageButton deleteButton;
         private CheckBox selectCheckBox;
         private DecimalFormat priceFormat = new DecimalFormat("0.00");
 
@@ -65,6 +86,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartVi
             quantityTextView = (TextView) itemView.findViewById(R.id.text_quantity);
             minusButton = (ImageButton) itemView.findViewById(R.id.button_minus);
             plusButton = (ImageButton) itemView.findViewById(R.id.button_plus);
+            deleteButton = (ImageButton) itemView.findViewById(R.id.button_delete);
             selectCheckBox = (CheckBox) itemView.findViewById(R.id.checkbox_select);
         }
 
@@ -74,6 +96,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartVi
                     priceFormat.format(item.getUnitPrice())));
             quantityTextView.setText(String.valueOf(item.getQuantity()));
             selectCheckBox.setChecked(item.isSelected());
+            deleteButton.setVisibility(manageMode ? View.VISIBLE : View.GONE);
 
             minusButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -104,6 +127,13 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartVi
                     if (listener != null) {
                         listener.onSelectionChanged();
                     }
+                }
+            });
+
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteItem(getAdapterPosition());
                 }
             });
         }

@@ -15,4 +15,21 @@
         <item>控评组</item>
         <item>摄影组</item>
     </string-array>
+
+    <string-array name="admin_order_statuses">
+        <item>@string/order_status_created</item>
+        <item>@string/order_status_paid</item>
+        <item>@string/order_status_shipped</item>
+        <item>@string/order_status_fulfilled</item>
+        <item>@string/order_status_cancelled</item>
+    </string-array>
+
+    <string-array name="product_image_names">
+        <item>《你说》舞台</item>
+        <item>《宝贝》封面</item>
+        <item>《朋友，请听好》</item>
+        <item>《粉雾海》</item>
+        <item>《离骚》</item>
+        <item>通用主图</item>
+    </string-array>
 </resources>

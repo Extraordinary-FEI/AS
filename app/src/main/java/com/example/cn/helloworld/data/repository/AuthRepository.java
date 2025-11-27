@@ -1,7 +1,12 @@
 package com.example.cn.helloworld.data.repository;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.example.cn.helloworld.DBHelper;
 import com.example.cn.helloworld.data.model.LoginResult;
 import com.example.cn.helloworld.data.model.Permission;
 import com.example.cn.helloworld.data.model.UserRole;
@@ -10,10 +15,6 @@ import java.util.EnumSet;
 import java.util.Locale;
 import java.util.UUID;
 
-/**
- * AuthRepository
- * 用于处理管理员与普通用户登录验证。
- */
 public class AuthRepository {
 
     public static final String ROLE_ADMIN = UserRole.ADMIN.name();
@@ -21,43 +22,56 @@ public class AuthRepository {
 
     private static final String ADMIN_USERNAME = "admin";
     private static final String ADMIN_PASSWORD = "admin123";
-    private static final String ADMIN_VERIFICATION_CODE = "YYQX2020";
+    private static final String ADMIN_CODE = "YYQX2020";
 
-    private static final String USER_USERNAME = "user";
-    private static final String USER_PASSWORD = "user123";
+    private static final String TAG = "AuthRepository";
 
-    /**
-     * 兼容旧调用：根据入口判断角色。
-     */
-    public LoginResult login(String username, String password, boolean useAdminEntrance) {
-        String role = useAdminEntrance ? ROLE_ADMIN : ROLE_USER;
-        return login(username, password, role, "");
+    private DBHelper helper;
+    private Context context;
+
+    public AuthRepository(Context context) {
+        this.context = context.getApplicationContext();
+        helper = new DBHelper(this.context);
     }
 
-    /**
-     * 登录逻辑：管理员入口与普通粉丝入口分开。
-     */
-    public LoginResult login(String username,
-                             String password,
-                             String requestedRole,
-                             String verificationCode) {
+    public LoginResult login(String username, String password, boolean adminEntry) {
+        return login(username, password,
+                adminEntry ? ROLE_ADMIN : ROLE_USER,
+                "");
+    }
+
+    public LoginResult login(String username, String password, String role, String code) {
+
         if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
-            return new LoginResult(false, null, null, null, null, "用户名和密码不能为空");
+            return new LoginResult(false, null, username, null, null, null,
+                    "用户名或密码不能为空");
         }
 
-        String role = TextUtils.isEmpty(requestedRole) ? "" : requestedRole.toUpperCase(Locale.US);
+        role = role == null ? ROLE_USER : role.toUpperCase(Locale.US);
 
+        // -------------------------
+        // 管理员登录
+        // -------------------------
         if (ROLE_ADMIN.equals(role)) {
-            if (TextUtils.isEmpty(verificationCode)) {
-                return new LoginResult(false, username, null, null, null, "请输入管理员验证码");
+
+            if (TextUtils.isEmpty(code)) {
+                return new LoginResult(false, null, username, null, null, null,
+                        "请输入管理员验证码");
             }
-            if (!isValidAdminVerification(verificationCode)) {
-                return new LoginResult(false, username, null, null, null, "管理员验证码错误");
+
+            if (!ADMIN_CODE.equalsIgnoreCase(code)) {
+                return new LoginResult(false, null, username, null, null, null,
+                        "管理员验证码错误");
             }
-            if (isAdminAccount(username, password)) {
-                String token = generateToken(username);
+
+            if (ADMIN_USERNAME.equalsIgnoreCase(username)
+                    && ADMIN_PASSWORD.equals(password)) {
+
+                String token = token(username);
+
                 return new LoginResult(
                         true,
+                        username,
                         username,
                         token,
                         UserRole.ADMIN,
@@ -65,49 +79,91 @@ public class AuthRepository {
                                 Permission.MANAGE_PRODUCTS,
                                 Permission.MANAGE_PLAYLISTS,
                                 Permission.APPROVE_SUPPORT_TASKS,
-                                Permission.VIEW_ANALYTICS
-                        ),
-                        "管理员登录成功"
-                );
+                                Permission.VIEW_ANALYTICS),
+                        "管理员登录成功");
             }
-            return new LoginResult(false, username, null, null, null, "管理员账号或密码错误");
+
+            return new LoginResult(false, null, username, null, null, null,
+                    "管理员账号或密码错误");
         }
 
-        if (ROLE_USER.equals(role)) {
-            if (isUserAccount(username, password)) {
-                String token = generateToken(username);
-                return new LoginResult(
-                        true,
-                        username,
-                        token,
-                        UserRole.USER,
-                        EnumSet.of(Permission.VIEW_ANALYTICS),
-                        "用户登录成功"
-                );
-            }
-            return new LoginResult(false, username, null, null, null, "用户名或密码错误");
+        // -------------------------
+        // 普通用户 SQLite 查询
+        // -------------------------
+
+        UserRecord record = queryUser(username, password);
+        if (record != null) {
+
+            String token = token(record.name);
+
+            return new LoginResult(
+                    true,
+                    record.id,
+                    record.name,
+                    token,
+                    UserRole.USER,
+                    EnumSet.of(Permission.VIEW_ANALYTICS),
+                    "用户登录成功"
+            );
         }
 
-        return new LoginResult(false, username, null, null, null, "不支持的账号角色");
+        return new LoginResult(false, null, username, null, null, null,
+                "用户名或密码错误");
     }
 
-    /** 判断管理员账号 */
-    private boolean isAdminAccount(String username, String password) {
-        return ADMIN_USERNAME.equalsIgnoreCase(username) && ADMIN_PASSWORD.equals(password);
+    private UserRecord queryUser(String username, String pwd) {
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+
+        try {
+            db = helper.getReadableDatabase();
+
+            cursor = db.query(
+                    DBHelper.T_USER,
+                    new String[]{
+                            DBHelper.C_ID,
+                            DBHelper.C_NAME,
+                            DBHelper.C_ROLE
+                    },
+                    DBHelper.C_NAME + "=? AND " + DBHelper.C_PWD + "=?",
+                    new String[]{username, pwd},
+                    null, null, null, "1"
+            );
+
+            if (cursor != null && cursor.moveToFirst()) {
+                String role = cursor.getString(cursor.getColumnIndex(DBHelper.C_ROLE));
+
+                if (ROLE_USER.equalsIgnoreCase(role)) {
+                    return new UserRecord(
+                            String.valueOf(cursor.getLong(cursor.getColumnIndex(DBHelper.C_ID))),
+                            cursor.getString(cursor.getColumnIndex(DBHelper.C_NAME))
+                    );
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "queryUser error:", e);
+        } finally {
+            if (cursor != null)
+                cursor.close();
+            if (db != null)
+                db.close();
+        }
+
+        return null;
     }
 
-    /** 判断普通用户账号 */
-    private boolean isUserAccount(String username, String password) {
-        return USER_USERNAME.equalsIgnoreCase(username) && USER_PASSWORD.equals(password);
+    private String token(String name) {
+        return name + "-" + UUID.randomUUID().toString();
     }
 
-    /** 管理员验证码 */
-    private boolean isValidAdminVerification(String code) {
-        return ADMIN_VERIFICATION_CODE.equalsIgnoreCase(code);
-    }
+    private static class UserRecord {
+        String id;
+        String name;
 
-    /** 生成唯一 token */
-    private String generateToken(String username) {
-        return String.format(Locale.US, "%s-%s", username, UUID.randomUUID().toString());
+        UserRecord(String id, String name) {
+            this.id = id;
+            this.name = name;
+        }
     }
 }

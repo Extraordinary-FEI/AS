@@ -11,23 +11,18 @@ import java.util.Set;
 public class AdminMetricsRepository {
 
     private final SupportTaskRepository supportTaskRepository;
-    private final List<Order> orders = new ArrayList<>();
+    private final AdminOrderRepository orderRepository;
     private final Set<String> registrationUserIds = new HashSet<>();
     private final Set<String> activeUserIds = new HashSet<>();
 
-    public AdminMetricsRepository(SupportTaskRepository supportTaskRepository) {
+    public AdminMetricsRepository(SupportTaskRepository supportTaskRepository,
+                                  AdminOrderRepository orderRepository) {
         this.supportTaskRepository = supportTaskRepository;
+        this.orderRepository = orderRepository;
         seed();
     }
 
     private void seed() {
-        // 模拟最近一天内的订单
-        for (int i = 0; i < 18; i++) {
-            Order order = new Order("order-" + (1000 + i));
-            order.setStatus(i % 3 == 0 ? "PAID" : "CREATED");
-            orders.add(order);
-        }
-
         // 模拟报名/注册数据
         registrationUserIds.add("user_amy");
         registrationUserIds.add("user_bob");
@@ -45,17 +40,15 @@ public class AdminMetricsRepository {
     }
 
     public AdminMetrics loadMetrics() {
-        int orderCount = orders.size();
+        int orderCount = orderRepository.count();
         int pendingTasks = supportTaskRepository.countTasksByStatus(SupportTaskRepository.STATUS_PENDING);
         int newRegistrations = registrationUserIds.size();
         int activeUsers = activeUserIds.size();
         return new AdminMetrics(orderCount, pendingTasks, newRegistrations, activeUsers);
     }
 
-    public void addOrder(Order order) {
-        if (order != null) {
-            orders.add(order);
-        }
+    public List<Order> getOrders() {
+        return orderRepository.getOrders();
     }
 
     public void registerUser(String userId) {

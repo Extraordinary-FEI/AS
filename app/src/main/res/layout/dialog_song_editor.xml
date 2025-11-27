@@ -9,10 +9,17 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/song_info_basic"
+            android:textStyle="bold" />
+
         <EditText
             android:id="@+id/editSongTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
             android:hint="@string/hint_song_title" />
 
         <EditText
@@ -30,6 +37,42 @@
             android:hint="@string/hint_song_duration"
             android:inputType="number" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/divider" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/song_info_audio_source"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonPickLocalAudio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/song_action_pick_local" />
+
+            <TextView
+                android:id="@+id/textSongLocalFile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:text="@string/song_hint_no_file"
+                android:textColor="@color/textSecondary" />
+        </LinearLayout>
+
         <EditText
             android:id="@+id/editSongStreamUrl"
             android:layout_width="match_parent"
@@ -37,6 +80,14 @@
             android:layout_marginTop="8dp"
             android:hint="@string/hint_song_stream"
             android:inputType="textUri" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/song_hint_stream_or_local"
+            android:textColor="@color/textSecondary"
+            android:textSize="12sp" />
 
     </LinearLayout>
 
