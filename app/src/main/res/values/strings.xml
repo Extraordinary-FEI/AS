@@ -81,6 +81,10 @@
     <string name="cart_price_template">单价：¥%1$s</string>
     <string name="cart_reduce_quantity">减少数量</string>
     <string name="cart_increase_quantity">增加数量</string>
+    <string name="cart_action_delete">删除商品</string>
+    <string name="cart_manage">管理商品</string>
+    <string name="cart_manage_done">完成</string>
+    <string name="cart_item_deleted">已删除该商品</string>
     <string name="title_order_detail">订单详情</string>
     <string name="order_id_template">订单号：%1$s</string>
     <string name="order_status_template">订单状态：%1$s</string>

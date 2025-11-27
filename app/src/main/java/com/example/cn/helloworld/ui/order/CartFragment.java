@@ -29,10 +29,12 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartChan
 
     private TextView totalTextView;
     private Button checkoutButton;
+    private Button manageButton;
     private CartItemAdapter adapter;
     private List<CartItem> cartItems = new ArrayList<CartItem>();
     private CartStorage cartStorage;
     private SessionManager sessionManager;
+    private boolean manageMode = false;
 
     @Nullable
     @Override
@@ -42,6 +44,7 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartChan
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_cart);
         totalTextView = (TextView) view.findViewById(R.id.text_total_price);
         checkoutButton = (Button) view.findViewById(R.id.button_checkout);
+        manageButton = (Button) view.findViewById(R.id.button_manage_cart);
 
         sessionManager = new SessionManager(view.getContext());
         Context context = view.getContext();
@@ -54,6 +57,7 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartChan
         if (sessionManager.isAdmin()) {
             recyclerView.setVisibility(View.GONE);
             checkoutButton.setVisibility(View.GONE);
+            manageButton.setVisibility(View.GONE);
             totalTextView.setText(R.string.admin_cart_hidden);
             return view;
         }
@@ -62,6 +66,13 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartChan
             @Override
             public void onClick(View v) {
                 startCheckout();
+            }
+        });
+
+        manageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleManageMode();
             }
         });
 
@@ -141,5 +152,24 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartChan
     @Override
     public void onSelectionChanged() {
         updateTotal();
+    }
+
+    @Override
+    public void onItemsChanged() {
+        updateTotal();
+        if (manageMode) {
+            Context context = getContext();
+            if (context != null) {
+                Toast.makeText(context, R.string.cart_item_deleted, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void toggleManageMode() {
+        manageMode = !manageMode;
+        if (adapter != null) {
+            adapter.setManageMode(manageMode);
+        }
+        manageButton.setText(manageMode ? R.string.cart_manage_done : R.string.cart_manage);
     }
 }

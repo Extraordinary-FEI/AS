@@ -74,6 +74,15 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/cart_increase_quantity"
                 android:src="@android:drawable/ic_media_next" />
+
+            <ImageButton
+                android:id="@+id/button_delete"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginLeft="12dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/cart_action_delete"
+                android:src="@android:drawable/ic_menu_delete" />
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>
