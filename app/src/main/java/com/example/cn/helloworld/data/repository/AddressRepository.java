@@ -3,6 +3,7 @@ package com.example.cn.helloworld.data.repository;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.cn.helloworld.data.model.Address;
 import com.example.cn.helloworld.data.session.SessionManager;
@@ -19,6 +20,7 @@ public class AddressRepository {
     private static final String PREF_NAME = "user_addresses";
     private static final String KEY_ADDRESSES = "addresses";
     private static final String KEY_ADDRESSES_PREFIX = "addresses_";
+    private static final String TAG = "AddressRepository";
 
     private final SharedPreferences sharedPreferences;
     private final String addressesKey;
@@ -57,10 +59,10 @@ public class AddressRepository {
     }
 
     public List<Address> loadAddresses() {
-        String raw = sharedPreferences.getString(addressesKey, null);
+        String raw = safeGetString(addressesKey);
         // 兼容旧版本数据
         if (raw == null) {
-            raw = sharedPreferences.getString(KEY_ADDRESSES, null);
+            raw = safeGetString(KEY_ADDRESSES);
         }
         if (raw == null) {
             return createDefault();
@@ -80,6 +82,11 @@ public class AddressRepository {
             return result;
         } catch (JSONException e) {
             e.printStackTrace();
+            return createDefault();
+        } catch (Exception e) {
+            // 防御性兜底：SharedPreferences 中存在异常数据类型时直接重置
+            Log.e(TAG, "Failed to parse addresses, falling back to defaults", e);
+            clearCorruptedData();
             return createDefault();
         }
     }
@@ -105,5 +112,22 @@ public class AddressRepository {
         List<Address> demo = new ArrayList<Address>();
         demo.add(new Address("demo-1", "默认联系人", "13800001234", "北京市朝阳区应援大道 1 号"));
         return demo;
+    }
+
+    /**
+     * 避免旧版本以 Set 形式存储时强转失败导致崩溃。
+     */
+    private String safeGetString(String key) {
+        try {
+            return sharedPreferences.getString(key, null);
+        } catch (ClassCastException e) {
+            Log.w(TAG, "Corrupted address cache, clearing and resetting", e);
+            clearCorruptedData();
+            return null;
+        }
+    }
+
+    private void clearCorruptedData() {
+        sharedPreferences.edit().remove(addressesKey).remove(KEY_ADDRESSES).apply();
     }
 }
