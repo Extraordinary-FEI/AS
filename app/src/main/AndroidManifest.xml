@@ -124,6 +124,15 @@
                 android:value="com.example.cn.helloworld.ui.main.MainActivity" />
         </activity>
 
+        <activity
+            android:name="com.example.cn.helloworld.ui.user.AddressManagementActivity"
+            android:label="@string/title_address_management"
+            android:parentActivityName="com.example.cn.helloworld.ui.user.UserProfileActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.cn.helloworld.ui.user.UserProfileActivity" />
+        </activity>
+
         <!-- 应援商城（商品详情） -->
         <activity
             android:name="com.example.cn.helloworld.ui.catalog.ProductDetailActivity"

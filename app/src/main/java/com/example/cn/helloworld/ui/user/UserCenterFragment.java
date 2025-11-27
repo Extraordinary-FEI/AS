@@ -43,6 +43,7 @@ import com.example.cn.helloworld.ui.main.HomeModels;
 import com.example.cn.helloworld.ui.main.PlaylistAdapter;
 import com.example.cn.helloworld.ui.playlist.PlaylistDetailActivity;
 import com.example.cn.helloworld.ui.playlist.PlaylistOverviewActivity;
+import com.example.cn.helloworld.ui.user.AddressManagementActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,7 @@ public class UserCenterFragment extends Fragment {
     private HomeDataSource homeDataSource;
     private RecyclerView playlistList;
     private View viewAllPlaylistsButton;
+    private View playlistCard;
     private RecyclerView quickActionList;
     private View manageQuickActionsButton;
     private View adminCard;
@@ -68,6 +70,7 @@ public class UserCenterFragment extends Fragment {
     private View btnAdminSupportTasks;
     private View btnAdminTaskApproval;
     private View btnAdminOrders;
+    private View btnAdminAddresses;
     private AdminMetricsRepository adminMetricsRepository;
     private SupportTaskRepository supportTaskRepository;
     private AdminOrderRepository adminOrderRepository;
@@ -99,6 +102,7 @@ public class UserCenterFragment extends Fragment {
         TextView logout = (TextView) root.findViewById(R.id.btnLogout);
         playlistList = (RecyclerView) root.findViewById(R.id.playlistList);
         viewAllPlaylistsButton = root.findViewById(R.id.button_view_all_playlists);
+        playlistCard = root.findViewById(R.id.card_playlist_section);
         quickActionList = (RecyclerView) root.findViewById(R.id.recyclerQuickActions);
         manageQuickActionsButton = root.findViewById(R.id.button_manage_quick_actions);
         adminCard = root.findViewById(R.id.card_admin_center);
@@ -110,6 +114,7 @@ public class UserCenterFragment extends Fragment {
         btnAdminSupportTasks = root.findViewById(R.id.buttonAdminSupportTasks);
         btnAdminTaskApproval = root.findViewById(R.id.buttonAdminTaskApproval);
         btnAdminOrders = root.findViewById(R.id.buttonAdminOrders);
+        btnAdminAddresses = root.findViewById(R.id.buttonAdminAddresses);
 
         avatar.setImageResource(R.drawable.ic_user_default);
         username.setText(sessionManager.getUsername());
@@ -344,12 +349,18 @@ public class UserCenterFragment extends Fragment {
             if (checkinCard != null) {
                 checkinCard.setVisibility(View.VISIBLE);
             }
+            if (playlistCard != null) {
+                playlistCard.setVisibility(View.VISIBLE);
+            }
             return;
         }
 
         adminCard.setVisibility(View.VISIBLE);
         if (checkinCard != null) {
             checkinCard.setVisibility(View.GONE);
+        }
+        if (playlistCard != null) {
+            playlistCard.setVisibility(View.GONE);
         }
 
         AdminMetrics metrics = adminMetricsRepository.loadMetrics();
@@ -418,6 +429,15 @@ public class UserCenterFragment extends Fragment {
                 public void onClick(View v) {
                     ArrayList<Order> orders = new ArrayList<Order>(adminMetricsRepository.getOrders());
                     startActivity(AdminOrderListActivity.createIntent(getContext(), orders));
+                }
+            });
+        }
+
+        if (btnAdminAddresses != null) {
+            btnAdminAddresses.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getContext(), AddressManagementActivity.class));
                 }
             });
         }

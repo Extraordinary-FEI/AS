@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.example.cn.helloworld.R;
+import com.example.cn.helloworld.ui.user.AddressManagementActivity;
 import com.example.cn.helloworld.ui.admin.SupportTaskManagementActivity;
 import com.example.cn.helloworld.ui.playlist.PlaylistOverviewActivity;
 
@@ -26,6 +27,12 @@ public class QuickAction {
             @Override
             public Intent buildIntent(Context context) {
                 return new Intent(context, UserProfileActivity.class);
+            }
+        },
+        ADDRESS("address", R.string.user_action_address, R.drawable.ic_location) {
+            @Override
+            public Intent buildIntent(Context context) {
+                return new Intent(context, AddressManagementActivity.class);
             }
         },
         SUPPORT("support", R.string.quick_action_type_support, R.drawable.ic_category_task) {

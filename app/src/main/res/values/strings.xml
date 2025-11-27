@@ -210,6 +210,8 @@
     <string name="playlist_song_section">曲目列表</string>
     <string name="playlist_action_save">保存歌单</string>
     <string name="action_save">保存</string>
+    <string name="action_edit">编辑</string>
+    <string name="action_delete">删除</string>
     <string name="playlist_action_edit_song">编辑</string>
     <string name="playlist_action_delete_song">移除</string>
     <string name="playlist_song_duration_format">%1$s · %2$d 秒</string>
@@ -282,8 +284,6 @@
     <string name="banner_image_fenwuhai">演出《奋无海》</string>
     <string name="banner_image_lisao">演出《离骚》</string>
     <string name="banner_image_song_cover">精选歌曲封面</string>
-    <string name="action_edit">编辑</string>
-    <string name="action_delete">删除</string>
 
     <string name="category_header_title">千玺应援好物</string>
     <string name="category_header_subtitle">挑选巡演门票、限定周边与签名纪念</string>
@@ -376,6 +376,12 @@
     <string name="quick_action_type_profile">个人资料</string>
     <string name="quick_action_type_support">客服/工单</string>
     <string name="quick_action_type_none">仅展示</string>
+    <string name="admin_action_products_desc">周边、库存、价格集中管理</string>
+    <string name="admin_action_playlist_desc">策划歌单和主题模块</string>
+    <string name="admin_action_order_desc">订单、售后集中处理</string>
+    <string name="admin_action_support_desc">创建或更新应援任务</string>
+    <string name="admin_action_approval_desc">审核队列中的应援任务</string>
+    <string name="admin_action_address_desc">统一维护用户收货地址</string>
     <string name="quick_action_editor_hint">长按卡片可直接编辑，或选择下方要修改的快捷入口</string>
     <string name="quick_action_editor_title">标题</string>
     <string name="quick_action_editor_description">描述</string>
@@ -387,6 +393,15 @@
     <string name="user_action_collection_desc">心动歌单与专属周边</string>
     <string name="user_action_address">收货地址</string>
     <string name="user_action_address_desc">常用地址一键管理</string>
+    <string name="title_address_management">收货地址管理</string>
+    <string name="address_header">地址管理</string>
+    <string name="address_subtitle">保存你的收货信息，结算时快速选择。</string>
+    <string name="action_add_address">新增地址</string>
+    <string name="action_edit_address">编辑地址</string>
+    <string name="address_delete_confirm">确定删除 %1$s 的地址吗？</string>
+    <string name="hint_address_name">联系人姓名</string>
+    <string name="hint_address_phone">联系电话（可选）</string>
+    <string name="hint_address_detail">详细地址</string>
     <string name="user_action_settings">设置</string>
     <string name="user_action_settings_desc">账号安全 / 消息偏好</string>
     <string name="user_checkin_title">线下打卡</string>
