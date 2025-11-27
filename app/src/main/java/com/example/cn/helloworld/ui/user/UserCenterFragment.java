@@ -8,11 +8,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.AppCompatSpinner;
+import android.widget.ArrayAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.EditText;
+import android.app.AlertDialog;
+import android.widget.Toast;
+import android.content.DialogInterface;
 
 import com.example.cn.helloworld.MusicService;
 import com.example.cn.helloworld.R;
@@ -50,6 +57,8 @@ public class UserCenterFragment extends Fragment {
     private HomeDataSource homeDataSource;
     private RecyclerView playlistList;
     private View viewAllPlaylistsButton;
+    private RecyclerView quickActionList;
+    private View manageQuickActionsButton;
     private View adminCard;
     private View checkinCard;
     private StatsBarView adminStatsView;
@@ -62,6 +71,8 @@ public class UserCenterFragment extends Fragment {
     private AdminMetricsRepository adminMetricsRepository;
     private SupportTaskRepository supportTaskRepository;
     private AdminOrderRepository adminOrderRepository;
+    private QuickActionAdapter quickActionAdapter;
+    private QuickActionStorage quickActionStorage;
 
     @Override
     public void onAttach(Context context) {
@@ -73,6 +84,7 @@ public class UserCenterFragment extends Fragment {
         supportTaskRepository = new SupportTaskRepository(appContext);
         adminOrderRepository = new AdminOrderRepository(appContext);
         adminMetricsRepository = new AdminMetricsRepository(supportTaskRepository, adminOrderRepository);
+        quickActionStorage = new QuickActionStorage(appContext);
     }
 
     @Nullable
@@ -87,6 +99,8 @@ public class UserCenterFragment extends Fragment {
         TextView logout = (TextView) root.findViewById(R.id.btnLogout);
         playlistList = (RecyclerView) root.findViewById(R.id.playlistList);
         viewAllPlaylistsButton = root.findViewById(R.id.button_view_all_playlists);
+        quickActionList = (RecyclerView) root.findViewById(R.id.recyclerQuickActions);
+        manageQuickActionsButton = root.findViewById(R.id.button_manage_quick_actions);
         adminCard = root.findViewById(R.id.card_admin_center);
         checkinCard = root.findViewById(R.id.card_checkin);
         adminStatsView = (StatsBarView) root.findViewById(R.id.adminStatsView);
@@ -123,6 +137,7 @@ public class UserCenterFragment extends Fragment {
         });
 
         setupPlaylists();
+        setupQuickActions(inflater);
         setupAdminArea();
 
         return root;
@@ -175,6 +190,148 @@ public class UserCenterFragment extends Fragment {
                 }
             });
         }
+    }
+
+    private void setupQuickActions(LayoutInflater inflater) {
+        if (quickActionList == null || quickActionStorage == null) {
+            return;
+        }
+
+        quickActionList.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        quickActionList.setNestedScrollingEnabled(false);
+
+        quickActionAdapter = new QuickActionAdapter(
+                quickActionStorage.loadActions(),
+                new QuickActionAdapter.Listener() {
+                    @Override
+                    public void onActionClick(QuickAction action) {
+                        handleQuickActionClick(action);
+                    }
+
+                    @Override
+                    public void onActionEdit(QuickAction action) {
+                        showQuickActionEditor(action, inflater);
+                    }
+                }
+        );
+        quickActionList.setAdapter(quickActionAdapter);
+
+        if (manageQuickActionsButton != null) {
+            manageQuickActionsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (quickActionAdapter != null) {
+                        showQuickActionPicker(inflater);
+                    }
+                }
+            });
+        }
+    }
+
+    private void handleQuickActionClick(QuickAction action) {
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+
+        Intent intent = action.getType().buildIntent(context);
+        if (intent != null) {
+            startActivity(intent);
+        } else {
+            Toast.makeText(context,
+                    getString(R.string.quick_action_empty_action, action.getTitle()),
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showQuickActionPicker(final LayoutInflater inflater) {
+        if (quickActionAdapter == null) {
+            return;
+        }
+
+        final List<QuickAction> actions = quickActionStorage.loadActions();
+        CharSequence[] names = new CharSequence[actions.size()];
+        for (int i = 0; i < actions.size(); i++) {
+            names[i] = actions.get(i).getTitle();
+        }
+
+        new AlertDialog.Builder(getContext())
+                .setTitle(R.string.quick_action_manage)
+                .setItems(names, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showQuickActionEditor(actions.get(which), inflater);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void showQuickActionEditor(final QuickAction action, LayoutInflater inflater) {
+        View dialogView = inflater.inflate(R.layout.dialog_quick_action_editor, null, false);
+        final AppCompatSpinner spinner = (AppCompatSpinner) dialogView.findViewById(R.id.spinnerQuickActionType);
+        final EditText titleInput = (EditText) dialogView.findViewById(R.id.inputQuickActionTitle);
+        final EditText descInput = (EditText) dialogView.findViewById(R.id.inputQuickActionDescription);
+
+        final QuickAction.Type[] types = QuickAction.Type.values();
+        String[] labels = new String[types.length];
+        for (int i = 0; i < types.length; i++) {
+            labels[i] = getString(types[i].getDisplayNameRes());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                getContext(), android.R.layout.simple_spinner_item, labels);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        int selected = 0;
+        for (int i = 0; i < types.length; i++) {
+            if (types[i] == action.getType()) {
+                selected = i;
+                break;
+            }
+        }
+        spinner.setSelection(selected);
+
+        titleInput.setText(action.getTitle());
+        descInput.setText(action.getDescription());
+
+        new AlertDialog.Builder(getContext())
+                .setTitle(R.string.quick_action_manage)
+                .setView(dialogView)
+                .setPositiveButton(R.string.action_save, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String title = titleInput.getText().toString();
+                        String desc = descInput.getText().toString();
+                        QuickAction.Type type = types[spinner.getSelectedItemPosition()];
+                        QuickAction updated = action.withContent(title, desc, type);
+                        quickActionStorage.saveActions(replaceAction(updated));
+                        if (quickActionAdapter != null) {
+                            quickActionAdapter.updateAction(updated);
+                        }
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private List<QuickAction> replaceAction(QuickAction updated) {
+        List<QuickAction> current = quickActionStorage.loadActions();
+        List<QuickAction> replaced = new ArrayList<QuickAction>(current.size());
+        boolean found = false;
+        for (QuickAction action : current) {
+            if (action.getId().equals(updated.getId())) {
+                replaced.add(updated);
+                found = true;
+            } else {
+                replaced.add(action);
+            }
+        }
+        if (!found) {
+            replaced.add(updated);
+        }
+        return replaced;
     }
 
     private void setupAdminArea() {

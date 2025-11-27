@@ -178,6 +178,7 @@
     <string name="hint_product_description">商品简介</string>
     <string name="hint_product_active">立即上架</string>
     <string name="hint_product_home_switch">显示在首页顶部切换</string>
+    <string name="hint_product_image">商品主图</string>
     <string name="product_category_default">默认分类</string>
     <string name="dialog_title_add_product">新增商品</string>
     <string name="dialog_title_edit_product">编辑商品</string>
@@ -204,6 +205,7 @@
     <string name="playlist_action_change_cover">更换封面</string>
     <string name="playlist_song_section">曲目列表</string>
     <string name="playlist_action_save">保存歌单</string>
+    <string name="action_save">保存</string>
     <string name="playlist_action_edit_song">编辑</string>
     <string name="playlist_action_delete_song">移除</string>
     <string name="playlist_song_duration_format">%1$s · %2$d 秒</string>
@@ -365,6 +367,15 @@
     <string name="user_stat_active_days_value">129</string>
     <string name="user_quick_actions">快捷功能</string>
     <string name="user_quick_actions_subtitle">常用入口、权益特权一键直达</string>
+    <string name="quick_action_manage">编辑快捷功能</string>
+    <string name="quick_action_type_playlists">歌单/播放</string>
+    <string name="quick_action_type_profile">个人资料</string>
+    <string name="quick_action_type_support">客服/工单</string>
+    <string name="quick_action_type_none">仅展示</string>
+    <string name="quick_action_editor_hint">长按卡片可直接编辑，或选择下方要修改的快捷入口</string>
+    <string name="quick_action_editor_title">标题</string>
+    <string name="quick_action_editor_description">描述</string>
+    <string name="quick_action_empty_action">%1$s 暂未绑定页面，先自定义下吧</string>
     <string name="user_privileges">千纸鹤特权</string>
     <string name="user_action_orders">我的订单</string>
     <string name="user_action_orders_desc">查物流 / 售后服务</string>
