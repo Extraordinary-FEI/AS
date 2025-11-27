@@ -402,6 +402,7 @@
     <string name="title_address_management">收货地址管理</string>
     <string name="address_header">地址管理</string>
     <string name="address_subtitle">保存你的收货信息，结算时快速选择。</string>
+    <string name="address_empty">暂无收货地址，点击下方按钮新增。</string>
     <string name="action_add_address">新增地址</string>
     <string name="action_edit_address">编辑地址</string>
     <string name="address_delete_confirm">确定删除 %1$s 的地址吗？</string>

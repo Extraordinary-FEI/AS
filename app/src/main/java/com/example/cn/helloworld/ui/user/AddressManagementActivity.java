@@ -27,6 +27,7 @@ public class AddressManagementActivity extends AppCompatActivity {
     private AddressRepository repository;
     private AddressAdapter adapter;
     private List<Address> addresses = new ArrayList<Address>();
+    private View emptyView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +56,9 @@ public class AddressManagementActivity extends AppCompatActivity {
             }
         });
         recyclerView.setAdapter(adapter);
+
+        emptyView = findViewById(R.id.empty_addresses);
+        updateEmptyState();
 
         findViewById(R.id.button_add_address).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,6 +143,13 @@ public class AddressManagementActivity extends AppCompatActivity {
     private void persist() {
         repository.saveAddresses(addresses);
         adapter.update(addresses);
+        updateEmptyState();
+    }
+
+    private void updateEmptyState() {
+        if (emptyView != null) {
+            emptyView.setVisibility(addresses.isEmpty() ? View.VISIBLE : View.GONE);
+        }
     }
 
     private static class AddressAdapter extends RecyclerView.Adapter<AddressViewHolder> {
