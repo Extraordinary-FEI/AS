@@ -45,6 +45,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView productList;
     private View viewAllPlaylistsButton;
     private View viewAllProductsButton;
+    private View bannerCard;
     private LinearLayout bannerIndicator;
 
     private HomeDataSource dataSource;
@@ -74,6 +75,7 @@ public class HomeFragment extends Fragment {
         productList = (RecyclerView) root.findViewById(R.id.productList);
         viewAllPlaylistsButton = root.findViewById(R.id.button_view_all_playlists);
         viewAllProductsButton = root.findViewById(R.id.button_view_all_products);
+        bannerCard = root.findViewById(R.id.bannerCard);
         bannerIndicator = (LinearLayout) root.findViewById(R.id.bannerIndicator);
 
         setupBanner();
@@ -94,6 +96,17 @@ public class HomeFragment extends Fragment {
 
         final List<HomeModels.BannerItem> banners = dataSource.loadBanners();
         bannerCount = banners.size();
+
+        if (bannerCount <= 0) {
+            if (bannerCard != null) {
+                bannerCard.setVisibility(View.GONE);
+            }
+            return;
+        }
+
+        if (bannerCard != null) {
+            bannerCard.setVisibility(View.VISIBLE);
+        }
 
         bannerAdapter = new BannerAdapter(ctx, banners);
         bannerPager.setAdapter(bannerAdapter);

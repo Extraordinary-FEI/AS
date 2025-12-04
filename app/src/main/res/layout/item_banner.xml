@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/cover_nishuo" />
+        android:src="@drawable/cover_baobei" />
 
     <!-- 移除背景，让渐变直接作用于整个FrameLayout -->
     <LinearLayout
