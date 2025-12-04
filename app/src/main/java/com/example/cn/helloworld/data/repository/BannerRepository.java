@@ -113,9 +113,12 @@ public class BannerRepository {
 
     private void seed() {
         banners.clear();
-        addSeedBanner(new Banner("banner-birthday", "千玺生日月冲刺", "每日打卡累计生贺能量", R.drawable.cover_nishuo));
-        addSeedBanner(new Banner("banner-public", "公益舞台回顾", "重温他与山城孩子的约定", R.drawable.cover_baobei));
-        addSeedBanner(new Banner("banner-tour", "线下巡礼报名", "和小橙灯一起打卡地标应援点", R.drawable.song_cover));
+        addSeedBanner(new Banner("banner-tx1", "舞台瞬间 01", "Tx 新主页轮播图 01", R.drawable.banner_tx1));
+        addSeedBanner(new Banner("banner-tx2", "舞台瞬间 02", "Tx 新主页轮播图 02", R.drawable.banner_tx2));
+        addSeedBanner(new Banner("banner-tx3", "舞台瞬间 03", "Tx 新主页轮播图 03", R.drawable.banner_tx3));
+        addSeedBanner(new Banner("banner-tx4", "舞台瞬间 04", "Tx 新主页轮播图 04", R.drawable.banner_tx4));
+        addSeedBanner(new Banner("banner-tx5", "舞台瞬间 05", "Tx 新主页轮播图 05", R.drawable.banner_tx5));
+        addSeedBanner(new Banner("banner-tx6", "舞台瞬间 06", "Tx 新主页轮播图 06", R.drawable.banner_tx6));
         persist();
     }
 
@@ -140,7 +143,7 @@ public class BannerRepository {
                 object.optString("id"),
                 object.optString("title"),
                 object.optString("description"),
-                object.optInt("imageResId", R.drawable.cover_nishuo)
+                object.optInt("imageResId", R.drawable.banner_tx1)
         );
     }
 }

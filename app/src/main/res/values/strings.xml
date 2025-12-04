@@ -284,12 +284,12 @@
     <string name="dialog_title_edit_banner">编辑横幅</string>
     <string name="error_banner_title_required">请输入横幅标题</string>
     <string name="error_banner_description_required">请输入横幅描述</string>
-    <string name="banner_image_birthday">生日舞台主题</string>
-    <string name="banner_image_public">公益影像主题</string>
-    <string name="banner_image_friend">舞台《朋友》</string>
-    <string name="banner_image_fenwuhai">演出《奋无海》</string>
-    <string name="banner_image_lisao">演出《离骚》</string>
-    <string name="banner_image_song_cover">精选歌曲封面</string>
+    <string name="banner_image_tx1">Tx 主页轮播 01</string>
+    <string name="banner_image_tx2">Tx 主页轮播 02</string>
+    <string name="banner_image_tx3">Tx 主页轮播 03</string>
+    <string name="banner_image_tx4">Tx 主页轮播 04</string>
+    <string name="banner_image_tx5">Tx 主页轮播 05</string>
+    <string name="banner_image_tx6">Tx 主页轮播 06</string>
 
     <string name="category_header_title">千玺应援好物</string>
     <string name="category_header_subtitle">挑选巡演门票、限定周边与签名纪念</string>

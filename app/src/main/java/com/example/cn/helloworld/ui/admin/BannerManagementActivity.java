@@ -42,12 +42,12 @@ public class BannerManagementActivity extends AppCompatActivity {
     private FloatingActionButton fabAdd;
 
     private final int[] imageOptions = new int[]{
-            R.drawable.cover_nishuo,
-            R.drawable.cover_baobei,
-            R.drawable.cover_friend,
-            R.drawable.cover_fenwuhai,
-            R.drawable.cover_lisao,
-            R.drawable.song_cover
+            R.drawable.banner_tx1,
+            R.drawable.banner_tx2,
+            R.drawable.banner_tx3,
+            R.drawable.banner_tx4,
+            R.drawable.banner_tx5,
+            R.drawable.banner_tx6
     };
 
     private final int layoutPreview = R.layout.dialog_banner_editor;
@@ -211,12 +211,12 @@ public class BannerManagementActivity extends AppCompatActivity {
 
     private List<String> getImageOptionNames() {
         return Arrays.asList(
-                getString(R.string.banner_image_birthday),
-                getString(R.string.banner_image_public),
-                getString(R.string.banner_image_friend),
-                getString(R.string.banner_image_fenwuhai),
-                getString(R.string.banner_image_lisao),
-                getString(R.string.banner_image_song_cover)
+                getString(R.string.banner_image_tx1),
+                getString(R.string.banner_image_tx2),
+                getString(R.string.banner_image_tx3),
+                getString(R.string.banner_image_tx4),
+                getString(R.string.banner_image_tx5),
+                getString(R.string.banner_image_tx6)
         );
     }
 
