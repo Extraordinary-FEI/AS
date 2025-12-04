@@ -101,12 +101,12 @@
     <string name="dialog_title_edit_banner">编辑横幅</string>
     <string name="error_banner_title_required">请输入横幅标题</string>
     <string name="error_banner_description_required">请输入横幅描述</string>
-    <string name="banner_image_tx1">Tx 主页轮播 01</string>
-    <string name="banner_image_tx2">Tx 主页轮播 02</string>
-    <string name="banner_image_tx3">Tx 主页轮播 03</string>
-    <string name="banner_image_tx4">Tx 主页轮播 04</string>
-    <string name="banner_image_tx5">Tx 主页轮播 05</string>
-    <string name="banner_image_tx6">Tx 主页轮播 06</string>
+    <string name="banner_image_tx1">新歌速递</string>
+    <string name="banner_image_tx2">巡演现场</string>
+    <string name="banner_image_tx3">粉丝限定礼遇</string>
+    <string name="banner_image_tx4">练习室直拍</string>
+    <string name="banner_image_tx5">公益同行</string>
+    <string name="banner_image_tx6">社群活动</string>
 
     <!-- 管理员快捷入口描述 -->
     <string name="admin_action_products_desc">周边、库存、价格集中管理</string>

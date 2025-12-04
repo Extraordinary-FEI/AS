@@ -113,12 +113,12 @@ public class BannerRepository {
 
     private void seed() {
         banners.clear();
-        addSeedBanner(new Banner("banner-tx1", "舞台瞬间 01", "Tx 新主页轮播图 01", R.drawable.banner_tx1));
-        addSeedBanner(new Banner("banner-tx2", "舞台瞬间 02", "Tx 新主页轮播图 02", R.drawable.banner_tx2));
-        addSeedBanner(new Banner("banner-tx3", "舞台瞬间 03", "Tx 新主页轮播图 03", R.drawable.banner_tx3));
-        addSeedBanner(new Banner("banner-tx4", "舞台瞬间 04", "Tx 新主页轮播图 04", R.drawable.banner_tx4));
-        addSeedBanner(new Banner("banner-tx5", "舞台瞬间 05", "Tx 新主页轮播图 05", R.drawable.banner_tx5));
-        addSeedBanner(new Banner("banner-tx6", "舞台瞬间 06", "Tx 新主页轮播图 06", R.drawable.banner_tx6));
+        addSeedBanner(new Banner("banner-tx1", "新歌速递", "抢先听千玺全新单曲，幕后花絮同步上线", R.drawable.banner_tx1));
+        addSeedBanner(new Banner("banner-tx2", "巡演现场", "沉浸式回顾全国巡演高燃片段，光影与呼吸同频", R.drawable.banner_tx2));
+        addSeedBanner(new Banner("banner-tx3", "粉丝限定礼遇", "会员签到礼、生日贺卡与周边抽奖，专属宠爱升级", R.drawable.banner_tx3));
+        addSeedBanner(new Banner("banner-tx4", "练习室直拍", "捕捉每日排练瞬间，见证舞台打磨的点滴", R.drawable.banner_tx4));
+        addSeedBanner(new Banner("banner-tx5", "公益同行", "与千玺一起关注公益项目，传递舞台之外的温度", R.drawable.banner_tx5));
+        addSeedBanner(new Banner("banner-tx6", "社群活动", "参与应援任务、线下见面与群聊活动，组队相遇", R.drawable.banner_tx6));
         persist();
     }
 
