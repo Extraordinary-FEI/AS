@@ -129,7 +129,7 @@
 
         <activity
             android:name="com.example.cn.helloworld.ui.user.AddressManagementActivity"
-            android:label="@string/title_address_management"
+            android:label="收货地址管理"
             android:parentActivityName="com.example.cn.helloworld.ui.user.UserProfileActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

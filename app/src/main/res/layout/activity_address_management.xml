@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="#FFFFFF">
 
-    <!-- 顶部返回 + 标题 -->
+    <!-- 顶部标题区域 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
         <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/button_back"
@@ -21,7 +21,7 @@
             android:background="@android:color/transparent"
             android:padding="6dp"
             app:srcCompat="@drawable/ic_arrow_back_line"
-            android:tint="#222222"
+            android:tint="#222"
             android:contentDescription="back" />
 
         <TextView
@@ -30,10 +30,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/title_address_management"
+            android:textColor="#222222"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="#222222"
-            android:paddingBottom="8dp" />
+            android:paddingBottom="8dp"/>
     </LinearLayout>
 
     <TextView
@@ -43,9 +43,8 @@
         android:text="@string/address_subtitle"
         android:textColor="#666666"
         android:textSize="14sp"
-        android:paddingTop="4dp" />
+        android:paddingTop="4dp"/>
 
-    <!-- 空列表提示 -->
     <TextView
         android:id="@+id/empty_addresses"
         android:layout_width="match_parent"
@@ -57,7 +56,6 @@
         android:textColor="#666666"
         android:visibility="gone" />
 
-    <!-- 地址列表 -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_addresses"
         android:layout_width="match_parent"
@@ -65,22 +63,19 @@
         android:layout_weight="1"
         android:layout_marginTop="8dp"
         android:clipToPadding="false"
-        android:paddingBottom="12dp" />
+        android:paddingBottom="12dp"/>
 
-    <!-- 新增地址按钮：使用 TextView 模拟 Button，并使用硬编码文本绕过资源加载错误 -->
     <TextView
         android:id="@+id/button_add_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:background="#FF4081"
-        android:text="新增收货地址"
-        android:textAllCaps="false"
+        android:text="@string/action_add_address"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:padding="14dp"
         android:gravity="center"
         android:clickable="true"
         android:focusable="true" />
-
 </LinearLayout>
