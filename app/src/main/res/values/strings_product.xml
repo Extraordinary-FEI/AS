@@ -53,6 +53,9 @@
     <string name="review_prompt">留下你的应援碎碎念</string>
     <string name="hint_review_content">分享抢购心得或应援攻略...</string>
     <string name="button_submit_review">提交评论</string>
+    <string name="title_review_wall">评论墙</string>
+    <string name="review_wall_filter_format">正在查看：%1$s 的评论</string>
+    <string name="review_wall_empty">暂时还没有评论，来做第一个留言的千纸鹤吧～</string>
     <string name="dialog_reviews_title">千纸鹤评论墙</string>
     <string name="no_reviews_yet">还没有千纸鹤留言，快来首发应援！</string>
     <string name="error_empty_review">请写下至少一句话噢</string>

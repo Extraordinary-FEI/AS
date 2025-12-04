@@ -49,6 +49,12 @@ public class QuickAction {
                 return new Intent(context, UserOrderListActivity.class);
             }
         },
+        SETTINGS("settings", R.string.user_action_settings, R.drawable.ic_settings) {
+            @Override
+            public Intent buildIntent(Context context) {
+                return new Intent(context, SettingsActivity.class);
+            }
+        },
         SUPPORT("support", R.string.quick_action_type_support, R.drawable.ic_category_task) {
             @Override
             public Intent buildIntent(Context context) {

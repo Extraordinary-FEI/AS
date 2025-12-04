@@ -41,6 +41,9 @@ class QuickActionStorage {
                 JSONObject object = array.getJSONObject(i);
                 String id = object.optString("id", "");
                 QuickAction.Type type = QuickAction.Type.fromId(object.optString("type", QuickAction.Type.NONE.getId()));
+                if ("settings".equals(id) && type == QuickAction.Type.NONE) {
+                    type = QuickAction.Type.SETTINGS;
+                }
                 if ("address".equals(id) && type == QuickAction.Type.SUPPORT) {
                     type = QuickAction.Type.ADDRESS;
                 }
@@ -85,10 +88,10 @@ class QuickActionStorage {
                 context.getString(R.string.user_action_address),
                 context.getString(R.string.user_action_address_desc),
                 QuickAction.Type.ADDRESS.getIconRes()));
-        actions.add(new QuickAction("settings", QuickAction.Type.NONE,
+        actions.add(new QuickAction("settings", QuickAction.Type.SETTINGS,
                 context.getString(R.string.user_action_settings),
                 context.getString(R.string.user_action_settings_desc),
-                QuickAction.Type.NONE.getIconRes()));
+                QuickAction.Type.SETTINGS.getIconRes()));
         return actions;
     }
 }

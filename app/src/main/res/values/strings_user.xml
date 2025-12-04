@@ -93,6 +93,16 @@
     <string name="user_action_favorites">我的收藏</string>
     <string name="user_action_settings">设置</string>
     <string name="user_action_settings_desc">账号安全 / 消息偏好</string>
+    <string name="profile_banner_caption_title">粉丝专属时刻</string>
+    <string name="profile_banner_caption_subtitle">轮播里收纳了最新活动、应援公告和会员福利，滑动查看精彩</string>
+    <string name="settings_title">偏好设置</string>
+    <string name="settings_notification">活动与推送</string>
+    <string name="settings_notification_desc">开启后将第一时间收到应援直播、周边补货等提醒</string>
+    <string name="settings_wifi_only">仅在 Wi-Fi 下自动下载</string>
+    <string name="settings_wifi_only_desc">减少流量占用，歌单封面与缓存仅在 Wi-Fi 环境自动更新</string>
+    <string name="settings_privacy">隐私保护模式</string>
+    <string name="settings_privacy_desc">隐藏个人主页访客记录，播放历史仅自己可见</string>
+    <string name="settings_saved">已为你保存偏好</string>
 
     <!-- 收藏与打卡 -->
     <string name="favorite_section_songs">歌曲收藏</string>
