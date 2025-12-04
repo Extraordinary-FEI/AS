@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_main">千玺星球</string>
+
+    <!-- 首页 -->
+    <string name="category_header_title">千玺应援好物</string>
+    <string name="category_header_subtitle">挑选巡演门票、限定周边与签名纪念</string>
+    <string name="category_default_subtitle">更多精选内容</string>
+    <string name="home_category_title">快速入口</string>
+    <string name="home_category_subtitle">一键直达最用的应援与购买入口</string>
+    <string name="home_category_ticket">舞台回顾</string>
+    <string name="home_category_merch">新品速递</string>
+    <string name="home_category_support">巡演日历</string>
+    <string name="home_category_playlist">应援口碑墙</string>
+    <string name="home_category_profile">线下打卡</string>
+    <string name="home_category_cart">粉丝播报</string>
+    <string name="home_playlist_title">千玺主题歌单</string>
+    <string name="home_playlist_subtitle">和他一起听舞台、电影与成长的故事</string>
+    <string name="home_playlist_view_all">全部歌单</string>
+    <string name="home_product_title">千玺应援好物</string>
+    <string name="home_product_subtitle">门票、周边与签名，主页即可快速挑选</string>
+    <string name="home_product_view_all">全部好物</string>
+    <string name="home_task_title">应援任务</string>
+    <string name="home_task_subtitle">参与行动，为千玺蓄力应援能量</string>
+    <string name="category_subtitle_ticket">舞台返场、彩排高光一屏收藏</string>
+    <string name="category_subtitle_merch">最新周边与限定套装速递</string>
+    <string name="category_subtitle_signed">口碑墙、歌单与线下打卡入口</string>
+
+    <!-- 底部导航 -->
+    <string name="nav_home">主页</string>
+    <string name="nav_cart">购物车</string>
+    <string name="nav_support">应援任务</string>
+    <string name="nav_playlist">歌单</string>
+    <string name="nav_profile">个人中心</string>
+
+    <!-- 首页任务 -->
+    <string name="task_type_format">类型：%1$s</string>
+    <string name="task_time_format">时间：%1$s</string>
+    <string name="task_capacity_format">进度：%1$d/%2$d 人</string>
+    <string name="task_status_ongoing">进行中</string>
+    <string name="task_status_completed">已完成</string>
+    <string name="task_status_upcoming">待发布</string>
+    <string name="task_registration_open">报名中</string>
+    <string name="task_registration_full">名额已满</string>
+    <string name="task_registration_closed">报名结束</string>
+    <string name="task_registration_check_in">可签到</string>
+    <string name="task_registration_not_open">尚未开放</string>
+
+    <!-- 任务详情 -->
+    <string name="task_detail_time_format">时间安排：%1$s</string>
+    <string name="task_detail_location_format">行动地点：%1$s</string>
+    <string name="task_detail_type_format">任务类型：%1$s</string>
+    <string name="task_detail_status_format">当前状态：%1$s</string>
+    <string name="task_detail_enroll">报名</string>
+    <string name="task_detail_check_in">签到</string>
+    <string name="task_detail_full">名额已满</string>
+    <string name="task_detail_not_open">尚未开放</string>
+    <string name="task_detail_completed">任务已结束</string>
+    <string name="task_detail_action_feedback">已收到你的%1$s意愿，我们会尽快联系！</string>
+    <string name="task_detail_invalid">未找到对应的应援任务</string>
+    <string name="task_detail_description_title">任务说明</string>
+    <string name="task_detail_guide_title">参与指南</string>
+    <string name="task_detail_contact_title">联系人</string>
+    <string name="task_detail_progress_title">实时进度</string>
+    <string name="task_detail_body_placeholder">--</string>
+</resources>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 管理员面板 -->
+    <string name="title_admin_dashboard">管理控制台</string>
+    <string name="title_admin_manage_products">商品管理</string>
+    <string name="title_admin_manage_playlists">歌单管理</string>
+    <string name="title_admin_support_tasks">应援任务审批</string>
+    <string name="title_admin_manage_support_tasks">应援任务管理</string>
+    <string name="title_admin_order_list">订单列表</string>
+    <string name="dashboard_stats_title">核心指标</string>
+    <string name="stat_label_order">订单</string>
+    <string name="stat_label_support">待审批任务</string>
+    <string name="stat_label_new_user">新报名</string>
+    <string name="stat_label_active">活跃粉丝</string>
+    <string name="dashboard_summary">今日完成 %1$d 个订单，仍有 %2$d 个任务待审批，新增 %3$d 位粉丝加入。</string>
+    <string name="dashboard_chart_description">管理员统计图，显示订单、任务、粉丝等数据</string>
+    <string name="dashboard_tip">及时关注任务审批状态，确保应援计划顺利推进。</string>
+    <string name="dashboard_action_orders">查看订单列表</string>
+    <string name="dashboard_action_banners">管理首页横幅</string>
+    <string name="dashboard_action_manage_support">管理应援任务</string>
+    <string name="dashboard_action_approval">应援任务审批</string>
+    <string name="admin_action_edit">编辑</string>
+    <string name="admin_action_delete">删除</string>
+    <string name="admin_order_id">订单编号</string>
+    <string name="admin_order_amount">订单金额</string>
+    <string name="admin_order_shipping">收货地址</string>
+    <string name="admin_order_new">新增订单</string>
+    <string name="admin_order_save">保存订单</string>
+    <string name="admin_order_delete_confirm">确定要删除该订单吗？</string>
+    <string name="admin_order_status_placeholder">选择订单状态</string>
+    <string name="admin_order_forbidden">管理员视图不支持购物车和下单</string>
+    <string name="admin_entry_only">仅管理员可访问</string>
+    <string name="admin_order_saved">订单已保存</string>
+    <string name="admin_order_deleted">订单已删除</string>
+    <string name="admin_cart_hidden">管理员无需购物车功能</string>
+    <string name="admin_add_to_cart_hidden">管理员无法下单</string>
+    <string name="admin_center_title">管理员专区</string>
+    <string name="admin_center_subtitle">集中处理商品、歌单、应援任务与订单</string>
+    <string name="dashboard_action_section">管理员常用操作</string>
+    <string name="admin_access_denied">仅管理员可访问后台功能</string>
+
+    <!-- 商品管理表单 -->
+    <string name="hint_product_name">商品名称</string>
+    <string name="hint_product_price">商品售价</string>
+    <string name="hint_product_inventory">库存数量</string>
+    <string name="hint_product_description">商品简介</string>
+    <string name="hint_product_active">立即上架</string>
+    <string name="hint_product_home_switch">显示在首页顶部切换</string>
+    <string name="hint_product_image">商品主图</string>
+    <string name="product_category_default">默认分类</string>
+    <string name="dialog_title_add_product">新增商品</string>
+    <string name="dialog_title_edit_product">编辑商品</string>
+    <string name="error_product_name_required">请输入商品名称</string>
+    <string name="error_product_price_invalid">请输入正确的价格</string>
+    <string name="error_product_inventory_invalid">请输入正确的库存数量</string>
+    <string name="product_status_online">已上架</string>
+    <string name="product_status_offline">已下架</string>
+    <string name="product_home_switch_on">首页切换：已展示</string>
+    <string name="product_home_switch_off">首页切换：未展示</string>
+    <string name="product_status_with_home_switch">%1$s · %2$s</string>
+    <string name="product_action_edit">编辑</string>
+    <string name="product_action_online">上架</string>
+    <string name="product_action_offline">下架</string>
+
+    <!-- 应援任务审批 -->
+    <string name="support_task_action_approve">通过</string>
+    <string name="support_task_action_reject">驳回</string>
+    <string name="support_task_status_format">状态：%1$s</string>
+    <string name="support_task_unassigned">未分配审批人</string>
+    <string name="support_task_assigned_format">审批人：%1$s</string>
+    <string name="support_task_status_pending">待审批</string>
+    <string name="support_task_status_approved">已通过</string>
+    <string name="support_task_status_rejected">已驳回</string>
+    <string name="support_task_type_admin">管理员发布</string>
+    <string name="support_task_location_default">线上/后台</string>
+    <string name="support_task_admin_guide">管理员发布的应援任务，请查看说明完成操作。</string>
+    <string name="support_task_progress_note_format">%1$s · 优先级 %2$d</string>
+    <string name="hint_support_task_title">任务标题</string>
+    <string name="hint_support_task_desc">任务描述</string>
+    <string name="hint_support_task_priority">优先级（数字越大越紧急）</string>
+    <string name="label_support_task_status">任务状态</string>
+    <string name="dialog_title_add_support_task">新增应援任务</string>
+    <string name="dialog_title_edit_support_task">编辑应援任务</string>
+    <string name="dialog_title_delete_support_task">删除应援任务</string>
+    <string name="dialog_message_delete_support_task">确定删除“%1$s”这条任务吗？</string>
+    <string name="error_support_task_title_required">请输入任务标题</string>
+    <string name="error_support_task_description_required">请输入任务描述</string>
+    <string name="error_support_task_priority_invalid">请输入正确的优先级数字</string>
+    <string name="support_task_priority_format">优先级：%1$d</string>
+    <string name="support_task_updated_time_format">更新时间：%1$s</string>
+    <string name="orders_empty">暂无订单记录</string>
+
+    <!-- Banner 管理 -->
+    <string name="banner_hint_title">横幅标题</string>
+    <string name="banner_hint_description">横幅描述</string>
+    <string name="banner_label_image">选择展示图片</string>
+    <string name="title_admin_manage_banners">首页横幅管理</string>
+    <string name="dialog_title_delete_banner">删除横幅</string>
+    <string name="dialog_confirm_delete_banner">确定要删除“%1$s”吗？</string>
+    <string name="dialog_title_add_banner">新增横幅</string>
+    <string name="dialog_title_edit_banner">编辑横幅</string>
+    <string name="error_banner_title_required">请输入横幅标题</string>
+    <string name="error_banner_description_required">请输入横幅描述</string>
+    <string name="banner_image_tx1">Tx 主页轮播 01</string>
+    <string name="banner_image_tx2">Tx 主页轮播 02</string>
+    <string name="banner_image_tx3">Tx 主页轮播 03</string>
+    <string name="banner_image_tx4">Tx 主页轮播 04</string>
+    <string name="banner_image_tx5">Tx 主页轮播 05</string>
+    <string name="banner_image_tx6">Tx 主页轮播 06</string>
+
+    <!-- 管理员快捷入口描述 -->
+    <string name="admin_action_products_desc">周边、库存、价格集中管理</string>
+    <string name="admin_action_playlist_desc">策划歌单和主题模块</string>
+    <string name="admin_action_order_desc">单、售后集中处理</string>
+    <string name="admin_action_support_desc">创建或更新应援任务</string>
+    <string name="admin_action_approval_desc">审核队列中的应援任务</string>
+    <string name="admin_action_address_desc">统一维护用户收货地址</string>
+</resources>

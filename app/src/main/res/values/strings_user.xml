@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 标题 -->
+    <string name="title_register">应援注册</string>
+    <string name="title_confirm">注册信息确认</string>
+    <string name="title_user_list">粉丝列表</string>
+    <string name="title_user_profile">个人中心</string>
+
+    <!-- 按钮 -->
+    <string name="btn_register">注册</string>
+    <string name="btn_cancel">清空</string>
+    <string name="btn_back">返回</string>
+    <string name="btn_ok">确认</string>
+    <string name="close">关闭</string>
+
+    <!-- 登录与注册 -->
+    <string name="login_title">欢迎回到千玺星球</string>
+    <string name="login_subtitle">请登录以继续应援旅程</string>
+    <string name="login_choose_role">请选择登录角色</string>
+    <string name="role_fan">千纸鹤粉丝</string>
+    <string name="role_admin">管理员</string>
+    <string name="role_user_login_hint">粉丝登录可参与活动与交流</string>
+    <string name="hint_verification_code">验证码</string>
+    <string name="login_security_tip_user">温馨提示：请勿与他人分享验证码</string>
+    <string name="login_remember_me">记住我</string>
+    <string name="login_button">登录</string>
+    <string name="login_register_button">没有账号？立即注册</string>
+    <string name="login_status_default">等待输入登录信息</string>
+    <string name="label_account_role">账号角色</string>
+    <string name="register_role_hint">请选择你的应援角色</string>
+
+    <!-- 注册校验 -->
+    <string name="error_admin_register_hint">管理员账号不能在此处注册，请使用登录入口</string>
+    <string name="error_short_password">密码长度不能少于6位</string>
+    <string name="error_invalid_email">请输入正确的邮箱地址</string>
+    <string name="error_invalid_phone">请输入有效的手机号</string>
+    <string name="error_empty_fans_date">请选择入坑日期</string>
+    <string name="msg_register_success">注册成功！</string>
+    <string name="error_db">数据库异常：%1$s</string>
+    <string name="error_insert_failed">无法保存注册信息</string>
+    <string name="accessibility_profile">打开用户资料</string>
+    <string name="error_profile_not_found">暂时无法打开个人中心，请稍后重试</string>
+
+    <!-- 表单字段 -->
+    <string name="hint_name">昵称</string>
+    <string name="hint_pwd">密码</string>
+    <string name="hint_email">邮箱</string>
+    <string name="hint_phone">联系方式</string>
+    <string name="label_gender">性别</string>
+    <string name="label_major">角色/粉籍</string>
+    <string name="label_class">应援小组</string>
+    <string name="label_date">入坑日期</string>
+    <string name="label_hobby">应援偏好</string>
+    <string name="label_bio">个人介绍 / 应援宣言</string>
+
+    <!-- 选项内容 -->
+    <string name="gender_male">男</string>
+    <string name="gender_female">女</string>
+    <string name="pref_vote">打投</string>
+    <string name="pref_comment">控评</string>
+    <string name="pref_offline">线下应援</string>
+
+    <!-- 登录提示 -->
+    <string name="role_admin_login_hint">管理员登录用于管理应援商品和歌单</string>
+    <string name="login_security_tip_admin">提示：管理员账号请勿泄露。</string>
+    <string name="logout">退出登录</string>
+
+    <!-- 个人中心升级 -->
+    <string name="user_membership_label">钻石粉丝</string>
+    <string name="user_membership_desc">连续签到 28 天 · 应援值 +320</string>
+    <string name="user_stat_level">应援等级</string>
+    <string name="user_stat_level_value">Lv.7</string>
+    <string name="user_stat_fans">粉丝勋章</string>
+    <string name="user_stat_fans_value">臻享徽章</string>
+    <string name="user_stat_active_days">活跃天数</string>
+    <string name="user_stat_active_days_value">129</string>
+    <string name="user_quick_actions">快捷功能</string>
+    <string name="user_quick_actions_subtitle">常用入口、权益特权一键直达</string>
+    <string name="quick_action_manage">编辑快捷功能</string>
+    <string name="quick_action_type_playlists">歌单/播放</string>
+    <string name="quick_action_type_profile">个人资料</string>
+    <string name="quick_action_type_support">客服/工单</string>
+    <string name="quick_action_type_none">仅展示</string>
+    <string name="quick_action_editor_hint">长按卡片可直接编辑，或选择下方要修改的快捷入口</string>
+    <string name="quick_action_editor_title">标题</string>
+    <string name="quick_action_editor_description">描述</string>
+    <string name="quick_action_empty_action">%1$s 暂未绑定页面，先自定义下吧</string>
+    <string name="user_privileges">千纸鹤特权</string>
+    <string name="user_action_orders">我的订单</string>
+    <string name="user_action_orders_desc">查物流 / 售后服务</string>
+    <string name="user_action_collection">我的收藏</string>
+    <string name="user_action_collection_desc">心动歌单与专属周边</string>
+    <string name="user_action_favorites">我的收藏</string>
+    <string name="user_action_settings">设置</string>
+    <string name="user_action_settings_desc">账号安全 / 消息偏好</string>
+
+    <!-- 收藏与打卡 -->
+    <string name="favorite_section_songs">歌曲收藏</string>
+    <string name="favorite_section_products">商品收藏</string>
+    <string name="favorite_section_tasks">应援任务收藏</string>
+    <string name="favorite_empty_songs">还没有收藏歌曲</string>
+    <string name="favorite_empty_products">还没有收藏商品</string>
+    <string name="favorite_empty_tasks">还没有收藏应援任务</string>
+    <string name="user_checkin_title">线下打卡</string>
+    <string name="user_checkin_subtitle">前往地标应援点，完成线下任务领取徽章</string>
+    <string name="user_checkin_task_route">路线指引：重庆来福士「登月舞台」→ 洪崖洞光影墙 → 解放碑主题展柜</string>
+    <string name="user_checkin_task_reward">集齐 3 个地点盖章，可兑换「巡礼纪念票」和限定贴纸</string>
+    <string name="user_checkin_task_time">开放时间：每日 10:00-22:00，志愿者 14:00-20:00 在场协助</string>
+    <string name="user_checkin_task_tips">小贴士：记得打开蓝牙提交现场留影，方便记录你的足迹</string>
+    <string name="user_checkin_action">查看线下地图</string>
+</resources>
+

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 商品详情 -->
+    <string name="product_inventory_format">库存剩余：%1$d 件</string>
+    <string name="product_tags_format">亮点：%1$s</string>
+    <string name="product_star_events_format">应援福利：%1$s</string>
+    <string name="product_release_time_format">发售时间：%1$s</string>
+    <string name="product_limit_format">限定数量：%1$s</string>
+    <string name="product_attributes_format">品类特性：\u000A%1$s</string>
+
+    <!-- 购物车与订单 -->
+    <string name="cart_total_template">合计：¥%1$s</string>
+    <string name="cart_total_placeholder">合计：¥0.00</string>
+    <string name="cart_button_checkout">去结算</string>
+    <string name="cart_price_template">单价：¥%1$s</string>
+    <string name="cart_reduce_quantity">减少数量</string>
+    <string name="cart_increase_quantity">增加数量</string>
+    <string name="cart_action_delete">删除商品</string>
+    <string name="cart_manage">管理商品</string>
+    <string name="cart_manage_done">完成</string>
+    <string name="cart_item_deleted">已删除该商品</string>
+    <string name="title_order_detail">订单详情</string>
+    <string name="order_id_template">订单号：%1$s</string>
+    <string name="order_status_template">订单状态：%1$s</string>
+    <string name="order_status_created">已创建</string>
+    <string name="order_status_paid">已付款</string>
+    <string name="order_status_shipped">已发货</string>
+    <string name="order_status_fulfilled">已完成</string>
+    <string name="order_status_cancelled">已取消</string>
+    <string name="order_status_unknown">未知状态</string>
+    <string name="order_total_template">订单总额：¥%1$s</string>
+    <string name="order_address_template">收货地址：%1$s</string>
+    <string name="order_created_template">下单时间：%1$s</string>
+    <string name="order_items">商品清单</string>
+    <string name="checkout_title">提交订单</string>
+    <string name="checkout_shipping_title">收货信息</string>
+    <string name="checkout_shipping_desc">请确认收货地址，确保应援好物准确送达。</string>
+    <string name="checkout_address_hint">示例：北京市朝阳区应援大道 1 号</string>
+    <string name="checkout_note_hint">给商家留言（选填）</string>
+    <string name="checkout_summary_title">订单商品</string>
+    <string name="checkout_item_meta">数量：%1$d · 单价 ¥%2$s · 小计 ¥%3$s</string>
+    <string name="checkout_total_template">应付金额：¥%1$s</string>
+    <string name="checkout_button_submit">提交订单</string>
+    <string name="checkout_empty_cart">请选择要结算的商品</string>
+    <string name="checkout_address_required">请填写收货地址</string>
+
+    <!-- 商品详情文本 -->
+    <string name="default_product_name">易烊千玺特别周边</string>
+    <string name="default_product_description">%1$s，点亮千纸鹤的收藏柜！</string>
+    <string name="favorite_added">已加入心愿单</string>
+    <string name="favorite_removed">加入心愿单</string>
+    <string name="button_view_comments">查看应援口碑</string>
+    <string name="review_prompt">留下你的应援碎碎念</string>
+    <string name="hint_review_content">分享抢购心得或应援攻略...</string>
+    <string name="button_submit_review">提交评论</string>
+    <string name="dialog_reviews_title">千纸鹤评论墙</string>
+    <string name="no_reviews_yet">还没有千纸鹤留言，快来首发应援！</string>
+    <string name="error_empty_review">请写下至少一句话噢</string>
+    <string name="review_submitted">应援评论发送成功</string>
+    <string name="review_submit_error">评论提交失败，请稍后再试</string>
+    <string name="button_add_to_cart">加入购物车</string>
+    <string name="cart_added_success">已加入购物车</string>
+    <string name="title_product_list">全部应援好物</string>
+    <string name="title_product_detail">商品详情</string>
+</resources>
+
