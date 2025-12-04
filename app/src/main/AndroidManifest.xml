@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.cn.helloworld">
 
+    <!-- 读写存储权限：用于从相册/文件中读取歌单封面、歌曲文件等 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:name=".AdminApplication"
         android:allowBackup="true"
@@ -70,7 +74,6 @@
                 android:value="com.example.cn.helloworld.ui.main.MainActivity" />
         </activity>
 
-
         <!-- 管理员控制台 -->
         <activity
             android:name="com.example.cn.helloworld.ui.admin.AdminDashboardActivity"
@@ -114,7 +117,7 @@
                 android:value="com.example.cn.helloworld.ui.admin.AdminDashboardActivity" />
         </activity>
 
-        <!-- ⭐ 正确保留版本：用户中心 -->
+        <!-- 用户中心 -->
         <activity
             android:name="com.example.cn.helloworld.ui.user.UserProfileActivity"
             android:label="@string/title_user_profile"

@@ -29,6 +29,8 @@ public class PlaylistManagementActivity extends AppCompatActivity {
 
     public static final String EXTRA_PLAYLIST_ID = "extra_playlist_id";
 
+    private static final int REQUEST_EDIT_PLAYLIST = 1001;
+
     private SessionManager sessionManager;
     private PlaylistRepository playlistRepository;
     private PlaylistAdapter adapter;
@@ -52,7 +54,6 @@ public class PlaylistManagementActivity extends AppCompatActivity {
             return;
         }
 
-        // ❗ 正确写法：单例
         playlistRepository = PlaylistRepository.getInstance(this);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerPlaylists);
@@ -85,7 +86,6 @@ public class PlaylistManagementActivity extends AppCompatActivity {
     }
 
     private void loadPlaylists() {
-        // ❗ 修正这里
         adapter.submit(playlistRepository.getAllPlaylists());
     }
 
@@ -107,7 +107,6 @@ public class PlaylistManagementActivity extends AppCompatActivity {
                 0
         );
 
-        // ❗ 正确保存
         playlistRepository.addPlaylist(playlist);
 
         loadPlaylists();
@@ -117,7 +116,19 @@ public class PlaylistManagementActivity extends AppCompatActivity {
     private void openPlaylistEditor(String playlistId) {
         Intent intent = new Intent(this, PlaylistEditorActivity.class);
         intent.putExtra(EXTRA_PLAYLIST_ID, playlistId);
-        startActivity(intent);
+
+        // ⭐ 必须用 startActivityForResult 才能在编辑后自动刷新
+        startActivityForResult(intent, REQUEST_EDIT_PLAYLIST);
+    }
+
+    // ⭐⭐ 关键部分：编辑歌单返回后刷新列表 ⭐⭐
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_EDIT_PLAYLIST && resultCode == RESULT_OK) {
+            loadPlaylists(); // ⭐ 强制刷新显示更新后的封面、歌曲数量
+        }
     }
 
     @Override

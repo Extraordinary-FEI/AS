@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -19,7 +20,6 @@ import com.example.cn.helloworld.data.playlist.PlaylistRepository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 
 public class MusicService extends Service {
 
@@ -45,7 +45,6 @@ public class MusicService extends Service {
         ensureDefaultPlaylist();
         preparePlayer();
 
-        // 注册外部接收器
         musicReceiver = new MusicReceiver(this);
         musicReceiver.register(this);
 
@@ -56,7 +55,10 @@ public class MusicService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null && ACTION_PLAY_SONG.equals(intent.getAction())) {
-            handlePlaySongRequest(intent.getStringExtra(EXTRA_PLAYLIST_ID), intent.getStringExtra(EXTRA_SONG_ID));
+            handlePlaySongRequest(
+                    intent.getStringExtra(EXTRA_PLAYLIST_ID),
+                    intent.getStringExtra(EXTRA_SONG_ID)
+            );
         }
         return START_STICKY;
     }
@@ -137,18 +139,31 @@ public class MusicService extends Service {
         startForeground(1, notification);
     }
 
-    /** 发送UI更新广播 **/
+    /** 发送 UI 更新广播（带封面路径 + 封面资源ID） */
     private void updateUI() {
-        Intent uiIntent = new Intent("ACTION_UPDATE_UI");
         Song currentSong = getCurrentSong();
-        uiIntent.putExtra("title", currentSong != null ? currentSong.getTitle() : getString(R.string.app_name));
-        uiIntent.putExtra("artist", currentSong != null ? currentSong.getArtist() : "");
-        uiIntent.putExtra("coverResId", currentSong != null ? currentSong.getCoverResId() : R.drawable.cover_playlist_placeholder);
-        uiIntent.putExtra("index", currentSong != null ? currentIndex : -1);
-        uiIntent.putExtra("total", currentSongs != null ? currentSongs.size() : 0);
-        uiIntent.putExtra("playlistTitle", currentPlaylistTitle);
-        uiIntent.putExtra("songId", currentSong != null ? currentSong.getId() : "");
+
+        Intent uiIntent = new Intent(ACTION_UPDATE_UI);
+        uiIntent.putExtra("title",
+                currentSong != null ? currentSong.getTitle() : getString(R.string.app_name));
+        uiIntent.putExtra("artist",
+                currentSong != null ? currentSong.getArtist() : "");
+        uiIntent.putExtra("index", currentIndex);
+        uiIntent.putExtra("total", currentSongs.size());
         uiIntent.putExtra("playing", player != null && player.isPlaying());
+        uiIntent.putExtra("songId", currentSong != null ? currentSong.getId() : "");
+
+        // 封面资源ID（用于没有自定义封面时）
+        int coverResId = R.drawable.cover_playlist_placeholder;
+        if (currentSong != null && currentSong.getCoverResId() != 0) {
+            coverResId = currentSong.getCoverResId();
+        }
+        uiIntent.putExtra("coverResId", coverResId);
+
+        // 自定义封面路径（由后台选择的图片）
+        uiIntent.putExtra("coverPath",
+                currentSong != null ? currentSong.getCoverImagePath() : null);
+
         sendBroadcast(uiIntent);
     }
 
@@ -160,34 +175,34 @@ public class MusicService extends Service {
         super.onDestroy();
     }
 
+    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
     private void ensureDefaultPlaylist() {
-        if (currentPlaylist == null) {
-            List<Playlist> all = playlistRepository.getAllPlaylists();
-            if (!all.isEmpty()) {
-                setCurrentPlaylist(all.get(0));
-            }
+        List<Playlist> all = playlistRepository.getAllPlaylists();
+        if (!all.isEmpty()) {
+            setCurrentPlaylist(all.get(0));
         }
     }
 
     private void setCurrentPlaylist(Playlist playlist) {
         currentPlaylist = playlist;
-        currentSongs = playlist.getSongs() == null ? Collections.<Song>emptyList() : playlist.getSongs();
+        currentSongs = playlist.getSongs() == null
+                ? Collections.<Song>emptyList()
+                : playlist.getSongs();
         currentPlaylistTitle = playlist.getTitle();
         currentIndex = 0;
     }
 
     private void setAllSongsPlaylist() {
         List<Playlist> all = playlistRepository.getAllPlaylists();
-        List<Song> songs = new ArrayList<>();
-        for (int i = 0; i < all.size(); i++) {
-            Playlist playlist = all.get(i);
-            if (playlist != null && playlist.getSongs() != null) {
-                songs.addAll(playlist.getSongs());
+        List<Song> songs = new ArrayList<Song>();
+        for (Playlist p : all) {
+            if (p.getSongs() != null) {
+                songs.addAll(p.getSongs());
             }
         }
         currentPlaylist = null;
@@ -198,12 +213,12 @@ public class MusicService extends Service {
 
     private void preparePlayer() {
         Song currentSong = getCurrentSong();
-        if (currentSong == null) {
-            return;
-        }
+        if (currentSong == null) return;
 
         try {
             String localPath = currentSong.getLocalFilePath();
+
+            // ① 本地文件（通过文件选择器选的 content:// 或 file://）
             if (!TextUtils.isEmpty(localPath)) {
                 player = new MediaPlayer();
                 player.setDataSource(this, Uri.parse(localPath));
@@ -214,18 +229,25 @@ public class MusicService extends Service {
                     }
                 });
                 player.prepare();
-            } else if (currentSong.getAudioResId() != 0) {
+                return;
+            }
+
+            // ② raw 资源
+            if (currentSong.getAudioResId() != 0) {
                 player = MediaPlayer.create(this, currentSong.getAudioResId());
-                if (player == null) {
-                    throw new Exception("无法加载音频文件，请检查格式");
+                if (player != null) {
+                    player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            nextMusic();
+                        }
+                    });
                 }
-                player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        nextMusic();
-                    }
-                });
-            } else if (!TextUtils.isEmpty(currentSong.getStreamUrl())) {
+                return;
+            }
+
+            // ③ 网络 URL
+            if (!TextUtils.isEmpty(currentSong.getStreamUrl())) {
                 player = new MediaPlayer();
                 player.setDataSource(currentSong.getStreamUrl());
                 player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -235,10 +257,11 @@ public class MusicService extends Service {
                     }
                 });
                 player.prepare();
-            } else {
-                Toast.makeText(this, R.string.error_song_not_found, Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            Toast.makeText(this, "无法播放：音频文件不存在", Toast.LENGTH_SHORT).show();
+
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "音乐加载失败", Toast.LENGTH_SHORT).show();
@@ -249,17 +272,14 @@ public class MusicService extends Service {
         if (player != null) {
             try {
                 player.stop();
-            } catch (IllegalStateException ignored) {
-            }
+            } catch (Exception ignored) {}
             player.release();
             player = null;
         }
     }
 
     private Song getCurrentSong() {
-        if (currentSongs == null || currentSongs.isEmpty()) {
-            return null;
-        }
+        if (currentSongs.isEmpty()) return null;
         if (currentIndex < 0 || currentIndex >= currentSongs.size()) {
             currentIndex = 0;
         }
@@ -267,42 +287,29 @@ public class MusicService extends Service {
     }
 
     private void handlePlaySongRequest(String playlistId, String songId) {
-        if (TextUtils.isEmpty(playlistId) && TextUtils.isEmpty(songId)) {
-            return;
-        }
-
         if (!TextUtils.isEmpty(playlistId)) {
-            Playlist playlist = playlistRepository.getById(playlistId);
-            if (playlist == null) {
-                Toast.makeText(this, R.string.error_playlist_not_found, Toast.LENGTH_SHORT).show();
-                return;
+            Playlist p = playlistRepository.getById(playlistId);
+            if (p != null) {
+                setCurrentPlaylist(p);
             }
-            setCurrentPlaylist(playlist);
         } else {
             setAllSongsPlaylist();
         }
 
         if (!TextUtils.isEmpty(songId)) {
             int index = findSongIndex(songId);
-            if (index == -1 && currentPlaylist != null) {
-                setAllSongsPlaylist();
-                index = findSongIndex(songId);
+            if (index != -1) {
+                currentIndex = index;
             }
-            if (index == -1) {
-                Toast.makeText(this, R.string.error_song_not_found, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            currentIndex = index;
         }
 
         switchMusic();
     }
 
     private int findSongIndex(String songId) {
-        if (currentSongs == null) return -1;
         for (int i = 0; i < currentSongs.size(); i++) {
-            Song song = currentSongs.get(i);
-            if (songId.equals(song.getId())) {
+            Song s = currentSongs.get(i);
+            if (songId.equals(s.getId())) {
                 return i;
             }
         }
@@ -310,7 +317,7 @@ public class MusicService extends Service {
     }
 
     private String getCurrentSongTitle() {
-        Song song = getCurrentSong();
-        return song != null ? song.getTitle() : getString(R.string.app_name);
+        Song s = getCurrentSong();
+        return s != null ? s.getTitle() : getString(R.string.app_name);
     }
 }

@@ -17,6 +17,8 @@ public class Song implements Serializable {
     private String streamUrl;   // 线上播放 URL
     private String coverUrl;    // 线上封面 URL
     private String localFilePath; // 本地上传的音频路径
+    private String coverImagePath;  // 新增：封面图片文件路径（可由后台设置）
+
 
     /** 本地资源构造器 */
     public Song(String id,
@@ -102,5 +104,13 @@ public class Song implements Serializable {
     public String getStreamUrl() { return streamUrl; }
     public String getCoverUrl() { return coverUrl; }
     public String getLocalFilePath() { return localFilePath; }
+    public String getCoverImagePath() {
+        return coverImagePath;
+    }
+
+    public void setCoverImagePath(String coverImagePath) {
+        this.coverImagePath = coverImagePath;
+    }
+
 }
 

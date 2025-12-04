@@ -1,89 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="3"
     android:background="@drawable/song_cover">
 
-    <!-- 半透明蒙层 -->
+    <!-- 半透明遮罩 -->
     <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#88000000" />
+        android:id="@+id/mask_layer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#88000000"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- 返回按钮 -->
     <ImageButton
         android:id="@+id/btn_back"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         android:background="@android:color/transparent"
-        android:padding="8dp"
+        android:padding="6dp"
         android:src="@drawable/ic_arrow_back_line"
         android:tint="@android:color/white"
         android:contentDescription="返回"
-        android:layout_marginLeft="16dp"
-        android:layout_alignParentLeft="true" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp" />
 
-    <!-- 封面图 + 收藏按钮 -->
+    <!-- 封面区域 -->
     <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp">
+        android:id="@+id/cover_container"
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        app:layout_constraintTop_toBottomOf="@id/btn_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="40dp">
 
         <ImageView
             android:id="@+id/img_cover"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
-            android:src="@drawable/cover_playlist_stage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:background="@drawable/song_cover"
-            android:elevation="8dp" />
+            android:background="@drawable/bg_playlist_cover"
+            android:src="@drawable/cover_playlist_placeholder" />
 
         <ImageButton
             android:id="@+id/btn_favorite_song"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
             android:layout_gravity="top|end"
-            android:layout_margin="12dp"
+            android:layout_margin="10dp"
             android:background="@drawable/bg_favorite_circle"
-            android:contentDescription="@string/user_action_favorites"
-            android:scaleType="centerInside"
+            android:padding="6dp"
             android:src="@drawable/ic_heart_outline_white"
             android:tint="@android:color/white" />
     </FrameLayout>
 
-    <!-- 歌曲标题 -->
+    <!-- 歌曲名 -->
     <TextView
         android:id="@+id/tv_song_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/img_cover"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text="正在播放：粉雾海"
+        android:text="正在播放：歌曲名"
+        android:textColor="@android:color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:shadowColor="#CC000000"
-        android:shadowDx="2"
-        android:shadowDy="2"
-        android:shadowRadius="3" />
+        android:gravity="center"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        app:layout_constraintTop_toBottomOf="@id/cover_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="22dp" />
 
-    <!-- 控制按钮区 -->
+    <!-- 控制按钮区域 -->
     <LinearLayout
         android:id="@+id/control_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_song_name"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/tv_song_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="36dp">
 
         <ImageButton
             android:id="@+id/btn_prev"
@@ -92,18 +100,16 @@
             android:src="@drawable/prev"
             android:background="@null"
             android:tint="@android:color/white"
-            android:layout_margin="12dp"
-            android:contentDescription="上一首" />
+            android:padding="10dp" />
 
         <ImageButton
             android:id="@+id/btn_play"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
             android:src="@drawable/play"
             android:background="@null"
             android:tint="@android:color/white"
-            android:layout_margin="12dp"
-            android:contentDescription="播放" />
+            android:padding="12dp" />
 
         <ImageButton
             android:id="@+id/btn_stop"
@@ -112,8 +118,7 @@
             android:src="@drawable/stop"
             android:background="@null"
             android:tint="@android:color/white"
-            android:layout_margin="12dp"
-            android:contentDescription="停止" />
+            android:padding="10dp" />
 
         <ImageButton
             android:id="@+id/btn_next"
@@ -122,8 +127,8 @@
             android:src="@drawable/next"
             android:background="@null"
             android:tint="@android:color/white"
-            android:layout_margin="12dp"
-            android:contentDescription="下一首" />
+            android:padding="10dp" />
+
     </LinearLayout>
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

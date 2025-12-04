@@ -9,11 +9,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+
+        <!-- ========== 基础信息区域 ========== -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/song_info_basic"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/editSongTitle"
@@ -37,25 +40,78 @@
             android:hint="@string/hint_song_duration"
             android:inputType="number" />
 
+
+        <!-- 分割线 -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:background="@color/divider" />
 
+
+        <!-- ========== 新增：歌曲封面设置区域 ========== -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
+            android:text="歌曲封面"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+
+        <!-- 封面预览 -->
+        <ImageView
+            android:id="@+id/imgSongCoverPreview"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="centerCrop"
+            android:background="@drawable/bg_playlist_cover"
+            android:src="@drawable/cover_playlist_placeholder" />
+
+        <!-- 选择封面按钮 -->
+        <Button
+            android:id="@+id/buttonPickSongCover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="选择封面图片"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal" />
+
+        <!-- 显示封面路径 -->
+        <TextView
+            android:id="@+id/textSongCoverPath"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="未选择封面"
+            android:textColor="@color/textSecondary"
+            android:textSize="12sp" />
+
+
+        <!-- 分割线 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/divider" />
+
+
+        <!-- ========== 音频选择区域 ========== -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="@string/song_info_audio_source"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
             <Button
                 android:id="@+id/buttonPickLocalAudio"
@@ -70,7 +126,8 @@
                 android:layout_marginStart="12dp"
                 android:layout_weight="1"
                 android:text="@string/song_hint_no_file"
-                android:textColor="@color/textSecondary" />
+                android:textColor="@color/textSecondary"
+                android:layout_marginLeft="12dp" />
         </LinearLayout>
 
         <EditText
