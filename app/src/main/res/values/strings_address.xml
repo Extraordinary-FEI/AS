@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 地址管理 -->
+
+    <!-- 页面标题 -->
     <string name="title_address_management">收货地址管理</string>
     <string name="address_header">地址管理</string>
     <string name="address_subtitle">保存你的收货信息，结算时快速选择。</string>
+
+    <!-- 空列表提示 -->
     <string name="address_empty">暂无收货地址，点击下方按钮新增。</string>
+
+    <!-- 按钮 -->
     <string name="action_add_address">新增地址</string>
     <string name="action_edit_address">编辑地址</string>
     <string name="address_delete_confirm">确定删除 %1$s 的地址吗？</string>
+
+    <!-- 表单输入 -->
     <string name="hint_address_name">联系人姓名</string>
     <string name="hint_address_phone">联系电话（可选）</string>
     <string name="hint_address_detail">详细地址</string>
+
+    <!-- 个人中心入口 -->
     <string name="user_action_address">收货地址</string>
     <string name="user_action_address_desc">常用地址一键管理</string>
-</resources>
 
+</resources>

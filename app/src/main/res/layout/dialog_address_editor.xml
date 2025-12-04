@@ -9,7 +9,7 @@
         android:id="@+id/input_address_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="收货人姓名"
+        android:hint="@string/hint_address_name"
         android:inputType="textPersonName" />
 
     <EditText
@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:hint="手机号（可选）"
+        android:hint="@string/hint_address_phone"
         android:inputType="phone" />
 
     <EditText
@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:hint="详细地址"
+        android:hint="@string/hint_address_detail"
         android:inputType="textPostalAddress" />
 
 </LinearLayout>

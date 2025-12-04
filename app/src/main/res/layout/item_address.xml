@@ -10,7 +10,7 @@
         android:id="@+id/text_address_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="姓名"
+        android:text="@string/hint_address_name"
         android:textColor="#222222"
         android:textSize="16sp"
         android:textStyle="bold" />
@@ -20,7 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="电话：12345678900\n地址：广东省 深圳市 xxx"
         android:textColor="#666666"
         android:textSize="14sp" />
 
@@ -35,7 +34,7 @@
             android:id="@+id/button_edit_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="编辑"
+            android:text="@string/action_edit_address"
             android:textColor="#3F51B5"
             android:padding="8dp" />
 
@@ -43,7 +42,7 @@
             android:id="@+id/button_delete_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="删除"
+            android:text="@string/action_delete"
             android:textColor="#F44336"
             android:padding="8dp" />
     </LinearLayout>
