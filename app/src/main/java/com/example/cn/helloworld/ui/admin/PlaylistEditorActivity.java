@@ -374,14 +374,30 @@ public class PlaylistEditorActivity extends AppCompatActivity {
                         }
 
                         songAdapter.submit(songs);
-                        playlist.setSongs(songs);
 
+                        String newCoverUrl = null;
 // ⭐ 如果歌单需要使用第一首歌封面作为封面，自动更新歌单封面
                         if (!songs.isEmpty()) {
                             Song first = songs.get(0);
                             if (first.getCoverImagePath() != null) {
-                                playlist.setCoverUrl(first.getCoverImagePath());
+                                newCoverUrl = first.getCoverImagePath();
                             }
+                        }
+
+                        playlist = playlist.copyWith(
+                                null,
+                                null,
+                                null,
+                                newCoverUrl,
+                                null,
+                                null,
+                                songs,
+                                playlist.getPlayCount(),
+                                playlist.getFavoriteCount()
+                        );
+
+                        if (newCoverUrl != null) {
+                            coverUri = newCoverUrl;
                         }
 
 // ⭐ 写入数据库

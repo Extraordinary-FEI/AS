@@ -40,6 +40,14 @@ public class BannerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View itemView = inflater.inflate(R.layout.item_banner, container, false);
+
+        // ⭐ 强制填满 ViewPager（关键修复）
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        itemView.setLayoutParams(params);
+
         HomeModels.BannerItem banner = banners.get(position);
 
         TextView titleView = (TextView) itemView.findViewById(R.id.banner_title);
@@ -54,6 +62,7 @@ public class BannerAdapter extends PagerAdapter {
         container.addView(itemView);
         return itemView;
     }
+
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
