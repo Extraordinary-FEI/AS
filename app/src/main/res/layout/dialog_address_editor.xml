@@ -3,34 +3,29 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="20dp">
 
     <EditText
         android:id="@+id/input_address_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_address_name"
-        android:inputType="textPersonName"
-        android:maxLines="1" />
+        android:hint="收货人姓名"
+        android:inputType="textPersonName" />
 
     <EditText
         android:id="@+id/input_address_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="@string/hint_address_phone"
-        android:inputType="phone"
-        android:maxLines="1" />
+        android:layout_marginTop="12dp"
+        android:hint="手机号（可选）"
+        android:inputType="phone" />
 
     <EditText
         android:id="@+id/input_address_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="top"
-        android:hint="@string/hint_address_detail"
-        android:inputType="textMultiLine"
-        android:minLines="2" />
+        android:layout_marginTop="12dp"
+        android:hint="详细地址"
+        android:inputType="textPostalAddress" />
 
 </LinearLayout>
-
