@@ -22,7 +22,7 @@
             android:padding="6dp"
             app:srcCompat="@drawable/ic_arrow_back_line"
             android:tint="#222222"
-            android:contentDescription="@string/address_header" />
+            android:contentDescription="back" />
 
         <TextView
             android:id="@+id/address_header"
@@ -36,7 +36,6 @@
             android:paddingBottom="8dp" />
     </LinearLayout>
 
-    <!-- 副标题 -->
     <TextView
         android:id="@+id/address_subtitle"
         android:layout_width="match_parent"
@@ -69,7 +68,8 @@
         android:paddingBottom="12dp" />
 
     <!-- 新增地址按钮 -->
-    <android.support.v7.widget.AppCompatButton
+    <!-- 使用原生 Button 避免 AppCompatButton 在低版本设备上解析字符串时崩溃 -->
+    <Button
         android:id="@+id/button_add_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -80,6 +80,7 @@
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:padding="14dp"
-        android:gravity="center" />
+        android:gravity="center"
+        style="?android:attr/borderlessButtonStyle" />
 
 </LinearLayout>
