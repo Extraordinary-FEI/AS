@@ -15,37 +15,41 @@
         android:orientation="vertical"
         android:paddingBottom="32dp">
 
-        <!-- ⭐ Banner 卡片 -->
+        <!-- ⭐ 高颜值千玺轮播图（左右露边） -->
         <android.support.v7.widget.CardView
             android:id="@+id/bannerCard"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_margin="16dp"
-            app:cardCornerRadius="18dp"
-            app:cardElevation="6dp"
             app:cardUseCompatPadding="true"
-            app:cardBackgroundColor="@android:color/transparent">
+            app:cardCornerRadius="18dp"
+            app:cardElevation="6dp">
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:clipChildren="false">
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/bannerPager"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:clipToPadding="true" />
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:paddingLeft="32dp"
+                    android:paddingRight="32dp"/>
 
+                <!-- ⭐ 指示器 -->
                 <LinearLayout
                     android:id="@+id/bannerIndicator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_gravity="bottom|center_horizontal"
+                    android:orientation="horizontal"
                     android:gravity="center"
-                    android:layout_marginBottom="12dp" />
+                    android:layout_marginBottom="12dp"/>
             </FrameLayout>
-
         </android.support.v7.widget.CardView>
 
         <!-- ⭐ 快速入口（分类区） -->
@@ -71,7 +75,7 @@
                     style="@style/HomeSectionTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/home_category_title" />
+                    android:text="@string/home_category_title"/>
 
                 <TextView
                     android:id="@+id/category_subtitle"
@@ -79,17 +83,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="@string/home_category_subtitle" />
+                    android:text="@string/home_category_subtitle"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/categoryList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="16dp"
-                    android:nestedScrollingEnabled="false" />
-
+                    android:nestedScrollingEnabled="false"/>
             </LinearLayout>
-
         </android.support.v7.widget.CardView>
 
         <!-- ⭐ 应援好物展示 -->
@@ -122,7 +124,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/home_product_title" />
+                        android:text="@string/home_product_title"/>
 
                     <TextView
                         android:id="@+id/button_view_all_products"
@@ -137,7 +139,7 @@
                         android:textColor="@color/homeTextPrimary"
                         android:textSize="12sp"
                         android:clickable="true"
-                        android:focusable="true" />
+                        android:focusable="true"/>
                 </LinearLayout>
 
                 <TextView
@@ -146,7 +148,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="@string/home_product_subtitle" />
+                    android:text="@string/home_product_subtitle"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/productList"
@@ -154,10 +156,8 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="12dp"
                     android:nestedScrollingEnabled="false"
-                    android:clipToPadding="false" />
-
+                    android:clipToPadding="false"/>
             </LinearLayout>
-
         </android.support.v7.widget.CardView>
 
         <!-- ⭐ 歌单模块 -->
@@ -190,7 +190,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/home_playlist_title" />
+                        android:text="@string/home_playlist_title"/>
 
                     <TextView
                         android:id="@+id/button_view_all_playlists"
@@ -205,7 +205,7 @@
                         android:textColor="@color/homeTextPrimary"
                         android:textSize="12sp"
                         android:clickable="true"
-                        android:focusable="true" />
+                        android:focusable="true"/>
                 </LinearLayout>
 
                 <TextView
@@ -214,7 +214,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="@string/home_playlist_subtitle" />
+                    android:text="@string/home_playlist_subtitle"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/playlistList"
@@ -222,10 +222,8 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="16dp"
                     android:nestedScrollingEnabled="false"
-                    android:clipToPadding="false" />
-
+                    android:clipToPadding="false"/>
             </LinearLayout>
-
         </android.support.v7.widget.CardView>
 
         <!-- ⭐ 应援任务模块 -->
@@ -249,7 +247,7 @@
                     style="@style/HomeSectionTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/home_task_title" />
+                    android:text="@string/home_task_title"/>
 
                 <TextView
                     android:id="@+id/task_subtitle"
@@ -257,19 +255,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="@string/home_task_subtitle" />
+                    android:text="@string/home_task_subtitle"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/taskList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="16dp"
-                    android:nestedScrollingEnabled="false" />
-
+                    android:nestedScrollingEnabled="false"/>
             </LinearLayout>
-
         </android.support.v7.widget.CardView>
 
     </LinearLayout>
-
 </android.support.v4.widget.NestedScrollView>

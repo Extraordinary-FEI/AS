@@ -20,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
@@ -33,29 +32,29 @@ import com.example.cn.helloworld.ui.product.ReviewWallActivity;
 
 import java.util.List;
 
-/**
- * 首页内容 Fragment，承载轮播、分类、歌单和应援任务模块。
- */
 public class HomeFragment extends Fragment {
 
     private ViewPager bannerPager;
+    private LinearLayout bannerIndicator;
+    private View bannerCard;
+
     private RecyclerView categoryList;
+    private RecyclerView productList;
     private RecyclerView playlistList;
     private RecyclerView taskList;
-    private RecyclerView productList;
+
     private View viewAllPlaylistsButton;
     private View viewAllProductsButton;
-    private View bannerCard;
-    private LinearLayout bannerIndicator;
 
     private HomeDataSource dataSource;
 
-    // Banner 相关
+    // Banner 自动轮播
     private Handler bannerHandler;
     private Runnable bannerRunnable;
-    private static final int BANNER_INTERVAL = 4000; // 4 秒
+    private static final int BANNER_INTERVAL = 4000;
     private int bannerCount = 0;
     private int currentBannerIndex = 0;
+
     private BannerAdapter bannerAdapter;
 
     @Nullable
@@ -68,15 +67,18 @@ public class HomeFragment extends Fragment {
 
         dataSource = new FakeHomeDataSource(root.getContext());
 
+        // 绑定控件
         bannerPager = (ViewPager) root.findViewById(R.id.bannerPager);
+        bannerIndicator = (LinearLayout) root.findViewById(R.id.bannerIndicator);
+        bannerCard = root.findViewById(R.id.bannerCard);
+
         categoryList = (RecyclerView) root.findViewById(R.id.categoryList);
+        productList = (RecyclerView) root.findViewById(R.id.productList);
         playlistList = (RecyclerView) root.findViewById(R.id.playlistList);
         taskList = (RecyclerView) root.findViewById(R.id.taskList);
-        productList = (RecyclerView) root.findViewById(R.id.productList);
+
         viewAllPlaylistsButton = root.findViewById(R.id.button_view_all_playlists);
         viewAllProductsButton = root.findViewById(R.id.button_view_all_products);
-        bannerCard = root.findViewById(R.id.bannerCard);
-        bannerIndicator = (LinearLayout) root.findViewById(R.id.bannerIndicator);
 
         setupBanner();
         setupCategories();
@@ -88,93 +90,129 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * Banner：设置适配器 + 自动轮播 + 胶囊指示器
+     * ⭐ 高颜值轮播图
      */
     private void setupBanner() {
         Context ctx = getContext();
         if (ctx == null) return;
 
-        final List<HomeModels.BannerItem> banners = dataSource.loadBanners();
-        bannerCount = banners.size();
+        final List<HomeModels.BannerItem> list = dataSource.loadBanners();
+        bannerCount = list.size();
 
         if (bannerCount <= 0) {
-            if (bannerCard != null) {
-                bannerCard.setVisibility(View.GONE);
-            }
+            bannerCard.setVisibility(View.GONE);
             return;
         }
 
-        if (bannerCard != null) {
-            bannerCard.setVisibility(View.VISIBLE);
-        }
-
-        bannerAdapter = new BannerAdapter(ctx, banners);
+        bannerCard.setVisibility(View.VISIBLE);
+        bannerAdapter = new BannerAdapter(ctx, list);
         bannerPager.setAdapter(bannerAdapter);
         bannerPager.setOffscreenPageLimit(3);
 
-        // 初始化胶囊指示器
-        initBannerIndicator(bannerCount);
+        // ⭐ 关键：左右露边 + 缩放
+        bannerPager.setPageMargin(24);
+        bannerPager.setClipToPadding(false);
+        bannerPager.setPadding(60, 0, 60, 0);
 
-        // ViewPager 页面切换时更新指示器
-        bannerPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        bannerPager.setPageTransformer(false, new ViewPager.PageTransformer() {
             @Override
-            public void onPageSelected(int position) {
-                currentBannerIndex = position % bannerCount;
-                updateBannerIndicator(currentBannerIndex);
+            public void transformPage(View page, float position) {
+                float scale = 0.92f - Math.abs(position) * 0.10f;
+                if (scale < 0.82f) scale = 0.82f;
+
+                page.setScaleX(scale);
+                page.setScaleY(scale);
+                page.setAlpha(1f - Math.abs(position) * 0.3f);
             }
         });
 
-        // 自动轮播
+        initBannerIndicator(bannerCount);
+
+        bannerPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int pos) {
+                currentBannerIndex = pos;
+                updateBannerIndicator(pos);
+            }
+        });
+
+        // ⭐ 自动轮播
         bannerHandler = new Handler();
         bannerRunnable = new Runnable() {
             @Override
             public void run() {
-                if (bannerCount <= 0 || bannerPager == null || bannerAdapter == null) {
-                    return;
-                }
-                int next = (bannerPager.getCurrentItem() + 1) % bannerAdapter.getCount();
+                if (bannerCount <= 0) return;
+
+                int next = (bannerPager.getCurrentItem() + 1) % bannerCount;
                 bannerPager.setCurrentItem(next, true);
+
                 bannerHandler.postDelayed(this, BANNER_INTERVAL);
             }
         };
     }
-
-    /**
-     * 创建胶囊指示器
-     */
     private void initBannerIndicator(int count) {
         bannerIndicator.removeAllViews();
-        if (count <= 0 || getContext() == null) return;
+
+        Context ctx = getContext();
+        if (ctx == null) return;
 
         for (int i = 0; i < count; i++) {
-            View dot = new View(getContext());
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            View dot = new View(ctx);
+            LinearLayout.LayoutParams lp =
+                    new LinearLayout.LayoutParams(18, 8);
             lp.setMargins(6, 0, 6, 0);
             dot.setLayoutParams(lp);
+
             dot.setBackgroundResource(
-                    i == 0 ? R.drawable.bg_indicator_capsule_active
-                            : R.drawable.bg_indicator_capsule_inactive
+                    i == 0 ?
+                            R.drawable.bg_indicator_capsule_active :
+                            R.drawable.bg_indicator_capsule_inactive
             );
+
             bannerIndicator.addView(dot);
         }
     }
 
-    /**
-     * 切换胶囊的选中状态
-     */
-    private void updateBannerIndicator(int position) {
-        int childCount = bannerIndicator.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            View child = bannerIndicator.getChildAt(i);
-            child.setBackgroundResource(
-                    i == position
-                            ? R.drawable.bg_indicator_capsule_active
-                            : R.drawable.bg_indicator_capsule_inactive
+    private void updateBannerIndicator(int pos) {
+        int total = bannerIndicator.getChildCount();
+
+        for (int i = 0; i < total; i++) {
+            View dot = bannerIndicator.getChildAt(i);
+            dot.setBackgroundResource(
+                    i == pos ?
+                            R.drawable.bg_indicator_capsule_active :
+                            R.drawable.bg_indicator_capsule_inactive
             );
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (bannerHandler != null && bannerRunnable != null && bannerCount > 0) {
+            bannerHandler.postDelayed(bannerRunnable, BANNER_INTERVAL);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        if (bannerHandler != null) {
+            bannerHandler.removeCallbacks(bannerRunnable);
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (bannerHandler != null) {
+            bannerHandler.removeCallbacks(bannerRunnable);
+        }
+        super.onDestroyView();
+    }
+
+    // --------------------
+    // 分类、商品、歌单、任务（原样保留）
+    // --------------------
 
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     private void setupCategories() {
@@ -183,115 +221,114 @@ public class HomeFragment extends Fragment {
 
         categoryList.setLayoutManager(new GridLayoutManager(ctx, 3));
         categoryList.setNestedScrollingEnabled(false);
-        categoryList.setAdapter(new CategoryAdapter(dataSource.loadCategories(),
+        categoryList.setAdapter(new CategoryAdapter(
+                dataSource.loadCategories(),
                 new CategoryAdapter.OnCategoryClickListener() {
                     @Override
                     public void onCategoryClick(HomeModels.HomeCategory category) {
                         handleCategoryClick(category);
                     }
-                }));
+                }
+        ));
     }
 
     private void handleCategoryClick(HomeModels.HomeCategory category) {
-        Context context = getContext();
-        if (context == null || category == null) {
-            return;
-        }
+        Context ctx = getContext();
+        if (ctx == null || category == null) return;
+
         String action = category.getAction();
+
         if ("action_stage_review".equals(action)) {
-            startActivity(new Intent(context, PlaylistOverviewActivity.class));
+            startActivity(new Intent(ctx, PlaylistOverviewActivity.class));
+
         } else if ("action_new_arrival".equals(action)) {
-            ProductListActivity.start(context);
-        } else if ("action_calendar".equals(action) || "action_check_in".equals(action)) {
+            ProductListActivity.start(ctx);
+
+        } else if ("action_calendar".equals(action)
+                || "action_check_in".equals(action)) {
+
             if (getActivity() != null) {
-                BottomNavigationView nav = (BottomNavigationView) getActivity().findViewById(R.id.bottom_navigation);
-                if (nav != null) {
-                    nav.setSelectedItemId(R.id.navigation_support);
-                }
+                BottomNavigationView nav =
+                        (BottomNavigationView) getActivity().findViewById(R.id.bottom_navigation);
+                if (nav != null) nav.setSelectedItemId(R.id.navigation_support);
             }
+
         } else if ("action_profile".equals(action)) {
             if (getActivity() != null) {
-                BottomNavigationView nav = (BottomNavigationView) getActivity().findViewById(R.id.bottom_navigation);
-                if (nav != null) {
-                    nav.setSelectedItemId(R.id.navigation_profile);
-                }
+                BottomNavigationView nav =
+                        (BottomNavigationView) getActivity().findViewById(R.id.bottom_navigation);
+                if (nav != null) nav.setSelectedItemId(R.id.navigation_profile);
             }
+
         } else if ("action_review_wall".equals(action)) {
-            startActivity(ReviewWallActivity.createIntent(context, null, null));
-        } else if ("action_news".equals(action)) {
-            startActivity(new Intent(context, PlaylistOverviewActivity.class));
+            startActivity(ReviewWallActivity.createIntent(ctx, null, null));
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     private void setupProducts() {
-        final Context context = getContext();
-        if (context == null) return;
+        final Context ctx = getContext();
+        if (ctx == null) return;
 
-        LinearLayoutManager layoutManager =
-                new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-        productList.setLayoutManager(layoutManager);
+        LinearLayoutManager layout =
+                new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
+
+        productList.setLayoutManager(layout);
         productList.setNestedScrollingEnabled(false);
-        final HomeProductAdapter adapter = new HomeProductAdapter(
+
+        HomeProductAdapter adapter = new HomeProductAdapter(
                 dataSource.loadFeaturedProducts(),
                 new HomeProductAdapter.OnProductClickListener() {
                     @Override
                     public void onProductClick(Product product) {
-                        ProductDetailActivity.start(context, product.getId());
+                        ProductDetailActivity.start(ctx, product.getId());
                     }
                 }
         );
+
         productList.setAdapter(adapter);
 
         viewAllProductsButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                ProductListActivity.start(context);
+            public void onClick(View view) {
+                ProductListActivity.start(ctx);
             }
         });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     private void setupPlaylists() {
-        final Context context = getContext();
-        if (context == null) return;
+        final Context ctx = getContext();
+        if (ctx == null) return;
 
-        LinearLayoutManager layoutManager =
-                new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-        playlistList.setLayoutManager(layoutManager);
+        LinearLayoutManager layout =
+                new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
+
+        playlistList.setLayoutManager(layout);
         playlistList.setNestedScrollingEnabled(false);
 
-        // Snap 效果（类似 ViewPager 翻页）
-        SnapHelper snapHelper = new LinearSnapHelper();
-        snapHelper.attachToRecyclerView(playlistList);
+        SnapHelper snap = new LinearSnapHelper();
+        snap.attachToRecyclerView(playlistList);
 
         playlistList.setAdapter(new PlaylistAdapter(
                 dataSource.loadPlaylists(),
                 new PlaylistAdapter.OnPlaylistClickListener() {
                     @Override
                     public void onPlaylistClick(Playlist playlist) {
-                        Context ctx = getContext();
-                        if (ctx != null) {
-                            startActivity(PlaylistDetailActivity.createIntent(
-                                    ctx,
-                                    playlist.getId()
-                            ));
-                        }
+                        startActivity(PlaylistDetailActivity.createIntent(
+                                ctx, playlist.getId()
+                        ));
                     }
 
                     @Override
-                    public void onPlaylistClick(HomeModels.Playlist playlist) {
-                        // 兼容旧接口，不用处理
-                    }
-                }));
+                    public void onPlaylistClick(HomeModels.Playlist playlist) { }
+                }
+        ));
 
         viewAllPlaylistsButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Context ctx = getContext();
-                if (ctx != null) {
-                    startActivity(new Intent(ctx, PlaylistOverviewActivity.class));
-                }
+            public void onClick(View view) {
+                startActivity(new Intent(ctx, PlaylistOverviewActivity.class));
             }
         });
     }
@@ -304,32 +341,5 @@ public class HomeFragment extends Fragment {
         taskList.setLayoutManager(new LinearLayoutManager(ctx));
         taskList.setNestedScrollingEnabled(false);
         taskList.setAdapter(new TaskAdapter(dataSource.loadSupportTasks()));
-    }
-
-    // ---------- 自动轮播生命周期控制 ----------
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (bannerHandler != null && bannerRunnable != null && bannerCount > 0) {
-            bannerHandler.removeCallbacks(bannerRunnable);
-            bannerHandler.postDelayed(bannerRunnable, BANNER_INTERVAL);
-        }
-    }
-
-    @Override
-    public void onPause() {
-        if (bannerHandler != null && bannerRunnable != null) {
-            bannerHandler.removeCallbacks(bannerRunnable);
-        }
-        super.onPause();
-    }
-
-    @Override
-    public void onDestroyView() {
-        if (bannerHandler != null && bannerRunnable != null) {
-            bannerHandler.removeCallbacks(bannerRunnable);
-        }
-        super.onDestroyView();
     }
 }

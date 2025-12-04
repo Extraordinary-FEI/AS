@@ -9,20 +9,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.cn.helloworld.R;
-
 import java.util.List;
 
-/**
- * 简单的轮播适配器，当前仅展示标题与描述。
- */
 public class BannerAdapter extends PagerAdapter {
 
     private final List<HomeModels.BannerItem> banners;
     private final LayoutInflater inflater;
-    private final Context context;
 
     public BannerAdapter(Context context, List<HomeModels.BannerItem> banners) {
-        this.context = context;
         this.banners = banners;
         this.inflater = LayoutInflater.from(context);
     }
@@ -33,36 +27,32 @@ public class BannerAdapter extends PagerAdapter {
     }
 
     @Override
-    public boolean isViewFromObject(View view, Object object) {
-        return view == object;
+    public boolean isViewFromObject(View view, Object o) {
+        return view == o;
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        View itemView = inflater.inflate(R.layout.item_banner, container, false);
 
-        // ⭐ 强制填满 ViewPager（关键修复）
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-        );
-        itemView.setLayoutParams(params);
+        View item = inflater.inflate(R.layout.item_banner, container, false);
+
+        ImageView img = (ImageView) item.findViewById(R.id.banner_image);
+        TextView title = (TextView) item.findViewById(R.id.banner_title);
+        TextView desc = (TextView) item.findViewById(R.id.banner_description);
 
         HomeModels.BannerItem banner = banners.get(position);
 
-        TextView titleView = (TextView) itemView.findViewById(R.id.banner_title);
-        TextView descriptionView = (TextView) itemView.findViewById(R.id.banner_description);
-        ImageView bannerImage = (ImageView) itemView.findViewById(R.id.banner_image);
+        img.setImageResource(banner.getImageResId());
+        title.setText(banner.getTitle());
+        desc.setText(banner.getDescription());
 
-        titleView.setText(banner.getTitle());
-        descriptionView.setText(banner.getDescription());
+        // ⭐ 高级居中轻缩放
+        item.setScaleX(0.92f);
+        item.setScaleY(0.92f);
 
-        bannerImage.setImageResource(banner.getImageResId());
-
-        container.addView(itemView);
-        return itemView;
+        container.addView(item);
+        return item;
     }
-
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
