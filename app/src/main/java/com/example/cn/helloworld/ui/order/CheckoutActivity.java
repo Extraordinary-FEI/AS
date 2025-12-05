@@ -2,8 +2,10 @@ package com.example.cn.helloworld.ui.order;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +20,12 @@ import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.CartItem;
 import com.example.cn.helloworld.data.model.Order;
 import com.example.cn.helloworld.data.repository.AdminOrderRepository;
+import com.example.cn.helloworld.data.model.Address;
+import com.example.cn.helloworld.data.repository.AddressRepository;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class CheckoutActivity extends AppCompatActivity {
@@ -35,6 +40,9 @@ public class CheckoutActivity extends AppCompatActivity {
     private TextView totalTextView;
     private EditText addressEditText;
     private EditText noteEditText;
+    private View selectAddressButton;
+    private List<Address> savedAddresses = new ArrayList<Address>();
+    private AddressRepository addressRepository;
 
     public static Intent createIntent(Context context, ArrayList<CartItem> items, double total) {
         Intent intent = new Intent(context, CheckoutActivity.class);
@@ -60,6 +68,8 @@ public class CheckoutActivity extends AppCompatActivity {
         addressEditText = (EditText) findViewById(R.id.edit_checkout_address);
         noteEditText = (EditText) findViewById(R.id.edit_checkout_note);
         Button submitButton = (Button) findViewById(R.id.button_submit_order);
+        selectAddressButton = findViewById(R.id.button_select_address);
+        addressEditText.setKeyListener(null);
 
         selectedItems = (ArrayList<CartItem>) getIntent().getSerializableExtra(EXTRA_SELECTED_ITEMS);
         totalAmount = getIntent().getDoubleExtra(EXTRA_TOTAL, 0.0);
@@ -80,6 +90,29 @@ public class CheckoutActivity extends AppCompatActivity {
         }
 
         bindSummary();
+
+        addressRepository = new AddressRepository(this);
+        savedAddresses = addressRepository.loadAddresses();
+
+        View.OnClickListener addressSelector = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddressSelectionDialog();
+            }
+        };
+        addressEditText.setOnClickListener(addressSelector);
+        if (selectAddressButton != null) {
+            selectAddressButton.setOnClickListener(addressSelector);
+        }
+        if (!savedAddresses.isEmpty()) {
+            applyAddress(savedAddresses.get(0));
+            addressEditText.post(new Runnable() {
+                @Override
+                public void run() {
+                    showAddressSelectionDialog();
+                }
+            });
+        }
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,5 +180,55 @@ public class CheckoutActivity extends AppCompatActivity {
 
         OrderDetailActivity.start(this, order);
         finish();
+    }
+
+    private void showAddressSelectionDialog() {
+        if (savedAddresses == null || savedAddresses.isEmpty()) {
+            Toast.makeText(this, R.string.checkout_no_addresses, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        CharSequence[] items = new CharSequence[savedAddresses.size()];
+        for (int i = 0; i < savedAddresses.size(); i++) {
+            items[i] = formatAddress(savedAddresses.get(i));
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.checkout_select_address_title)
+                .setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which >= 0 && which < savedAddresses.size()) {
+                            applyAddress(savedAddresses.get(which));
+                        }
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void applyAddress(Address address) {
+        addressEditText.setError(null);
+        addressEditText.setText(formatAddress(address));
+    }
+
+    private String formatAddress(Address address) {
+        StringBuilder builder = new StringBuilder();
+        if (!TextUtils.isEmpty(address.getContactName())) {
+            builder.append(address.getContactName());
+        }
+        if (!TextUtils.isEmpty(address.getPhone())) {
+            if (builder.length() > 0) {
+                builder.append(" ");
+            }
+            builder.append(address.getPhone());
+        }
+        if (!TextUtils.isEmpty(address.getDetail())) {
+            if (builder.length() > 0) {
+                builder.append("\n");
+            }
+            builder.append(address.getDetail());
+        }
+        return builder.toString();
     }
 }

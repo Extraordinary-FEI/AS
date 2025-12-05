@@ -58,11 +58,25 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:background="@drawable/bg_category_chip"
-                        android:inputType="textPostalAddress|textMultiLine"
+                        android:clickable="true"
+                        android:cursorVisible="false"
+                        android:focusable="false"
                         android:hint="@string/checkout_address_hint"
+                        android:inputType="none"
+                        android:longClickable="false"
+                        android:minLines="2"
                         android:padding="12dp"
                         android:textColor="@color/textPrimary"
                         android:textColorHint="@color/textSecondary" />
+
+                    <Button
+                        android:id="@+id/button_select_address"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/checkout_select_address_button"
+                        android:textAllCaps="false" />
 
                     <EditText
                         android:id="@+id/edit_checkout_note"
