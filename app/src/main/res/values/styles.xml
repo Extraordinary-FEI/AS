@@ -1,115 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- 应用主题 -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <!-- 全局背景 -->
         <item name="android:windowBackground">@color/homeBackground</item>
+        <!-- 全局文字颜色 -->
         <item name="android:textColorPrimary">@color/homeTextPrimary</item>
         <item name="android:textColorSecondary">@color/homeTextSecondary</item>
-        <item name="android:fontFamily">sans-serif</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-    <style name="HomeToolbarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+    <!-- Toolbar 标题 -->
+    <style name="HomeToolbarTitle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/colorOnPrimary</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
+    <!-- 区块标题 -->
     <style name="HomeSectionTitle" parent="TextAppearance.AppCompat.Title">
         <item name="android:textColor">@color/homeTextPrimary</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <style name="HomeSectionSubtitle" parent="TextAppearance.AppCompat.Body1">
+    <!-- 区块副标题 -->
+    <style name="HomeSectionSubtitle" parent="TextAppearance.AppCompat.Small">
         <item name="android:textColor">@color/homeTextSecondary</item>
         <item name="android:textSize">14sp</item>
     </style>
 
+    <!-- Banner 标题 -->
     <style name="HomeBannerTitle" parent="TextAppearance.AppCompat.Large">
         <item name="android:textColor">@color/colorOnPrimary</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="HomeBannerSubtitle" parent="TextAppearance.AppCompat.Body1">
+    <!-- Banner 副标题 -->
+    <style name="HomeBannerSubtitle" parent="TextAppearance.AppCompat.Small">
         <item name="android:textColor">@color/colorOnPrimary</item>
         <item name="android:textSize">14sp</item>
     </style>
 
+    <!-- 分类 Chip -->
     <style name="HomeCategoryChip" parent="TextAppearance.AppCompat.Medium">
         <item name="android:background">@drawable/bg_category_chip</item>
         <item name="android:textColor">@color/homeTextPrimary</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
+    <!-- 歌单标题 -->
     <style name="HomePlaylistTitle" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">@color/homeTextPrimary</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="HomePlaylistSubtitle" parent="TextAppearance.AppCompat.Body2">
+    <!-- 歌单副标题 -->
+    <style name="HomePlaylistSubtitle" parent="TextAppearance.AppCompat.Small">
         <item name="android:textColor">@color/homeTextSecondary</item>
         <item name="android:textSize">13sp</item>
     </style>
 
+    <!-- 任务标题 -->
     <style name="HomeTaskTitle" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">@color/homeTextPrimary</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
+    <!-- 截止日期文字 -->
     <style name="HomeTaskDeadline" parent="TextAppearance.AppCompat.Small">
         <item name="android:textColor">@color/homeTaskDeadline</item>
         <item name="android:textSize">12sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <style name="HomeTaskMeta" parent="TextAppearance.AppCompat.Body2">
+    <!-- 任务元信息 -->
+    <style name="HomeTaskMeta" parent="TextAppearance.AppCompat.Small">
         <item name="android:textColor">@color/homeTextSecondary</item>
         <item name="android:textSize">13sp</item>
     </style>
 
-    <style name="HomeTaskStatusChip" parent="TextAppearance.AppCompat.Caption">
+    <!-- 任务状态 Chip -->
+    <style name="HomeTaskStatusChip" parent="TextAppearance.AppCompat.Small">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">12sp</item>
         <item name="android:paddingLeft">12dp</item>
         <item name="android:paddingRight">12dp</item>
-        <item name="android:paddingStart">12dp</item>
-        <item name="android:paddingEnd">12dp</item>
         <item name="android:paddingTop">4dp</item>
         <item name="android:paddingBottom">4dp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:background">@color/colorAccent</item>
     </style>
 
-    <style name="HomeTaskDescription" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/homeTextSecondary</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <style name="TaskDetailSectionTitle" parent="TextAppearance.AppCompat.Medium">
-        <item name="android:textColor">@color/homeTextPrimary</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
-    </style>
-
+    <!-- 任务详情正文 -->
     <style name="TaskDetailBody" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@color/homeTextSecondary</item>
         <item name="android:textSize">15sp</item>
         <item name="android:lineSpacingExtra">4dp</item>
     </style>
 
-    <style name="TaskDetailMeta" parent="TextAppearance.AppCompat.Body2">
+    <!-- 任务详情小标题 -->
+    <style name="TaskDetailSectionTitle" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/homeTextPrimary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- 任务详情元信息 -->
+    <style name="TaskDetailMeta" parent="TextAppearance.AppCompat.Small">
         <item name="android:textColor">@color/homeTextSecondary</item>
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="TaskDetailMetaSecondary" parent="TextAppearance.AppCompat.Caption">
+    <style name="TaskDetailMetaSecondary" parent="TextAppearance.AppCompat.Small">
         <item name="android:textColor">@color/homeTextSecondary</item>
         <item name="android:textSize">12sp</item>
     </style>
+
 </resources>
