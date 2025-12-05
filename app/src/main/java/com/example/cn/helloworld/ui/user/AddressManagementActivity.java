@@ -2,6 +2,7 @@ package com.example.cn.helloworld.ui.user;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.cn.helloworld.R;
@@ -28,17 +28,21 @@ public class AddressManagementActivity extends AppCompatActivity {
     private AddressAdapter adapter;
     private TextView emptyView;
 
+    private boolean selectMode = false; // 是否是选择地址模式
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address_management);
 
+        // 判断是否为选择模式
+        selectMode = getIntent().getBooleanExtra("select_mode", false);
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("地址管理");
+            getSupportActionBar().setTitle(selectMode ? "选择地址" : "地址管理");
         }
 
-        // 修复：将 ImageButton 强制转换改为 View，并添加空检查
         View backButton = findViewById(R.id.button_back);
         if (backButton != null) {
             backButton.setOnClickListener(new View.OnClickListener() {
@@ -53,14 +57,11 @@ public class AddressManagementActivity extends AppCompatActivity {
         addresses = repository.loadAddresses();
 
         emptyView = (TextView) findViewById(R.id.empty_addresses);
-        // 修复：确保 emptyView 不为空，否则 updateEmptyState 会崩溃
         if (emptyView == null) {
-            // 如果找不到 emptyView，则创建一个空的 TextView 避免崩溃
             emptyView = new TextView(this);
         }
 
         RecyclerView recycler = (RecyclerView) findViewById(R.id.recycler_addresses);
-        // 修复：对 recycler 添加空检查
         if (recycler != null) {
             recycler.setLayoutManager(new LinearLayoutManager(this));
             adapter = new AddressAdapter(addresses);
@@ -69,16 +70,19 @@ public class AddressManagementActivity extends AppCompatActivity {
 
         updateEmptyState();
 
-        // 新增地址
         View addButton = findViewById(R.id.button_add_address);
-        // 修复：对 addButton 添加空检查
-        if (addButton != null) {
-            addButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showAddressEditor(null);
-                }
-            });
+        if (selectMode) {
+            // 选择地址模式隐藏“新增地址”
+            if (addButton != null) addButton.setVisibility(View.GONE);
+        } else {
+            if (addButton != null) {
+                addButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showAddressEditor(null);
+                    }
+                });
+            }
         }
     }
 
@@ -96,7 +100,7 @@ public class AddressManagementActivity extends AppCompatActivity {
     }
 
     // ============================================================================
-    // 编辑 / 新增 弹窗
+    // 新增 / 编辑 地址
     // ============================================================================
 
     private void showAddressEditor(final Address origin) {
@@ -108,9 +112,8 @@ public class AddressManagementActivity extends AppCompatActivity {
         final EditText phoneInput = (EditText) view.findViewById(R.id.input_address_phone);
         final EditText detailInput = (EditText) view.findViewById(R.id.input_address_detail);
 
-        boolean isEdit = origin != null;
+        final boolean isEdit = origin != null;
 
-        // 如果是编辑模式，填入原数据
         if (isEdit) {
             nameInput.setText(origin.getContactName());
             phoneInput.setText(origin.getPhone());
@@ -128,12 +131,9 @@ public class AddressManagementActivity extends AppCompatActivity {
                         String phone = phoneInput.getText().toString().trim();
                         String detail = detailInput.getText().toString().trim();
 
-                        if (name.isEmpty() || detail.isEmpty()) {
-                            return;
-                        }
+                        if (name.isEmpty() || detail.isEmpty()) return;
 
-                        if (origin == null) {
-                            // 新地址
+                        if (!isEdit) {
                             Address newAddr = new Address(
                                     "id-" + System.currentTimeMillis(),
                                     name,
@@ -144,18 +144,13 @@ public class AddressManagementActivity extends AppCompatActivity {
                             repository.saveAddresses(addresses);
 
                         } else {
-                            // 更新地址
                             origin.setContactName(name);
                             origin.setPhone(phone);
                             origin.setDetail(detail);
-
                             repository.updateAddress(origin);
                         }
 
-                        // 修复：确保 adapter 不为空
-                        if (adapter != null) {
-                            adapter.notifyDataSetChanged();
-                        }
+                        if (adapter != null) adapter.notifyDataSetChanged();
                         updateEmptyState();
                     }
                 })
@@ -216,45 +211,67 @@ public class AddressManagementActivity extends AppCompatActivity {
         public void bind(final Address address) {
 
             titleView.setText(address.getContactName());
-            detailView.setText(
-                    "电话：" + address.getPhone() + "\n地址：" + address.getDetail()
-            );
+            detailView.setText("电话：" + address.getPhone() + "\n地址：" + address.getDetail());
 
-            if (editBtn != null) {
-                editBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showAddressEditor(address);
+            // 点击地址 → 选择模式下返回数据
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (selectMode) {
+                        String resultText =
+                                address.getContactName() + " · " + address.getPhone() +
+                                        "\n" + address.getDetail();
+
+                        Intent result = new Intent();
+                        result.putExtra("selected_address", resultText);
+                        setResult(RESULT_OK, result);
+
+                        finish();
                     }
-                });
-            }
+                }
+            });
 
-            if (deleteBtn != null) {
-                deleteBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            // 非选择模式 → 显示编辑/删除按钮
+            if (!selectMode) {
 
-                        new AlertDialog.Builder(AddressManagementActivity.this)
-                                .setTitle("删除地址")
-                                .setMessage("确定删除此地址？")
-                                .setPositiveButton("删除", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                if (editBtn != null) {
+                    editBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showAddressEditor(address);
+                        }
+                    });
+                }
 
-                                        addresses.remove(address);
-                                        repository.saveAddresses(addresses);
+                if (deleteBtn != null) {
+                    deleteBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-                                        // 修复：确保 adapter 不为空
-                                        if (adapter != null) {
-                                            adapter.notifyDataSetChanged();
+                            new AlertDialog.Builder(AddressManagementActivity.this)
+                                    .setTitle("删除地址")
+                                    .setMessage("确定删除此地址？")
+                                    .setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            addresses.remove(address);
+                                            repository.saveAddresses(addresses);
+
+                                            if (adapter != null) adapter.notifyDataSetChanged();
+                                            updateEmptyState();
                                         }
-                                        updateEmptyState();
-                                    }
-                                })
-                                .setNegativeButton("取消", null)
-                                .show();
-                    }
-                });
+                                    })
+                                    .setNegativeButton("取消", null)
+                                    .show();
+                        }
+                    });
+                }
+
+            } else {
+                // 选择模式隐藏按钮
+                if (editBtn != null) editBtn.setVisibility(View.GONE);
+                if (deleteBtn != null) deleteBtn.setVisibility(View.GONE);
             }
         }
     }
