@@ -2,12 +2,14 @@ package com.example.cn.helloworld.ui.catalog;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -89,7 +91,9 @@ public class ProductListActivity extends AppCompatActivity {
             final Product product = products.get(position);
             holder.nameView.setText(product.getName());
             holder.priceView.setText(String.format(Locale.getDefault(), "¥%.2f", product.getPrice()));
-            if (product.getImageResId() > 0) {
+            if (!TextUtils.isEmpty(product.getCoverUrl())) {
+                holder.imageView.setImageURI(Uri.parse(product.getCoverUrl()));
+            } else if (product.getImageResId() > 0) {
                 holder.imageView.setImageResource(product.getImageResId());
             } else {
                 holder.imageView.setImageResource(R.drawable.song_cover);

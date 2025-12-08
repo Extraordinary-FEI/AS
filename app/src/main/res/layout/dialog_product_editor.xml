@@ -64,11 +64,27 @@
             android:scaleType="centerCrop"
             android:src="@drawable/song_cover" />
 
+        <TextView
+            android:id="@+id/textProductImageHint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/product_image_builtin_hint"
+            android:textColor="@color/gray_dark"
+            android:textSize="12sp" />
+
         <Spinner
             android:id="@+id/spinnerProductImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp" />
+
+        <Button
+            android:id="@+id/buttonPickProductImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/action_pick_product_image" />
 
         <CheckBox
             android:id="@+id/checkboxProductActive"

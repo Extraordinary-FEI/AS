@@ -1,6 +1,8 @@
 package com.example.cn.helloworld.ui.admin;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -37,6 +39,8 @@ import java.util.Locale;
 
 public class ProductManagementActivity extends AppCompatActivity {
 
+    private static final int REQUEST_CODE_PICK_PRODUCT_IMAGE = 1101;
+
     private SessionManager sessionManager;
     private ProductRepository productRepository;
     private RecyclerView recyclerView;
@@ -51,6 +55,12 @@ public class ProductManagementActivity extends AppCompatActivity {
             R.drawable.cover_lisao,
             R.drawable.song_cover
     };
+
+    private ImageView activeImagePreview;
+    private TextView activeImageHint;
+    private Spinner activeImageSpinner;
+    private String selectedImageUri;
+    private int selectedImageResId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,6 +117,23 @@ public class ProductManagementActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_PICK_PRODUCT_IMAGE && resultCode == RESULT_OK && data != null) {
+            Uri uri = data.getData();
+            if (uri != null) {
+                selectedImageUri = uri.toString();
+                selectedImageResId = 0;
+                updateImagePreview(activeImagePreview, activeImageHint, selectedImageUri,
+                        selectedImageResId > 0 ? selectedImageResId : imageOptions[0]);
+                if (activeImageSpinner != null) {
+                    activeImageSpinner.setSelection(0);
+                }
+            }
+        }
+    }
+
     private void loadProducts() {
         adapter.submit(productRepository.getProductsForAdmin());
     }
@@ -122,6 +149,8 @@ public class ProductManagementActivity extends AppCompatActivity {
         final Spinner categorySpinner = (Spinner) dialogView.findViewById(R.id.spinnerProductCategory);
         final Spinner imageSpinner = (Spinner) dialogView.findViewById(R.id.spinnerProductImage);
         final ImageView imagePreview = (ImageView) dialogView.findViewById(R.id.imageProductPreview);
+        final TextView imageHint = (TextView) dialogView.findViewById(R.id.textProductImageHint);
+        Button pickImageButton = (Button) dialogView.findViewById(R.id.buttonPickProductImage);
 
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item,
@@ -134,6 +163,14 @@ public class ProductManagementActivity extends AppCompatActivity {
                 getResources().getStringArray(R.array.product_image_names));
         imageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         imageSpinner.setAdapter(imageAdapter);
+
+        activeImagePreview = imagePreview;
+        activeImageHint = imageHint;
+        activeImageSpinner = imageSpinner;
+        selectedImageUri = product != null ? product.getCoverUrl() : null;
+        selectedImageResId = (product != null && product.getImageResId() > 0)
+                ? product.getImageResId()
+                : imageOptions[0];
 
         if (product != null) {
             nameInput.setText(product.getName());
@@ -149,23 +186,37 @@ public class ProductManagementActivity extends AppCompatActivity {
             int imageIndex = findImageIndex(product.getImageResId());
             if (imageIndex >= 0) {
                 imageSpinner.setSelection(imageIndex);
-                imagePreview.setImageResource(product.getImageResId());
             }
         } else {
             activeCheckBox.setChecked(true);
             homeSwitchCheckBox.setChecked(true);
-            imagePreview.setImageResource(imageOptions[0]);
         }
 
+        updateImagePreview(imagePreview, imageHint, selectedImageUri, selectedImageResId);
+
+        final boolean[] skipFirstSpinnerEvent = new boolean[]{!TextUtils.isEmpty(selectedImageUri)};
         imageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                imagePreview.setImageResource(imageOptions[position]);
+                if (skipFirstSpinnerEvent[0]) {
+                    skipFirstSpinnerEvent[0] = false;
+                    return;
+                }
+                selectedImageResId = imageOptions[position];
+                selectedImageUri = null;
+                updateImagePreview(imagePreview, imageHint, selectedImageUri, selectedImageResId);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 // no-op
+            }
+        });
+
+        pickImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startPickProductImage();
             }
         });
 
@@ -194,7 +245,10 @@ public class ProductManagementActivity extends AppCompatActivity {
                         String resolvedCategoryId = (categoryId == null && !categories.isEmpty())
                                 ? categories.get(0).getId()
                                 : categoryId;
-                        int imageResId = imageOptions[imageSpinner.getSelectedItemPosition()];
+                        String coverUri = selectedImageUri;
+                        int imageResId = TextUtils.isEmpty(coverUri)
+                                ? selectedImageResId
+                                : 0;
 
                         if (TextUtils.isEmpty(name)) {
                             nameInput.setError(getString(R.string.error_product_name_required));
@@ -228,7 +282,7 @@ public class ProductManagementActivity extends AppCompatActivity {
                                     Collections.<String>emptyList(),
                                     Collections.<String>emptyList(),
                                     active,
-                                    null,
+                                    coverUri,
                                     null,
                                     null,
                                     imageResId,
@@ -246,7 +300,8 @@ public class ProductManagementActivity extends AppCompatActivity {
                                     active,
                                     resolvedCategoryId,
                                     featuredOnHome,
-                                    imageResId);
+                                    imageResId,
+                                    coverUri);
                         }
                         dialogInterface.dismiss();
                         loadProducts();
@@ -255,7 +310,52 @@ public class ProductManagementActivity extends AppCompatActivity {
             }
         });
 
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                activeImagePreview = null;
+                activeImageHint = null;
+                activeImageSpinner = null;
+                selectedImageUri = null;
+                selectedImageResId = 0;
+            }
+        });
+
         dialog.show();
+    }
+
+    private void updateImagePreview(@Nullable ImageView preview, @Nullable TextView hint,
+                                    @Nullable String coverUri, int imageResId) {
+        if (preview == null || hint == null) {
+            return;
+        }
+        if (!TextUtils.isEmpty(coverUri)) {
+            preview.setImageURI(Uri.parse(coverUri));
+            hint.setText(getString(R.string.product_image_local_source, extractDisplayName(coverUri)));
+        } else {
+            preview.setImageResource(imageResId);
+            hint.setText(R.string.product_image_builtin_hint);
+        }
+    }
+
+    private String extractDisplayName(String uriString) {
+        if (TextUtils.isEmpty(uriString)) {
+            return "";
+        }
+        try {
+            Uri uri = Uri.parse(uriString);
+            String segment = uri.getLastPathSegment();
+            return TextUtils.isEmpty(segment) ? uriString : segment;
+        } catch (Exception exception) {
+            return uriString;
+        }
+    }
+
+    private void startPickProductImage() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.action_pick_product_image)),
+                REQUEST_CODE_PICK_PRODUCT_IMAGE);
     }
 
     private List<String> buildCategoryNames() {

@@ -61,6 +61,9 @@
     <string name="product_action_edit">编辑</string>
     <string name="product_action_online">上架</string>
     <string name="product_action_offline">下架</string>
+    <string name="action_pick_product_image">从本地选择图片</string>
+    <string name="product_image_local_source">已选择本地图片：%1$s</string>
+    <string name="product_image_builtin_hint">使用内置封面</string>
 
     <!-- 应援任务审批 -->
     <string name="support_task_action_approve">通过</string>

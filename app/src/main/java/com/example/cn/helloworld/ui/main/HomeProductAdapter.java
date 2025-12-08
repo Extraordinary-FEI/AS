@@ -1,7 +1,9 @@
 package com.example.cn.helloworld.ui.main;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +48,9 @@ public class HomeProductAdapter extends RecyclerView.Adapter<HomeProductAdapter.
         holder.descView.setText(product.getDescription());
         holder.priceView.setText(String.format(Locale.getDefault(), "¥%.2f", product.getPrice()));
 
-        if (product.getImageResId() > 0) {
+        if (!TextUtils.isEmpty(product.getCoverUrl())) {
+            holder.coverView.setImageURI(Uri.parse(product.getCoverUrl()));
+        } else if (product.getImageResId() > 0) {
             holder.coverView.setImageResource(product.getImageResId());
         } else {
             holder.coverView.setImageResource(R.drawable.song_cover);

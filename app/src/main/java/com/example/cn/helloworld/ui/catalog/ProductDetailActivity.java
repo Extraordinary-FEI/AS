@@ -2,6 +2,7 @@ package com.example.cn.helloworld.ui.catalog;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -98,7 +99,9 @@ public class ProductDetailActivity extends AppCompatActivity {
         favoriteButton = (ImageButton) findViewById(R.id.button_favorite);
         TextView attributesView = (TextView) findViewById(R.id.detailProductAttributes);
 
-        if (product.getImageResId() > 0) {
+        if (!TextUtils.isEmpty(product.getCoverUrl())) {
+            imageView.setImageURI(Uri.parse(product.getCoverUrl()));
+        } else if (product.getImageResId() > 0) {
             imageView.setImageResource(product.getImageResId());
         } else {
             imageView.setImageResource(R.drawable.song_cover);

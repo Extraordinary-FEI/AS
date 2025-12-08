@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import android.support.annotation.Nullable;
 
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Category;
@@ -246,7 +247,8 @@ public class ProductRepository {
             boolean active,
             String categoryId,
             boolean featuredOnHome,
-            int imageResId
+            int imageResId,
+            @Nullable String coverUri
     ) {
         for (Product p : products) {
             if (p.getId().equals(productId)) {
@@ -257,6 +259,7 @@ public class ProductRepository {
                 p.setActive(active);
                 p.setFeaturedOnHome(featuredOnHome);
                 p.setImageResId(imageResId);
+                p.setCoverUrl(coverUri);
                 if (!TextUtils.isEmpty(categoryId)) {
                     p.setCategory(categoryId);
                 }
