@@ -117,9 +117,9 @@ public class UserProfileActivity extends AppCompatActivity {
         bannerAdapter = new BannerAdapter(this, banners);
         bannerPager.setAdapter(bannerAdapter);
         bannerPager.setOffscreenPageLimit(3);
-        bannerPager.setPageMargin(24);
-        bannerPager.setClipToPadding(false);
-        bannerPager.setPadding(60, 0, 60, 0);
+        bannerPager.setPageMargin(0);
+        bannerPager.setClipToPadding(true);
+        bannerPager.setPadding(0, 0, 0, 0);
         bannerPager.setPageTransformer(false, new ViewPager.PageTransformer() {
             @Override
             public void transformPage(View page, float position) {

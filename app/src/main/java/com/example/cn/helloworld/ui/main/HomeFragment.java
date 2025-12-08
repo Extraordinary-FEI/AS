@@ -125,10 +125,10 @@ public class HomeFragment extends Fragment {
         bannerPager.setAdapter(bannerAdapter);
         bannerPager.setOffscreenPageLimit(3);
 
-        // ⭐ 关键：左右露边 + 缩放
-        bannerPager.setPageMargin(24);
-        bannerPager.setClipToPadding(false);
-        bannerPager.setPadding(60, 0, 60, 0);
+        // ⭐ 关键：满屏展示
+        bannerPager.setPageMargin(0);
+        bannerPager.setClipToPadding(true);
+        bannerPager.setPadding(0, 0, 0, 0);
 
         bannerPager.setPageTransformer(false, new ViewPager.PageTransformer() {
             @Override
