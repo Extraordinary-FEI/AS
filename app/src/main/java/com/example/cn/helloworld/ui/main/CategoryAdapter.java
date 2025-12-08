@@ -45,7 +45,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         holder.nameView.setText(category.getName());
         holder.subtitleView.setText(category.getSubtitle());
         holder.iconView.setImageResource(category.getIconResId());
-        holder.decorateStageEntry(category);
+        holder.decorateBadge(category);
         holder.bind(category, clickListener);
     }
 
@@ -59,7 +59,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         final TextView subtitleView;
         final ImageView iconView;
         final TextView badgeView;
-        final View iconContainer;
 
         CategoryViewHolder(View itemView) {
             super(itemView);
@@ -67,23 +66,26 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             subtitleView = (TextView) itemView.findViewById(R.id.categorySubtitle);
             iconView = (ImageView) itemView.findViewById(R.id.categoryIcon);
             badgeView = (TextView) itemView.findViewById(R.id.categoryBadge);
-            iconContainer = itemView.findViewById(R.id.categoryIconContainer);
         }
 
-        void decorateStageEntry(HomeModels.HomeCategory category) {
-            boolean isStageReview = category != null
-                    && "action_stage_review".equals(category.getAction());
-
-            if (badgeView != null) {
-                badgeView.setVisibility(isStageReview ? View.VISIBLE : View.GONE);
+        void decorateBadge(HomeModels.HomeCategory category) {
+            if (badgeView == null) {
+                return;
             }
 
-            if (iconContainer != null) {
-                int tint = pickTint(iconContainer, category == null ? null : category.getAction());
-                Drawable bg = DrawableCompat.wrap(iconContainer.getBackground().mutate());
-                DrawableCompat.setTint(bg, tint);
-                iconContainer.setBackground(bg);
+            String action = category == null ? null : category.getAction();
+            String label = resolveBadgeLabel(action);
+            if (label == null) {
+                badgeView.setVisibility(View.GONE);
+                return;
             }
+
+            Drawable badgeBackground = DrawableCompat.wrap(badgeView.getBackground().mutate());
+            int tint = pickTint(badgeView, action);
+            DrawableCompat.setTint(badgeBackground, tint);
+            badgeView.setBackground(badgeBackground);
+            badgeView.setText(label);
+            badgeView.setVisibility(View.VISIBLE);
         }
 
         private int pickTint(View iconContainer, String action) {
@@ -109,6 +111,28 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                 return ContextCompat.getColor(iconContainer.getContext(), R.color.quickEntryProfile);
             }
             return ContextCompat.getColor(iconContainer.getContext(), R.color.homeCategoryBackground);
+        }
+
+        private String resolveBadgeLabel(String action) {
+            if ("action_stage_review".equals(action)) {
+                return "舞台";
+            }
+            if ("action_new_arrival".equals(action)) {
+                return "新品";
+            }
+            if ("action_calendar".equals(action)) {
+                return "日程";
+            }
+            if ("action_review_wall".equals(action)) {
+                return "歌单";
+            }
+            if ("action_news".equals(action)) {
+                return "资讯";
+            }
+            if ("action_profile".equals(action)) {
+                return "档案";
+            }
+            return null;
         }
 
         void bind(final HomeModels.HomeCategory category,

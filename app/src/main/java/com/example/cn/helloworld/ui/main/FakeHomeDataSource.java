@@ -121,37 +121,37 @@ public class FakeHomeDataSource implements HomeDataSource {
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_ticket),
                         context.getString(R.string.category_subtitle_ticket),
-                        R.drawable.ic_category_ticket,
+                        R.drawable.cover_playlist_stage,
                         "action_stage_review"
                 ),
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_merch),
                         context.getString(R.string.category_subtitle_merch),
-                        R.drawable.ic_category_merch,
+                        R.drawable.cover_fenwuhai,
                         "action_new_arrival"
                 ),
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_support),
                         context.getString(R.string.home_task_subtitle),
-                        R.drawable.ic_category_task,
+                        R.drawable.cover_friend,
                         "action_calendar"
                 ),
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_playlist),
                         context.getString(R.string.home_playlist_subtitle),
-                        R.drawable.ic_category_music,
+                        R.drawable.cover_playlist_city,
                         "action_review_wall"
                 ),
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_cart),
                         context.getString(R.string.category_subtitle_signed),
-                        R.drawable.ic_category_signed,
+                        R.drawable.cover_baobei,
                         "action_news"
                 ),
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_profile),
                         context.getString(R.string.home_task_subtitle),
-                        R.drawable.ic_category_task,
+                        R.drawable.cover_playlist_growth,
                         "action_profile"
                 )
         );

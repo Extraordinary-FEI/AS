@@ -3,86 +3,86 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="176dp"
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
     android:layout_marginEnd="8dp"
-    android:layout_marginBottom="14dp"
+    android:layout_marginBottom="10dp"
     android:foreground="?attr/selectableItemBackground"
-    app:cardBackgroundColor="@color/homeSecondarySurface"
     app:cardCornerRadius="18dp"
-    app:cardElevation="0dp"
+    app:cardElevation="2dp"
     app:cardUseCompatPadding="false">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingStart="14dp"
-        android:paddingTop="18dp"
-        android:paddingEnd="14dp"
-        android:paddingBottom="18dp">
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/categoryIcon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/app_name"
+            android:scaleType="centerCrop"
+            android:src="@drawable/cover_playlist_stage"
+            tools:ignore="ContentDescription" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_category_image_scrim" />
 
         <TextView
             android:id="@+id/categoryBadge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-            android:background="@drawable/bg_category_badge_stage"
-            android:textColor="@android:color/white"
-            android:textSize="11sp"
+            android:layout_gravity="start|top"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="5dp"
+            android:background="@drawable/bg_category_badge_round"
+            android:textColor="#FFFFFF"
+            android:textSize="11.5sp"
             android:textStyle="bold"
             android:visibility="gone"
-            tools:text="舞台回顾"
+            tools:text="舞台"
             tools:visibility="visible" />
 
-        <FrameLayout
-            android:id="@+id/categoryIconContainer"
-            android:layout_width="72dp"
-            android:layout_height="64dp"
-            android:background="@drawable/bg_quick_entry_icon_square"
-            android:foreground="@drawable/bg_quick_entry_icon_foreground"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/categoryIcon"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:contentDescription="@string/app_name"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_category_ticket"
-                tools:ignore="ContentDescription" />
-        </FrameLayout>
-
-        <TextView
-            android:id="@+id/categoryName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:textColor="@color/textPrimary"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            tools:text="演出纪念票" />
-
-        <TextView
-            android:id="@+id/categorySubtitle"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:gravity="center"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:textColor="@color/textSecondary"
-            android:textSize="12sp"
-            android:text="@string/category_default_subtitle"
-            tools:text="实名购票 · 限定序列" />
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:paddingStart="14dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="14dp">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/categoryName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="演出纪念票" />
+
+            <TextView
+                android:id="@+id/categorySubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:textColor="#E6FFFFFF"
+                android:textSize="13sp"
+                android:text="@string/category_default_subtitle"
+                tools:text="实名购票 · 限定序列" />
+
+        </LinearLayout>
+
+    </FrameLayout>
 
 </android.support.v7.widget.CardView>

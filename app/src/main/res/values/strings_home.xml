@@ -52,6 +52,7 @@
     <string name="task_enrollment_section_title">我的报名状态</string>
     <string name="task_enrollment_hint">由管理员审核决定，结果会实时同步</string>
     <string name="task_enrollment_action_reapply">已驳回，重新报名</string>
+    <string name="task_enrollment_admin_description">粉丝 %1$s 申请报名「%2$s」（类型：%3$s）</string>
 
     <!-- 任务详情 -->
     <string name="task_detail_time_format">时间安排：%1$s</string>

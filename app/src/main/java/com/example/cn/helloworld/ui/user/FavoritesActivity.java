@@ -245,7 +245,7 @@ public class FavoritesActivity extends AppCompatActivity {
     }
 
     private void removeTask(HomeModels.SupportTask task, int position) {
-        favoriteRepository.setTaskFavorite(task.getTaskId(), false);
+        favoriteRepository.setTaskFavorite(task.getId(), false);
         favoriteTasks.remove(position);
         taskAdapter.notifyItemRemoved(position);
         updateEmptyStates();

@@ -15,8 +15,10 @@ import android.widget.Toast;
 
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.repository.FavoriteRepository;
+import com.example.cn.helloworld.data.repository.SupportTaskRepository;
 import com.example.cn.helloworld.data.repository.SupportTaskEnrollmentRepository;
 import com.example.cn.helloworld.data.session.SessionManager;
+import com.example.cn.helloworld.data.model.SupportTask;
 
 public class SupportTaskDetailActivity extends AppCompatActivity {
 
@@ -250,14 +252,15 @@ public class SupportTaskDetailActivity extends AppCompatActivity {
         if (enabled) {
             final String feedback = getString(R.string.task_detail_action_feedback, actionText);
             actionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    enrollmentRepository.markApplied(getCurrentUserId(), supportTask.getId());
-                    refreshEnrollmentStatus();
-                    updateEnrollmentViews();
-                    Toast.makeText(SupportTaskDetailActivity.this, feedback, Toast.LENGTH_SHORT)
-                            .show();
-                    configureActionButton((Button) v);
+                    @Override
+                    public void onClick(View v) {
+                        enrollmentRepository.markApplied(getCurrentUserId(), supportTask.getId());
+                        pushToAdminApprovalQueue();
+                        refreshEnrollmentStatus();
+                        updateEnrollmentViews();
+                        Toast.makeText(SupportTaskDetailActivity.this, feedback, Toast.LENGTH_SHORT)
+                                .show();
+                        configureActionButton((Button) v);
                 }
             });
         } else {
@@ -295,6 +298,34 @@ public class SupportTaskDetailActivity extends AppCompatActivity {
         enrollmentStatusView.setBackgroundResource(backgroundRes);
         if (enrollmentHintView != null) {
             enrollmentHintView.setText(R.string.task_enrollment_hint);
+        }
+    }
+
+    /**
+     * 将粉丝报名同步到管理员审批列表，便于后台看到新的待审核任务。
+     */
+    private void pushToAdminApprovalQueue() {
+        SupportTaskRepository adminRepository = new SupportTaskRepository(this);
+        String applicantId = getCurrentUserId();
+        String applicantName = sessionManager.getUsername();
+        String adminTaskId = supportTask.getId() + "_" + applicantId;
+
+        String description = getString(R.string.task_enrollment_admin_description,
+                applicantName, supportTask.getName(), supportTask.getTaskType());
+
+        SupportTask existing = adminRepository.getTaskById(adminTaskId);
+        if (existing == null) {
+            SupportTask newTask = new SupportTask(adminTaskId, supportTask.getName(), description,
+                    SupportTaskRepository.STATUS_PENDING, null, System.currentTimeMillis(),
+                    System.currentTimeMillis(), 1);
+            adminRepository.createTask(newTask);
+        } else {
+            existing.setTitle(supportTask.getName());
+            existing.setDescription(description);
+            existing.setStatus(SupportTaskRepository.STATUS_PENDING);
+            existing.setAssignedAdmin(null);
+            existing.setUpdatedAt(System.currentTimeMillis());
+            adminRepository.updateTask(existing);
         }
     }
 

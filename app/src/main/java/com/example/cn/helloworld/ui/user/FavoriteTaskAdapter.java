@@ -33,8 +33,8 @@ class FavoriteTaskAdapter extends RecyclerView.Adapter<FavoriteTaskAdapter.ViewH
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        HomeModels.SupportTask task = tasks.get(position);
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        final HomeModels.SupportTask task = tasks.get(position);
         holder.title.setText(task.getName());
         holder.subtitle.setText(task.getLocation());
         holder.tag.setText(R.string.favorite_section_tasks);

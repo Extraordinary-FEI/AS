@@ -16,6 +16,9 @@
     <string name="cart_reduce_quantity">减少数量</string>
     <string name="cart_increase_quantity">增加数量</string>
     <string name="cart_action_delete">删除商品</string>
+    <string name="cart_quantity_dialog_title">修改商品数量</string>
+    <string name="cart_quantity_dialog_hint">请输入要购买的数量</string>
+    <string name="cart_quantity_invalid">请输入有效的购买数量</string>
     <string name="cart_manage">管理商品</string>
     <string name="cart_manage_done">完成</string>
     <string name="cart_item_deleted">已删除该商品</string>

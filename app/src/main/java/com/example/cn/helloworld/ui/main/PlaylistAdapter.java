@@ -86,9 +86,12 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
             // 统计信息
             metaView.setText(formatMeta(playlist));
 
-            // 封面：优先本地 resId
+            // 封面：优先 Uri，再次使用本地 resId
+            String coverUrl = playlist.getCoverUrl();
             Integer coverResId = playlist.getCoverResId();
-            if (coverResId != null) {
+            if (coverUrl != null && coverUrl.length() > 0) {
+                coverView.setImageURI(android.net.Uri.parse(coverUrl));
+            } else if (coverResId != null) {
                 coverView.setImageResource(coverResId);
             } else {
                 coverView.setImageResource(R.drawable.cover_playlist_placeholder);

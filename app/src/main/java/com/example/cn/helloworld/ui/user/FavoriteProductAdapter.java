@@ -34,8 +34,8 @@ class FavoriteProductAdapter extends RecyclerView.Adapter<FavoriteProductAdapter
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Product product = products.get(position);
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        final Product product = products.get(position);
         holder.title.setText(product.getName());
         holder.subtitle.setText(String.format(Locale.getDefault(), "¥%.2f", product.getPrice()));
         holder.tag.setText(R.string.favorite_section_products);

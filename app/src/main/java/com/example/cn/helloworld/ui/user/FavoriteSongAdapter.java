@@ -33,8 +33,8 @@ class FavoriteSongAdapter extends RecyclerView.Adapter<FavoriteSongAdapter.ViewH
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Song song = songs.get(position);
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        final Song song = songs.get(position);
         holder.title.setText(song.getTitle());
         holder.subtitle.setText(song.getArtist());
         holder.tag.setText(R.string.favorite_section_songs);

@@ -159,8 +159,8 @@ public class HomeFragment extends Fragment {
         for (int i = 0; i < count; i++) {
             View dot = new View(ctx);
             LinearLayout.LayoutParams lp =
-                    new LinearLayout.LayoutParams(28, 6);
-            lp.setMargins(8, 0, 8, 0);
+                    new LinearLayout.LayoutParams(20, 6);
+            lp.setMargins(6, 0, 6, 0);
             dot.setLayoutParams(lp);
 
             dot.setBackgroundResource(

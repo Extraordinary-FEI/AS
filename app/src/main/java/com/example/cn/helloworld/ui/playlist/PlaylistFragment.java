@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,6 +112,7 @@ public class PlaylistFragment extends Fragment {
                 playlist.getSongs().size() + " 首 · " + playlist.getPlayCount() + " 次播放"
         );
 
+        songAdapter.setPlaylistCover(playlist.getCoverUrl(), playlist.getCoverResId());
         songAdapter.submit(playlist.getSongs());
     }
 
@@ -124,6 +126,8 @@ public class PlaylistFragment extends Fragment {
         }
 
         private List<Song> songs;
+        private String playlistCoverUrl;
+        private Integer playlistCoverResId;
         private final OnSongClickListener listener;
 
         SongAdapter(List<Song> s, OnSongClickListener listener) {
@@ -136,6 +140,11 @@ public class PlaylistFragment extends Fragment {
             notifyDataSetChanged();
         }
 
+        void setPlaylistCover(String coverUrl, Integer coverResId) {
+            this.playlistCoverUrl = coverUrl;
+            this.playlistCoverResId = coverResId;
+        }
+
         @NonNull
         @Override
         public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -146,10 +155,14 @@ public class PlaylistFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull Holder h, int pos) {
-            Song s = songs.get(pos);
+            final Song s = songs.get(pos);
 
             h.title.setText(s.getTitle());
             h.artist.setText(s.getArtist());
+            h.duration.setText(formatDuration(s.getDurationMs()));
+            h.description.setText(s.getDescription());
+
+            bindCover(h.cover, s);
             h.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -167,13 +180,44 @@ public class PlaylistFragment extends Fragment {
 
         static class Holder extends RecyclerView.ViewHolder {
 
-            TextView title, artist;
+            TextView title, artist, duration, description;
+            ImageView cover;
 
             Holder(View v) {
                 super(v);
                 title = (TextView) v.findViewById(R.id.text_song_title);
                 artist = (TextView) v.findViewById(R.id.text_song_artist);
+                duration = (TextView) v.findViewById(R.id.text_song_duration);
+                description = (TextView) v.findViewById(R.id.text_song_description);
+                cover = (ImageView) v.findViewById(R.id.image_song_cover);
             }
+        }
+
+        private void bindCover(ImageView coverView, Song song) {
+            if (coverView == null || song == null) {
+                return;
+            }
+
+            if (!TextUtils.isEmpty(song.getCoverImagePath())) {
+                coverView.setImageURI(Uri.parse(song.getCoverImagePath()));
+            } else if (!TextUtils.isEmpty(song.getCoverUrl())) {
+                coverView.setImageURI(Uri.parse(song.getCoverUrl()));
+            } else if (song.getCoverResId() != 0) {
+                coverView.setImageResource(song.getCoverResId());
+            } else if (!TextUtils.isEmpty(playlistCoverUrl)) {
+                coverView.setImageURI(Uri.parse(playlistCoverUrl));
+            } else if (playlistCoverResId != null) {
+                coverView.setImageResource(playlistCoverResId);
+            } else {
+                coverView.setImageResource(R.drawable.cover_playlist_placeholder);
+            }
+        }
+
+        private static String formatDuration(long durationMs) {
+            long totalSeconds = durationMs / 1000;
+            long minutes = totalSeconds / 60;
+            long seconds = totalSeconds % 60;
+            return String.format(java.util.Locale.getDefault(), "%02d:%02d", minutes, seconds);
         }
     }
 }
