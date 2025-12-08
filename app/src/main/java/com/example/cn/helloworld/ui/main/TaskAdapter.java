@@ -43,7 +43,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.timeView.setText(context.getString(R.string.task_time_format, task.getTimeRange()));
         holder.capacityView.setText(context.getString(R.string.task_capacity_format,
                 task.getEnrolledCount(), task.getMaxParticipants()));
-        holder.registrationView.setText(getRegistrationText(context, task.getRegistrationStatus()));
+        holder.registrationView.setText(buildRegistrationLine(context, task));
         holder.descriptionView.setText(task.getDescription());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -54,6 +54,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 v.getContext().startActivity(intent);
             }
         });
+    }
+
+    private String buildRegistrationLine(Context context, HomeModels.SupportTask task) {
+        String base = getRegistrationText(context, task.getRegistrationStatus());
+        HomeModels.SupportTask.EnrollmentState enrollment = task.getEnrollmentState();
+        if (enrollment == HomeModels.SupportTask.EnrollmentState.NOT_APPLIED) {
+            return base;
+        }
+        return base + " · " + getEnrollmentText(context, enrollment);
     }
 
     @Override
@@ -120,6 +129,20 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             case NOT_OPEN:
             default:
                 return context.getString(R.string.task_registration_not_open);
+        }
+    }
+
+    private String getEnrollmentText(Context context, HomeModels.SupportTask.EnrollmentState state) {
+        switch (state) {
+            case APPROVED:
+                return context.getString(R.string.task_enrollment_status_approved);
+            case REJECTED:
+                return context.getString(R.string.task_enrollment_status_rejected);
+            case PENDING:
+                return context.getString(R.string.task_enrollment_status_pending);
+            case NOT_APPLIED:
+            default:
+                return context.getString(R.string.task_enrollment_status_not_applied);
         }
     }
 }

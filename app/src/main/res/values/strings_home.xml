@@ -45,6 +45,13 @@
     <string name="task_registration_closed">报名结束</string>
     <string name="task_registration_check_in">可签到</string>
     <string name="task_registration_not_open">尚未开放</string>
+    <string name="task_enrollment_status_not_applied">未报名</string>
+    <string name="task_enrollment_status_pending">已报名（待管理员审核）</string>
+    <string name="task_enrollment_status_approved">已通过</string>
+    <string name="task_enrollment_status_rejected">已驳回</string>
+    <string name="task_enrollment_section_title">我的报名状态</string>
+    <string name="task_enrollment_hint">由管理员审核决定，结果会实时同步</string>
+    <string name="task_enrollment_action_reapply">已驳回，重新报名</string>
 
     <!-- 任务详情 -->
     <string name="task_detail_time_format">时间安排：%1$s</string>

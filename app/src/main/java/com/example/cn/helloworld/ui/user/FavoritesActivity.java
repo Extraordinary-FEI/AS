@@ -16,8 +16,10 @@ import com.example.cn.helloworld.data.model.Product;
 import com.example.cn.helloworld.data.model.Song;
 import com.example.cn.helloworld.data.repository.FavoriteRepository;
 import com.example.cn.helloworld.data.repository.ProductRepository;
+import com.example.cn.helloworld.data.repository.SupportTaskEnrollmentRepository;
 import com.example.cn.helloworld.data.repository.SupportTaskRepository;
 import com.example.cn.helloworld.data.playlist.PlaylistRepository;
+import com.example.cn.helloworld.data.session.SessionManager;
 import com.example.cn.helloworld.ui.main.HomeModels;
 
 import java.util.ArrayList;
@@ -32,6 +34,8 @@ public class FavoritesActivity extends AppCompatActivity {
     private PlaylistRepository playlistRepository;
     private ProductRepository productRepository;
     private SupportTaskRepository supportTaskRepository;
+    private SupportTaskEnrollmentRepository enrollmentRepository;
+    private SessionManager sessionManager;
 
     private RecyclerView songList;
     private RecyclerView productList;
@@ -56,6 +60,8 @@ public class FavoritesActivity extends AppCompatActivity {
         playlistRepository = PlaylistRepository.getInstance(this);
         productRepository = new ProductRepository(this);
         supportTaskRepository = new SupportTaskRepository(this);
+        enrollmentRepository = new SupportTaskEnrollmentRepository(this);
+        sessionManager = new SessionManager(this);
 
         songList = (RecyclerView) findViewById(R.id.recycler_fav_songs);
         productList = (RecyclerView) findViewById(R.id.recycler_fav_products);
@@ -136,13 +142,30 @@ public class FavoritesActivity extends AppCompatActivity {
                             100,
                             task.getPriority(),
                             HomeModels.SupportTask.TaskStatus.ONGOING,
-                            HomeModels.SupportTask.RegistrationStatus.OPEN
+                            HomeModels.SupportTask.RegistrationStatus.OPEN,
+                            mapEnrollment(task.getTaskId())
                     ));
                 }
             }
         }
         taskList.setAdapter(new FavoriteTaskAdapter(tasks));
         emptyTasks.setVisibility(tasks.isEmpty() ? View.VISIBLE : View.GONE);
+    }
+
+    private HomeModels.SupportTask.EnrollmentState mapEnrollment(String taskId) {
+        SupportTaskEnrollmentRepository.EnrollmentStatus stored =
+                enrollmentRepository.getEnrollmentStatus(sessionManager.getUserId(), taskId);
+        switch (stored) {
+            case APPROVED:
+                return HomeModels.SupportTask.EnrollmentState.APPROVED;
+            case REJECTED:
+                return HomeModels.SupportTask.EnrollmentState.REJECTED;
+            case PENDING:
+                return HomeModels.SupportTask.EnrollmentState.PENDING;
+            case NOT_APPLIED:
+            default:
+                return HomeModels.SupportTask.EnrollmentState.NOT_APPLIED;
+        }
     }
 }
 

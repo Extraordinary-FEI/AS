@@ -15,12 +15,17 @@ import android.widget.Toast;
 
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.repository.FavoriteRepository;
+import com.example.cn.helloworld.data.repository.SupportTaskEnrollmentRepository;
+import com.example.cn.helloworld.data.session.SessionManager;
 
 public class SupportTaskDetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_SUPPORT_TASK = "extra_support_task";
 
     private HomeModels.SupportTask supportTask;
+    private SupportTaskEnrollmentRepository enrollmentRepository;
+    private SessionManager sessionManager;
+    private SupportTaskEnrollmentRepository.EnrollmentStatus enrollmentStatus;
 
     // ⭐ 新增：收藏功能变量
     private FavoriteRepository favoriteRepository;
@@ -29,6 +34,8 @@ public class SupportTaskDetailActivity extends AppCompatActivity {
 
     private ImageView btnFavorite;
     private TextView textFavorite;
+    private TextView enrollmentStatusView;
+    private TextView enrollmentHintView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +56,16 @@ public class SupportTaskDetailActivity extends AppCompatActivity {
         }
 
         supportTask = (HomeModels.SupportTask) extra;
+        sessionManager = new SessionManager(this);
+        enrollmentRepository = new SupportTaskEnrollmentRepository(this);
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle(supportTask.getName());
 
         // ⭐ 初始化收藏
         initializeFavoriteFeature();
+
+        refreshEnrollmentStatus();
 
         bindTask();
     }
@@ -79,6 +90,14 @@ public class SupportTaskDetailActivity extends AppCompatActivity {
                 toggleFavorite();
             }
         });
+    }
+
+    private void refreshEnrollmentStatus() {
+        enrollmentStatus = enrollmentRepository.getEnrollmentStatus(getCurrentUserId(), supportTask.getId());
+    }
+
+    private String getCurrentUserId() {
+        return sessionManager == null ? "" : sessionManager.getUserId();
     }
 
     /** 点击收藏 / 取消收藏 */
@@ -141,6 +160,8 @@ public class SupportTaskDetailActivity extends AppCompatActivity {
         TextView contactView = (TextView) findViewById(R.id.task_contact);
         TextView progressView = (TextView) findViewById(R.id.task_progress);
         TextView progressNoteView = (TextView) findViewById(R.id.task_progress_note);
+        enrollmentStatusView = (TextView) findViewById(R.id.task_user_enrollment_status);
+        enrollmentHintView = (TextView) findViewById(R.id.task_user_enrollment_hint);
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.task_progress_bar);
         Button actionButton = (Button) findViewById(R.id.task_action);
 
@@ -170,6 +191,7 @@ public class SupportTaskDetailActivity extends AppCompatActivity {
             progressNoteView.setText(note);
         }
 
+        updateEnrollmentViews();
         configureActionButton(actionButton);
     }
 
@@ -182,12 +204,6 @@ public class SupportTaskDetailActivity extends AppCompatActivity {
             enabled = false;
         } else {
             switch (supportTask.getRegistrationStatus()) {
-                case OPEN:
-                    actionText = getString(R.string.task_detail_enroll);
-                    break;
-                case CHECK_IN:
-                    actionText = getString(R.string.task_detail_check_in);
-                    break;
                 case FULL:
                     actionText = getString(R.string.task_detail_full);
                     enabled = false;
@@ -196,9 +212,34 @@ public class SupportTaskDetailActivity extends AppCompatActivity {
                     actionText = getString(R.string.task_detail_completed);
                     enabled = false;
                     break;
-                default:
+                case NOT_OPEN:
                     actionText = getString(R.string.task_detail_not_open);
                     enabled = false;
+                    break;
+                default:
+                    refreshEnrollmentStatus();
+                    switch (enrollmentStatus) {
+                        case APPROVED:
+                            actionText = getString(R.string.task_enrollment_status_approved);
+                            enabled = false;
+                            break;
+                        case REJECTED:
+                            actionText = getString(R.string.task_enrollment_action_reapply);
+                            enabled = true;
+                            break;
+                        case PENDING:
+                            actionText = getString(R.string.task_enrollment_status_pending);
+                            enabled = false;
+                            break;
+                        case NOT_APPLIED:
+                        default:
+                            if (supportTask.getRegistrationStatus() == HomeModels.SupportTask.RegistrationStatus.CHECK_IN) {
+                                actionText = getString(R.string.task_detail_check_in);
+                            } else {
+                                actionText = getString(R.string.task_detail_enroll);
+                            }
+                            break;
+                    }
                     break;
             }
         }
@@ -211,10 +252,49 @@ public class SupportTaskDetailActivity extends AppCompatActivity {
             actionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    enrollmentRepository.markApplied(getCurrentUserId(), supportTask.getId());
+                    refreshEnrollmentStatus();
+                    updateEnrollmentViews();
                     Toast.makeText(SupportTaskDetailActivity.this, feedback, Toast.LENGTH_SHORT)
                             .show();
+                    configureActionButton((Button) v);
                 }
             });
+        } else {
+            actionButton.setOnClickListener(null);
+        }
+    }
+
+    private void updateEnrollmentViews() {
+        if (enrollmentStatusView == null) {
+            return;
+        }
+        refreshEnrollmentStatus();
+        String statusText;
+        int backgroundRes;
+        switch (enrollmentStatus) {
+            case APPROVED:
+                statusText = getString(R.string.task_enrollment_status_approved);
+                backgroundRes = R.drawable.bg_task_status_ongoing;
+                break;
+            case REJECTED:
+                statusText = getString(R.string.task_enrollment_status_rejected);
+                backgroundRes = R.drawable.bg_task_status_completed;
+                break;
+            case PENDING:
+                statusText = getString(R.string.task_enrollment_status_pending);
+                backgroundRes = R.drawable.bg_task_status_upcoming;
+                break;
+            case NOT_APPLIED:
+            default:
+                statusText = getString(R.string.task_enrollment_status_not_applied);
+                backgroundRes = R.drawable.bg_task_status_upcoming;
+                break;
+        }
+        enrollmentStatusView.setText(statusText);
+        enrollmentStatusView.setBackgroundResource(backgroundRes);
+        if (enrollmentHintView != null) {
+            enrollmentHintView.setText(R.string.task_enrollment_hint);
         }
     }
 

@@ -1,5 +1,7 @@
 package com.example.cn.helloworld.ui.playlist;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.cn.helloworld.MusicActivity;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.data.model.Song;
@@ -42,6 +45,7 @@ public class PlaylistFragment extends Fragment {
     private TextView metaView;
     private RecyclerView songList;
 
+    private String playlistId;
     private SongAdapter songAdapter;
 
     @Nullable
@@ -62,7 +66,17 @@ public class PlaylistFragment extends Fragment {
         songList = (RecyclerView) view.findViewById(R.id.recycler_playlist_songs);   // ✔ 正确 ID
 
         songList.setLayoutManager(new LinearLayoutManager(getContext()));
-        songAdapter = new SongAdapter(new ArrayList<Song>());
+        songAdapter = new SongAdapter(new ArrayList<Song>(), new SongAdapter.OnSongClickListener() {
+            @Override
+            public void onSongClick(Song song) {
+                Context context = getContext();
+                if (context == null || song == null || playlistId == null) {
+                    return;
+                }
+                Intent intent = MusicActivity.createIntent(context, playlistId, song.getId());
+                context.startActivity(intent);
+            }
+        });
         songList.setAdapter(songAdapter);
 
         loadPlaylist();
@@ -73,8 +87,8 @@ public class PlaylistFragment extends Fragment {
     private void loadPlaylist() {
         if (getArguments() == null) return;
 
-        String id = getArguments().getString(ARG_PLAYLIST_ID);
-        Playlist playlist = playlistRepository.getById(id);
+        playlistId = getArguments().getString(ARG_PLAYLIST_ID);
+        Playlist playlist = playlistRepository.getById(playlistId);
         if (playlist == null) return;
 
         // 封面
@@ -105,10 +119,16 @@ public class PlaylistFragment extends Fragment {
 
     private static class SongAdapter extends RecyclerView.Adapter<SongAdapter.Holder> {
 
-        private List<Song> songs;
+        interface OnSongClickListener {
+            void onSongClick(Song song);
+        }
 
-        SongAdapter(List<Song> s) {
+        private List<Song> songs;
+        private final OnSongClickListener listener;
+
+        SongAdapter(List<Song> s, OnSongClickListener listener) {
             songs = s;
+            this.listener = listener;
         }
 
         void submit(List<Song> list) {
@@ -130,6 +150,14 @@ public class PlaylistFragment extends Fragment {
 
             h.title.setText(s.getTitle());
             h.artist.setText(s.getArtist());
+            h.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onSongClick(s);
+                    }
+                }
+            });
         }
 
         @Override

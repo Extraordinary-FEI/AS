@@ -146,6 +146,13 @@ public final class HomeModels {
             CLOSED
         }
 
+        public enum EnrollmentState {
+            NOT_APPLIED,
+            PENDING,
+            APPROVED,
+            REJECTED
+        }
+
         private final String id;
         private final String name;
         private final String taskType;
@@ -159,6 +166,7 @@ public final class HomeModels {
         private final int enrolledCount;
         private final TaskStatus status;
         private final RegistrationStatus registrationStatus;
+        private final EnrollmentState enrollmentState;
 
         public SupportTask(String id,
                            String name,
@@ -173,6 +181,25 @@ public final class HomeModels {
                            int enrolledCount,
                            TaskStatus status,
                            RegistrationStatus registrationStatus) {
+            this(id, name, taskType, timeRange, location, description, guide, contact,
+                    progressNote, maxParticipants, enrolledCount, status, registrationStatus,
+                    EnrollmentState.NOT_APPLIED);
+        }
+
+        public SupportTask(String id,
+                           String name,
+                           String taskType,
+                           String timeRange,
+                           String location,
+                           String description,
+                           String guide,
+                           String contact,
+                           String progressNote,
+                           int maxParticipants,
+                           int enrolledCount,
+                           TaskStatus status,
+                           RegistrationStatus registrationStatus,
+                           EnrollmentState enrollmentState) {
             this.id = id;
             this.name = name;
             this.taskType = taskType;
@@ -186,6 +213,9 @@ public final class HomeModels {
             this.enrolledCount = enrolledCount;
             this.status = status;
             this.registrationStatus = registrationStatus;
+            this.enrollmentState = enrollmentState == null
+                    ? EnrollmentState.NOT_APPLIED
+                    : enrollmentState;
         }
 
         public String getId() {
@@ -238,6 +268,10 @@ public final class HomeModels {
 
         public RegistrationStatus getRegistrationStatus() {
             return registrationStatus;
+        }
+
+        public EnrollmentState getEnrollmentState() {
+            return enrollmentState;
         }
 
         public int getProgressPercent() {

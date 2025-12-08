@@ -3,23 +3,23 @@ package com.example.cn.helloworld.ui.main;
 import android.content.Context;
 
 import com.example.cn.helloworld.R;
+import com.example.cn.helloworld.data.model.Banner;
 import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.data.model.Product;
-import com.example.cn.helloworld.data.model.Banner;
 import com.example.cn.helloworld.data.model.SupportTask;
 import com.example.cn.helloworld.data.playlist.PlaylistRepository;
 import com.example.cn.helloworld.data.repository.BannerRepository;
 import com.example.cn.helloworld.data.repository.ProductRepository;
+import com.example.cn.helloworld.data.repository.SupportTaskEnrollmentRepository;
 import com.example.cn.helloworld.data.repository.support.LocalSupportTaskDataSource;
+import com.example.cn.helloworld.data.session.SessionManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 /**
  * 暂时使用的假数据实现，便于后续替换为真实服务。
@@ -31,6 +31,8 @@ public class FakeHomeDataSource implements HomeDataSource {
     private final com.example.cn.helloworld.data.repository.SupportTaskRepository adminSupportTaskRepository;
     private final ProductRepository productRepository;
     private final BannerRepository bannerRepository;
+    private final SupportTaskEnrollmentRepository enrollmentRepository;
+    private final SessionManager sessionManager;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault());
 
     /**
@@ -47,6 +49,8 @@ public class FakeHomeDataSource implements HomeDataSource {
         adminSupportTaskRepository = new com.example.cn.helloworld.data.repository.SupportTaskRepository(this.context);
         productRepository = new ProductRepository(this.context);
         bannerRepository = new BannerRepository(this.context);
+        enrollmentRepository = new SupportTaskEnrollmentRepository(this.context);
+        sessionManager = new SessionManager(this.context);
     }
     @Override
     public List<HomeModels.BannerItem> loadBanners() {
@@ -69,66 +73,44 @@ public class FakeHomeDataSource implements HomeDataSource {
 
     @Override
     public List<HomeModels.HomeCategory> loadCategories() {
-        final List<Integer> randomIcons = buildRandomCategoryIcons();
         return Arrays.asList(
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_ticket),
                         context.getString(R.string.category_subtitle_ticket),
-                        pickIcon(randomIcons, 0),
+                        R.drawable.ic_category_ticket,
                         "action_stage_review"
                 ),
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_merch),
                         context.getString(R.string.category_subtitle_merch),
-                        pickIcon(randomIcons, 1),
+                        R.drawable.ic_category_merch,
                         "action_new_arrival"
                 ),
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_support),
                         context.getString(R.string.home_task_subtitle),
-                        pickIcon(randomIcons, 2),
+                        R.drawable.ic_category_task,
                         "action_calendar"
                 ),
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_playlist),
                         context.getString(R.string.home_playlist_subtitle),
-                        pickIcon(randomIcons, 3),
+                        R.drawable.ic_category_music,
                         "action_review_wall"
                 ),
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_cart),
                         context.getString(R.string.category_subtitle_signed),
-                        pickIcon(randomIcons, 4),
+                        R.drawable.ic_category_signed,
                         "action_news"
                 ),
                 new HomeModels.HomeCategory(
                         context.getString(R.string.home_category_profile),
                         context.getString(R.string.home_task_subtitle),
-                        pickIcon(randomIcons, 5),
+                        R.drawable.ic_category_task,
                         "action_profile"
                 )
         );
-    }
-
-    private List<Integer> buildRandomCategoryIcons() {
-        List<Integer> icons = new ArrayList<Integer>(Arrays.asList(
-                R.drawable.cover_nishuo,
-                R.drawable.cover_baobei,
-                R.drawable.cover_friend,
-                R.drawable.cover_fenwuhai,
-                R.drawable.cover_lisao,
-                R.drawable.song_cover
-        ));
-        Collections.shuffle(icons, new Random(System.currentTimeMillis()));
-        return icons;
-    }
-
-    private int pickIcon(List<Integer> icons, int index) {
-        if (icons == null || icons.isEmpty()) {
-            return R.drawable.ic_category_ticket;
-        }
-        int safeIndex = Math.abs(index) % icons.size();
-        return icons.get(safeIndex);
     }
 
     /**
@@ -206,7 +188,8 @@ public class FakeHomeDataSource implements HomeDataSource {
                 maxParticipants,
                 enrolled,
                 mapTaskStatus(task.getStatus()),
-                mapRegistrationStatus(task.getStatus())
+                mapRegistrationStatus(task.getStatus()),
+                mapEnrollmentState(task.getTaskId())
         );
     }
 
@@ -252,5 +235,21 @@ public class FakeHomeDataSource implements HomeDataSource {
             return HomeModels.SupportTask.RegistrationStatus.CLOSED;
         }
         return HomeModels.SupportTask.RegistrationStatus.OPEN;
+    }
+
+    private HomeModels.SupportTask.EnrollmentState mapEnrollmentState(String taskId) {
+        SupportTaskEnrollmentRepository.EnrollmentStatus stored =
+                enrollmentRepository.getEnrollmentStatus(sessionManager.getUserId(), taskId);
+        switch (stored) {
+            case APPROVED:
+                return HomeModels.SupportTask.EnrollmentState.APPROVED;
+            case REJECTED:
+                return HomeModels.SupportTask.EnrollmentState.REJECTED;
+            case PENDING:
+                return HomeModels.SupportTask.EnrollmentState.PENDING;
+            case NOT_APPLIED:
+            default:
+                return HomeModels.SupportTask.EnrollmentState.NOT_APPLIED;
+        }
     }
 }
