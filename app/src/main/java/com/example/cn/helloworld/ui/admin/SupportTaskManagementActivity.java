@@ -126,6 +126,8 @@ public class SupportTaskManagementActivity extends AppCompatActivity {
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         statusSpinner.setAdapter(statusAdapter);
 
+        final boolean isApproved = task != null && SupportTaskRepository.STATUS_APPROVED.equals(task.getStatus());
+
         if (task != null) {
             titleInput.setText(task.getTitle());
             descInput.setText(task.getDescription());
@@ -133,6 +135,12 @@ public class SupportTaskManagementActivity extends AppCompatActivity {
             statusSpinner.setSelection(findStatusIndex(task.getStatus()));
         } else {
             statusSpinner.setSelection(0);
+        }
+
+        // 审批通过的任务禁止修改状态，避免后续被取消报名
+        statusSpinner.setEnabled(!isApproved);
+        if (isApproved) {
+            statusSpinner.setAlpha(0.6f);
         }
 
         final AlertDialog dialog = new AlertDialog.Builder(this)
@@ -333,6 +341,8 @@ public class SupportTaskManagementActivity extends AppCompatActivity {
                     approvalButtons.setVisibility(View.GONE);
                 }
 
+                boolean approved = SupportTaskRepository.STATUS_APPROVED.equals(task.getStatus());
+
                 editButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -350,6 +360,9 @@ public class SupportTaskManagementActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+                deleteButton.setEnabled(!approved);
+                deleteButton.setAlpha(approved ? 0.5f : 1f);
             }
         }
     }

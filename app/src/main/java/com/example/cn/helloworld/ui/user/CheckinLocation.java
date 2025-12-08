@@ -8,14 +8,14 @@ public class CheckinLocation {
     private final String name;
     private final String description;
     private final String tips;
-    private final String geoQuery;
+    private final String reward;
 
-    public CheckinLocation(String id, String name, String description, String tips, String geoQuery) {
+    public CheckinLocation(String id, String name, String description, String tips, String reward) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.tips = tips;
-        this.geoQuery = geoQuery;
+        this.reward = reward;
     }
 
     public String getId() {
@@ -34,7 +34,7 @@ public class CheckinLocation {
         return tips;
     }
 
-    public String getGeoQuery() {
-        return geoQuery;
+    public String getReward() {
+        return reward;
     }
 }

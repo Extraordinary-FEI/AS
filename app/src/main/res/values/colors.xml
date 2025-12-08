@@ -59,4 +59,9 @@
     <color name="taskStatusOngoing">#FF6B8B</color>
     <color name="taskStatusUpcoming">#5BC0EB</color>
     <color name="taskStatusCompleted">#B5B1C7</color>
+
+    <!-- 任务中心 / 勋章墙配色 -->
+    <color name="missionAccent">#FF9CE6</color>
+    <color name="missionAccentSoft">#FFB6F2</color>
+    <color name="missionAccentDark">#9C7BFF</color>
 </resources>

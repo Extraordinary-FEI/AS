@@ -6,6 +6,8 @@ import android.text.TextUtils;
 
 import com.example.cn.helloworld.data.model.SupportTask;
 import com.example.cn.helloworld.data.storage.AdminLocalStore;
+import com.example.cn.helloworld.data.repository.support.LocalSupportTaskDataSource;
+import com.example.cn.helloworld.ui.main.HomeModels;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,13 +52,45 @@ public class SupportTaskRepository {
 
     private void seed() {
         tasks.clear();
-        addTaskInternal(new SupportTask("task-weibo", "微博控评", "集合队伍，守护主话题热度。",
-                STATUS_PENDING, null, System.currentTimeMillis(), System.currentTimeMillis(), 1));
-        addTaskInternal(new SupportTask("task-qqmusic", "QQ 音乐打榜", "集中打卡提高日播放量。",
-                STATUS_PENDING, null, System.currentTimeMillis(), System.currentTimeMillis(), 2));
-        addTaskInternal(new SupportTask("task-offline", "线下广告位", "招募同城伙伴一起筹备生日灯箱。",
-                STATUS_PENDING, null, System.currentTimeMillis(), System.currentTimeMillis(), 3));
+        seedFromUserFacingTasks();
+        // 如果用户端没有内置任务（极端情况），确保至少有一个占位任务
+        if (tasks.isEmpty()) {
+            addTaskInternal(new SupportTask("task-weibo", "微博控评", "集合队伍，守护主话题热度。",
+                    STATUS_PENDING, null, System.currentTimeMillis(), System.currentTimeMillis(), 1));
+        }
         persist();
+    }
+
+    /**
+     * 复用用户端的占位任务，确保管理员端与普通用户看到的默认数据一致。
+     */
+    private void seedFromUserFacingTasks() {
+        List<HomeModels.SupportTask> defaultTasks = new LocalSupportTaskDataSource().getSupportTasks();
+        for (HomeModels.SupportTask task : defaultTasks) {
+            if (task == null) {
+                continue;
+            }
+            addTaskInternal(new SupportTask(
+                    task.id,
+                    task.title,
+                    task.description,
+                    mapStatusFromHome(task.status),
+                    null,
+                    System.currentTimeMillis(),
+                    System.currentTimeMillis(),
+                    task.enrolled
+            ));
+        }
+    }
+
+    private String mapStatusFromHome(HomeModels.SupportTask.TaskStatus status) {
+        if (status == HomeModels.SupportTask.TaskStatus.ONGOING) {
+            return STATUS_APPROVED;
+        }
+        if (status == HomeModels.SupportTask.TaskStatus.COMPLETED) {
+            return STATUS_REJECTED;
+        }
+        return STATUS_PENDING;
     }
 
     private void loadFromStorage() {
@@ -123,6 +157,10 @@ public class SupportTaskRepository {
         if (task == null) {
             return;
         }
+        // 审批通过后不允许再取消报名或更改为其他状态
+        if (STATUS_APPROVED.equals(task.getStatus()) && !STATUS_APPROVED.equals(status)) {
+            return;
+        }
         task.setStatus(status);
         task.setAssignedAdmin(admin);
         task.setUpdatedAt(System.currentTimeMillis());
@@ -151,12 +189,24 @@ public class SupportTaskRepository {
         if (task == null) {
             return;
         }
+        SupportTask existing = tasks.get(task.getTaskId());
+        if (existing != null && STATUS_APPROVED.equals(existing.getStatus())
+                && !STATUS_APPROVED.equals(task.getStatus())) {
+            // 保持审批通过的状态不被回退，避免撤销报名
+            task.setStatus(existing.getStatus());
+            task.setAssignedAdmin(existing.getAssignedAdmin());
+        }
         tasks.put(task.getTaskId(), task);
         persist();
     }
 
     public void deleteTask(String taskId) {
         if (taskId == null) {
+            return;
+        }
+        SupportTask existing = tasks.get(taskId);
+        if (existing != null && STATUS_APPROVED.equals(existing.getStatus())) {
+            // 审批通过的报名不允许被删除
             return;
         }
         if (tasks.remove(taskId) != null) {

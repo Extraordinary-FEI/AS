@@ -44,6 +44,7 @@ public class CheckinLocationAdapter extends RecyclerView.Adapter<CheckinLocation
 
         holder.name.setText(location.getName());
         holder.description.setText(location.getDescription());
+        holder.reward.setText(location.getReward());
         holder.tips.setText(location.getTips());
         holder.checkinButton.setText(completed
                 ? holder.itemView.getContext().getString(R.string.checkin_completed)
@@ -73,6 +74,7 @@ public class CheckinLocationAdapter extends RecyclerView.Adapter<CheckinLocation
     static class ViewHolder extends RecyclerView.ViewHolder {
         final TextView name;
         final TextView description;
+        final TextView reward;
         final TextView tips;
         final TextView checkinButton;
         final TextView navigateButton;
@@ -81,6 +83,7 @@ public class CheckinLocationAdapter extends RecyclerView.Adapter<CheckinLocation
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.textLocationName);
             description = (TextView) itemView.findViewById(R.id.textLocationDescription);
+            reward = (TextView) itemView.findViewById(R.id.textLocationReward);
             tips = (TextView) itemView.findViewById(R.id.textLocationTips);
             checkinButton = (TextView) itemView.findViewById(R.id.buttonCheckin);
             navigateButton = (TextView) itemView.findViewById(R.id.buttonNavigate);

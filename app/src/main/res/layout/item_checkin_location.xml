@@ -43,6 +43,20 @@
                 android:textSize="13sp" />
 
             <TextView
+                android:id="@+id/textLocationReward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_mission_reward"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/textLocationTips"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -74,11 +88,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:background="@drawable/bg_category_icon_circle"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="6dp"
-                android:paddingBottom="6dp"
+                android:background="@drawable/bg_task_status_upcoming"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:text="@string/checkin_open_map"
                 android:textColor="@android:color/white"
                 android:textSize="12sp" />
