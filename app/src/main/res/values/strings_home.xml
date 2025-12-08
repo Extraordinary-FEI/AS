@@ -49,9 +49,12 @@
     <string name="task_enrollment_status_pending">已报名（待管理员审核）</string>
     <string name="task_enrollment_status_approved">已通过</string>
     <string name="task_enrollment_status_rejected">已驳回</string>
+    <string name="task_enrollment_status_cancelled">已取消报名</string>
     <string name="task_enrollment_section_title">我的报名状态</string>
     <string name="task_enrollment_hint">由管理员审核决定，结果会实时同步</string>
     <string name="task_enrollment_action_reapply">已驳回，重新报名</string>
+    <string name="task_enrollment_action_reapply_cancelled">重新报名</string>
+    <string name="task_enrollment_action_cancel">取消报名</string>
     <string name="task_enrollment_admin_description">粉丝 %1$s 申请报名「%2$s」（类型：%3$s）</string>
 
     <!-- 任务详情 -->
@@ -65,6 +68,7 @@
     <string name="task_detail_not_open">尚未开放</string>
     <string name="task_detail_completed">任务已结束</string>
     <string name="task_detail_action_feedback">已收到你的%1$s意愿，我们会尽快联系！</string>
+    <string name="task_detail_action_cancel_feedback">已帮你取消报名，欢迎随时再来！</string>
     <string name="task_detail_invalid">未找到对应的应援任务</string>
     <string name="task_detail_description_title">任务说明</string>
     <string name="task_detail_guide_title">参与指南</string>

@@ -43,6 +43,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView playlistList;
     private RecyclerView taskList;
 
+    private CategoryAdapter categoryAdapter;
     private View viewAllPlaylistsButton;
     private View viewAllProductsButton;
 
@@ -56,6 +57,9 @@ public class HomeFragment extends Fragment {
     private int currentBannerIndex = 0;
 
     private BannerAdapter bannerAdapter;
+    private Handler categoryShuffleHandler;
+    private Runnable categoryShuffleRunnable;
+    private static final int CATEGORY_SHUFFLE_INTERVAL = 3500;
 
     @Nullable
     @Override
@@ -192,12 +196,18 @@ public class HomeFragment extends Fragment {
         if (bannerHandler != null && bannerRunnable != null && bannerCount > 0) {
             bannerHandler.postDelayed(bannerRunnable, BANNER_INTERVAL);
         }
+        if (categoryShuffleHandler != null && categoryShuffleRunnable != null) {
+            categoryShuffleHandler.postDelayed(categoryShuffleRunnable, CATEGORY_SHUFFLE_INTERVAL);
+        }
     }
 
     @Override
     public void onPause() {
         if (bannerHandler != null) {
             bannerHandler.removeCallbacks(bannerRunnable);
+        }
+        if (categoryShuffleHandler != null) {
+            categoryShuffleHandler.removeCallbacks(categoryShuffleRunnable);
         }
         super.onPause();
     }
@@ -206,6 +216,9 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         if (bannerHandler != null) {
             bannerHandler.removeCallbacks(bannerRunnable);
+        }
+        if (categoryShuffleHandler != null) {
+            categoryShuffleHandler.removeCallbacks(categoryShuffleRunnable);
         }
         super.onDestroyView();
     }
@@ -221,15 +234,61 @@ public class HomeFragment extends Fragment {
 
         categoryList.setLayoutManager(new GridLayoutManager(ctx, 3));
         categoryList.setNestedScrollingEnabled(false);
-        categoryList.setAdapter(new CategoryAdapter(
-                dataSource.loadCategories(),
+        List<HomeModels.HomeCategory> categories = dataSource.loadCategories();
+        categoryAdapter = new CategoryAdapter(
+                categories,
+                buildCategoryIconPool(),
                 new CategoryAdapter.OnCategoryClickListener() {
                     @Override
                     public void onCategoryClick(HomeModels.HomeCategory category) {
                         handleCategoryClick(category);
                     }
                 }
-        ));
+        );
+        categoryList.setAdapter(categoryAdapter);
+        startCategoryShuffle();
+    }
+
+    private List<Integer> buildCategoryIconPool() {
+        Context ctx = getContext();
+        if (ctx == null) {
+            return java.util.Collections.<Integer>emptyList();
+        }
+        List<Integer> pool = new java.util.ArrayList<Integer>();
+        pool.add(R.drawable.cover_playlist_stage);
+        pool.add(R.drawable.cover_fenwuhai);
+        pool.add(R.drawable.cover_friend);
+        pool.add(R.drawable.cover_playlist_city);
+        pool.add(R.drawable.cover_baobei);
+        pool.add(R.drawable.cover_playlist_growth);
+        pool.add(R.drawable.cover_lisao);
+        pool.add(R.drawable.cover_nishuo);
+        pool.add(R.drawable.cover_playlist_healing);
+        return pool;
+    }
+
+    private void startCategoryShuffle() {
+        if (categoryAdapter == null) {
+            return;
+        }
+        if (categoryShuffleHandler == null) {
+            categoryShuffleHandler = new Handler();
+        }
+        if (categoryShuffleRunnable == null) {
+            categoryShuffleRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    if (categoryAdapter != null) {
+                        categoryAdapter.randomizeIcons();
+                    }
+                    if (categoryShuffleHandler != null) {
+                        categoryShuffleHandler.postDelayed(this, CATEGORY_SHUFFLE_INTERVAL);
+                    }
+                }
+            };
+        }
+        categoryShuffleHandler.removeCallbacks(categoryShuffleRunnable);
+        categoryShuffleHandler.postDelayed(categoryShuffleRunnable, CATEGORY_SHUFFLE_INTERVAL);
     }
 
     private void handleCategoryClick(HomeModels.HomeCategory category) {

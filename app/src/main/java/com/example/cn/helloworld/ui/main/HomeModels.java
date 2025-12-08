@@ -162,7 +162,8 @@ public final class HomeModels {
             NOT_APPLIED,
             PENDING,
             APPROVED,
-            REJECTED
+            REJECTED,
+            CANCELLED
         }
 
         private final String id;

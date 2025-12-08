@@ -138,6 +138,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 return context.getString(R.string.task_enrollment_status_approved);
             case REJECTED:
                 return context.getString(R.string.task_enrollment_status_rejected);
+            case CANCELLED:
+                return context.getString(R.string.task_enrollment_status_cancelled);
             case PENDING:
                 return context.getString(R.string.task_enrollment_status_pending);
             case NOT_APPLIED:

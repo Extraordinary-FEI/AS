@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.net.Uri;
 
 import com.example.cn.helloworld.MusicActivity;
 import com.example.cn.helloworld.R;
@@ -104,7 +105,7 @@ public class PlaylistLibraryFragment extends Fragment {
                 holder.description.setVisibility(View.VISIBLE);
                 holder.description.setText(song.getDescription());
             }
-            holder.cover.setImageResource(song.getCoverResId());
+            bindCover(holder.cover, song);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -142,6 +143,22 @@ public class PlaylistLibraryFragment extends Fragment {
             long minutes = totalSeconds / 60;
             long seconds = totalSeconds % 60;
             return String.format("%02d:%02d", minutes, seconds);
+        }
+
+        private static void bindCover(ImageView coverView, Song song) {
+            if (coverView == null || song == null) {
+                return;
+            }
+
+            if (!TextUtils.isEmpty(song.getCoverImagePath())) {
+                coverView.setImageURI(Uri.parse(song.getCoverImagePath()));
+            } else if (!TextUtils.isEmpty(song.getCoverUrl())) {
+                coverView.setImageURI(Uri.parse(song.getCoverUrl()));
+            } else if (song.getCoverResId() != 0) {
+                coverView.setImageResource(song.getCoverResId());
+            } else {
+                coverView.setImageResource(R.drawable.cover_playlist_placeholder);
+            }
         }
     }
 }

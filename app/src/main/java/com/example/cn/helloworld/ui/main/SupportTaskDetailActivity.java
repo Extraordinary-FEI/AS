@@ -201,9 +201,17 @@ public class SupportTaskDetailActivity extends AppCompatActivity {
         String actionText;
         boolean enabled = true;
 
+        refreshEnrollmentStatus();
+
         if (supportTask.getStatus() == HomeModels.SupportTask.TaskStatus.COMPLETED) {
             actionText = getString(R.string.task_detail_completed);
             enabled = false;
+        } else if (enrollmentStatus == SupportTaskEnrollmentRepository.EnrollmentStatus.APPROVED) {
+            actionText = getString(R.string.task_enrollment_status_approved);
+            enabled = false;
+        } else if (enrollmentStatus == SupportTaskEnrollmentRepository.EnrollmentStatus.PENDING) {
+            actionText = getString(R.string.task_enrollment_action_cancel);
+            enabled = true;
         } else {
             switch (supportTask.getRegistrationStatus()) {
                 case FULL:
@@ -219,19 +227,14 @@ public class SupportTaskDetailActivity extends AppCompatActivity {
                     enabled = false;
                     break;
                 default:
-                    refreshEnrollmentStatus();
                     switch (enrollmentStatus) {
-                        case APPROVED:
-                            actionText = getString(R.string.task_enrollment_status_approved);
-                            enabled = false;
-                            break;
                         case REJECTED:
                             actionText = getString(R.string.task_enrollment_action_reapply);
                             enabled = true;
                             break;
-                        case PENDING:
-                            actionText = getString(R.string.task_enrollment_status_pending);
-                            enabled = false;
+                        case CANCELLED:
+                            actionText = getString(R.string.task_enrollment_action_reapply_cancelled);
+                            enabled = true;
                             break;
                         case NOT_APPLIED:
                         default:
@@ -250,12 +253,19 @@ public class SupportTaskDetailActivity extends AppCompatActivity {
         actionButton.setEnabled(enabled);
 
         if (enabled) {
-            final String feedback = getString(R.string.task_detail_action_feedback, actionText);
+            final SupportTaskEnrollmentRepository.EnrollmentStatus currentStatus = enrollmentStatus;
+            final String feedback = currentStatus == SupportTaskEnrollmentRepository.EnrollmentStatus.PENDING
+                    ? getString(R.string.task_detail_action_cancel_feedback)
+                    : getString(R.string.task_detail_action_feedback, actionText);
             actionButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        enrollmentRepository.markApplied(getCurrentUserId(), supportTask.getId());
-                        pushToAdminApprovalQueue();
+                        if (currentStatus == SupportTaskEnrollmentRepository.EnrollmentStatus.PENDING) {
+                            enrollmentRepository.markCancelled(getCurrentUserId(), supportTask.getId());
+                        } else {
+                            enrollmentRepository.markApplied(getCurrentUserId(), supportTask.getId());
+                            pushToAdminApprovalQueue();
+                        }
                         refreshEnrollmentStatus();
                         updateEnrollmentViews();
                         Toast.makeText(SupportTaskDetailActivity.this, feedback, Toast.LENGTH_SHORT)
@@ -283,6 +293,10 @@ public class SupportTaskDetailActivity extends AppCompatActivity {
             case REJECTED:
                 statusText = getString(R.string.task_enrollment_status_rejected);
                 backgroundRes = R.drawable.bg_task_status_completed;
+                break;
+            case CANCELLED:
+                statusText = getString(R.string.task_enrollment_status_cancelled);
+                backgroundRes = R.drawable.bg_task_status_upcoming;
                 break;
             case PENDING:
                 statusText = getString(R.string.task_enrollment_status_pending);

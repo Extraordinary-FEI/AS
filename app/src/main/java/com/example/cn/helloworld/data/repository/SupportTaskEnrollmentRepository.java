@@ -13,7 +13,8 @@ public class SupportTaskEnrollmentRepository {
         NOT_APPLIED,
         PENDING,
         APPROVED,
-        REJECTED
+        REJECTED,
+        CANCELLED
     }
 
     private static final String PREF_NAME = "support_task_enrollments";
@@ -49,6 +50,10 @@ public class SupportTaskEnrollmentRepository {
 
     public void markRejected(String userId, String taskId) {
         updateStatus(userId, taskId, EnrollmentStatus.REJECTED);
+    }
+
+    public void markCancelled(String userId, String taskId) {
+        updateStatus(userId, taskId, EnrollmentStatus.CANCELLED);
     }
 
     public void reset(String userId, String taskId) {

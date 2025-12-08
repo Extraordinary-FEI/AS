@@ -275,7 +275,7 @@ public class UserCenterFragment extends Fragment {
 
                     @Override
                     public void onNavigateClick(CheckinLocation location) {
-                        openLocationOnMap(location.getGeoQuery());
+                        showAchievementTips(location);
                     }
                 });
         checkinList.setAdapter(checkinAdapter);
@@ -284,7 +284,7 @@ public class UserCenterFragment extends Fragment {
             checkinMapButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openLocationOnMap(getString(R.string.checkin_city_map_query));
+                    showAchievementRules();
                 }
             });
         }
@@ -331,6 +331,36 @@ public class UserCenterFragment extends Fragment {
                     ? getString(R.string.checkin_completed_all)
                     : getString(R.string.user_checkin_subtitle));
         }
+    }
+
+    private void showAchievementTips(CheckinLocation location) {
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+        new AlertDialog.Builder(context)
+                .setTitle(location.getName())
+                .setMessage(location.getTips())
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
+    }
+
+    private void showAchievementRules() {
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+        StringBuilder message = new StringBuilder();
+        message.append(getString(R.string.user_checkin_task_route)).append("\n\n")
+                .append(getString(R.string.user_checkin_task_reward)).append("\n\n")
+                .append(getString(R.string.user_checkin_task_time)).append("\n\n")
+                .append(getString(R.string.user_checkin_task_tips));
+
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.user_checkin_action)
+                .setMessage(message.toString())
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
     }
 
     private void openLocationOnMap(String query) {

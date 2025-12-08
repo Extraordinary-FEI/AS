@@ -276,6 +276,8 @@ public class FavoritesActivity extends AppCompatActivity {
                 return HomeModels.SupportTask.EnrollmentState.APPROVED;
             case REJECTED:
                 return HomeModels.SupportTask.EnrollmentState.REJECTED;
+            case CANCELLED:
+                return HomeModels.SupportTask.EnrollmentState.CANCELLED;
             case PENDING:
                 return HomeModels.SupportTask.EnrollmentState.PENDING;
             case NOT_APPLIED:

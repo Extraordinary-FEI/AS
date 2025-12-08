@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.cn.helloworld.R;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * 首页分类入口的网格适配器。
@@ -21,15 +22,22 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     private final List<HomeModels.HomeCategory> categories;
     private final OnCategoryClickListener clickListener;
+    private final List<Integer> iconPool;
+    private final int[] displayedIcons;
+    private final Random random = new Random();
 
     public interface OnCategoryClickListener {
         void onCategoryClick(HomeModels.HomeCategory category);
     }
 
     public CategoryAdapter(List<HomeModels.HomeCategory> categories,
+                           List<Integer> iconPool,
                            OnCategoryClickListener clickListener) {
         this.categories = categories;
         this.clickListener = clickListener;
+        this.iconPool = iconPool;
+        this.displayedIcons = new int[categories == null ? 0 : categories.size()];
+        initDisplayedIcons();
     }
 
     @Override
@@ -44,7 +52,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         HomeModels.HomeCategory category = categories.get(position);
         holder.nameView.setText(category.getName());
         holder.subtitleView.setText(category.getSubtitle());
-        holder.iconView.setImageResource(category.getIconResId());
+        int iconResId = resolveIcon(position, category);
+        holder.iconView.setImageResource(iconResId);
         holder.decorateBadge(category);
         holder.bind(category, clickListener);
     }
@@ -52,6 +61,38 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @Override
     public int getItemCount() {
         return categories == null ? 0 : categories.size();
+    }
+
+    public void randomizeIcons() {
+        if (iconPool == null || iconPool.isEmpty()) {
+            return;
+        }
+
+        for (int i = 0; i < displayedIcons.length; i++) {
+            int next = iconPool.get(random.nextInt(iconPool.size()));
+            if (next == displayedIcons[i] && iconPool.size() > 1) {
+                next = iconPool.get((random.nextInt(iconPool.size() - 1) + i + 1) % iconPool.size());
+            }
+            displayedIcons[i] = next;
+        }
+        notifyDataSetChanged();
+    }
+
+    private void initDisplayedIcons() {
+        if (categories == null) {
+            return;
+        }
+        for (int i = 0; i < categories.size(); i++) {
+            HomeModels.HomeCategory category = categories.get(i);
+            displayedIcons[i] = category == null ? 0 : category.getIconResId();
+        }
+    }
+
+    private int resolveIcon(int position, HomeModels.HomeCategory category) {
+        if (position >= 0 && position < displayedIcons.length && displayedIcons[position] != 0) {
+            return displayedIcons[position];
+        }
+        return category == null ? 0 : category.getIconResId();
     }
 
     static class CategoryViewHolder extends RecyclerView.ViewHolder {
