@@ -29,6 +29,7 @@
             app:cardElevation="6dp">
 
             <FrameLayout
+                android:id="@+id/bannerContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"

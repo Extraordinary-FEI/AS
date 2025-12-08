@@ -24,10 +24,20 @@ public class BannerAdapter extends PagerAdapter {
 
     private final List<HomeModels.BannerItem> banners;
     private final LayoutInflater inflater;
+    private final int[] startColors;
+    private final int[] endColors;
+    private OnGradientUpdateListener gradientUpdateListener;
 
     public BannerAdapter(Context context, List<HomeModels.BannerItem> banners) {
         this.banners = banners;
         this.inflater = LayoutInflater.from(context);
+        int size = banners == null ? 0 : banners.size();
+        this.startColors = new int[size];
+        this.endColors = new int[size];
+    }
+
+    public void setGradientUpdateListener(OnGradientUpdateListener listener) {
+        this.gradientUpdateListener = listener;
     }
 
     @Override
@@ -54,7 +64,7 @@ public class BannerAdapter extends PagerAdapter {
         HomeModels.BannerItem banner = banners.get(position);
 
         img.setImageResource(banner.getImageResId());
-        applyImageBackgroundGradient(item, banner.getImageResId());
+        applyImageBackgroundGradient(item, banner.getImageResId(), position);
         title.setText(banner.getTitle());
         desc.setText(banner.getDescription());
         tag.setText(banner.getTag());
@@ -68,8 +78,23 @@ public class BannerAdapter extends PagerAdapter {
         return item;
     }
 
-    private void applyImageBackgroundGradient(final View item, int imageResId) {
-        setFallbackGradient(item);
+    public void dispatchGradientForPosition(int position) {
+        if (gradientUpdateListener == null) {
+            return;
+        }
+        int start = FALLBACK_START_COLOR;
+        int end = FALLBACK_END_COLOR;
+        if (position >= 0 && position < startColors.length && endColors.length > position) {
+            if (startColors[position] != 0 && endColors[position] != 0) {
+                start = startColors[position];
+                end = endColors[position];
+            }
+        }
+        gradientUpdateListener.onGradientReady(start, end, position);
+    }
+
+    private void applyImageBackgroundGradient(final View item, int imageResId, final int position) {
+        setFallbackGradient(item, position);
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -92,6 +117,11 @@ public class BannerAdapter extends PagerAdapter {
                 gradient.setCornerRadius(0f);
                 ViewCompat.setBackground(item, gradient);
 
+                cacheColors(position, startColor, endColor);
+                if (gradientUpdateListener != null) {
+                    gradientUpdateListener.onGradientReady(startColor, endColor, position);
+                }
+
                 if (!bitmap.isRecycled()) {
                     bitmap.recycle();
                 }
@@ -99,12 +129,29 @@ public class BannerAdapter extends PagerAdapter {
         });
     }
 
-    private void setFallbackGradient(View item) {
+    private void setFallbackGradient(View item, int position) {
         GradientDrawable gradient = new GradientDrawable(
                 GradientDrawable.Orientation.LEFT_RIGHT,
                 new int[]{FALLBACK_START_COLOR, FALLBACK_END_COLOR});
         gradient.setCornerRadius(0f);
         ViewCompat.setBackground(item, gradient);
+
+        cacheColors(position, FALLBACK_START_COLOR, FALLBACK_END_COLOR);
+        if (gradientUpdateListener != null) {
+            gradientUpdateListener.onGradientReady(FALLBACK_START_COLOR, FALLBACK_END_COLOR, position);
+        }
+    }
+
+    private void cacheColors(int position, int startColor, int endColor) {
+        if (position < 0 || position >= startColors.length) {
+            return;
+        }
+        startColors[position] = startColor;
+        endColors[position] = endColor;
+    }
+
+    public interface OnGradientUpdateListener {
+        void onGradientReady(int startColor, int endColor, int position);
     }
 
     @Override

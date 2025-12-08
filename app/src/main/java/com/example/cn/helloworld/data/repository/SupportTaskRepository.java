@@ -71,14 +71,14 @@ public class SupportTaskRepository {
                 continue;
             }
             addTaskInternal(new SupportTask(
-                    task.id,
-                    task.title,
-                    task.description,
-                    mapStatusFromHome(task.status),
+                    task.getId(),
+                    task.getName(),
+                    task.getDescription(),
+                    mapStatusFromHome(task.getStatus()),
                     null,
                     System.currentTimeMillis(),
                     System.currentTimeMillis(),
-                    task.enrolled
+                    task.getEnrolledCount()
             ));
         }
     }

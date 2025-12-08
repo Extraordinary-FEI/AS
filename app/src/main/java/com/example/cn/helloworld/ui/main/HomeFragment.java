@@ -20,6 +20,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.Color;
 
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
@@ -37,6 +39,7 @@ public class HomeFragment extends Fragment {
     private ViewPager bannerPager;
     private LinearLayout bannerIndicator;
     private View bannerCard;
+    private View bannerContainer;
 
     private RecyclerView categoryList;
     private RecyclerView productList;
@@ -75,6 +78,7 @@ public class HomeFragment extends Fragment {
         bannerPager = (ViewPager) root.findViewById(R.id.bannerPager);
         bannerIndicator = (LinearLayout) root.findViewById(R.id.bannerIndicator);
         bannerCard = root.findViewById(R.id.bannerCard);
+        bannerContainer = root.findViewById(R.id.bannerContainer);
 
         categoryList = (RecyclerView) root.findViewById(R.id.categoryList);
         productList = (RecyclerView) root.findViewById(R.id.productList);
@@ -110,6 +114,14 @@ public class HomeFragment extends Fragment {
 
         bannerCard.setVisibility(View.VISIBLE);
         bannerAdapter = new BannerAdapter(ctx, list);
+        bannerAdapter.setGradientUpdateListener(new BannerAdapter.OnGradientUpdateListener() {
+            @Override
+            public void onGradientReady(int startColor, int endColor, int position) {
+                if (position == bannerPager.getCurrentItem()) {
+                    applyBannerContainerGradient(startColor, endColor);
+                }
+            }
+        });
         bannerPager.setAdapter(bannerAdapter);
         bannerPager.setOffscreenPageLimit(3);
 
@@ -131,12 +143,14 @@ public class HomeFragment extends Fragment {
         });
 
         initBannerIndicator(bannerCount);
+        bannerAdapter.dispatchGradientForPosition(0);
 
         bannerPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int pos) {
                 currentBannerIndex = pos;
                 updateBannerIndicator(pos);
+                bannerAdapter.dispatchGradientForPosition(pos);
             }
         });
 
@@ -153,6 +167,26 @@ public class HomeFragment extends Fragment {
                 bannerHandler.postDelayed(this, BANNER_INTERVAL);
             }
         };
+    }
+
+    private void applyBannerContainerGradient(int startColor, int endColor) {
+        if (bannerContainer == null) {
+            return;
+        }
+        GradientDrawable gradient = new GradientDrawable(
+                GradientDrawable.Orientation.LEFT_RIGHT,
+                new int[]{startColor, endColor}
+        );
+        gradient.setCornerRadius(0f);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            bannerContainer.setBackground(gradient);
+        } else {
+            //noinspection deprecation
+            bannerContainer.setBackgroundDrawable(gradient);
+        }
+        if (bannerCard instanceof android.support.v7.widget.CardView) {
+            ((android.support.v7.widget.CardView) bannerCard).setCardBackgroundColor(Color.TRANSPARENT);
+        }
     }
     private void initBannerIndicator(int count) {
         bannerIndicator.removeAllViews();
