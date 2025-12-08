@@ -2,6 +2,7 @@ package com.example.cn.helloworld.ui.user;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -63,6 +64,11 @@ public class UserCenterFragment extends Fragment {
     private View manageQuickActionsButton;
     private View adminCard;
     private View checkinCard;
+    private RecyclerView checkinList;
+    private TextView checkinSubtitle;
+    private TextView checkinProgressLabel;
+    private View checkinMapButton;
+    private android.widget.ProgressBar checkinProgressBar;
     private StatsBarView adminStatsView;
     private TextView adminSummary;
     private View btnAdminProducts;
@@ -76,6 +82,9 @@ public class UserCenterFragment extends Fragment {
     private AdminOrderRepository adminOrderRepository;
     private QuickActionAdapter quickActionAdapter;
     private QuickActionStorage quickActionStorage;
+    private CheckinManager checkinManager;
+    private CheckinLocationAdapter checkinAdapter;
+    private List<CheckinLocation> checkinLocations;
 
     @Override
     public void onAttach(Context context) {
@@ -88,6 +97,7 @@ public class UserCenterFragment extends Fragment {
         adminOrderRepository = new AdminOrderRepository(appContext);
         adminMetricsRepository = new AdminMetricsRepository(supportTaskRepository, adminOrderRepository);
         quickActionStorage = new QuickActionStorage(appContext);
+        checkinManager = new CheckinManager(appContext);
     }
 
     @Nullable
@@ -107,6 +117,11 @@ public class UserCenterFragment extends Fragment {
         manageQuickActionsButton = root.findViewById(R.id.button_manage_quick_actions);
         adminCard = root.findViewById(R.id.card_admin_center);
         checkinCard = root.findViewById(R.id.card_checkin);
+        checkinList = (RecyclerView) root.findViewById(R.id.recycler_checkin);
+        checkinSubtitle = (TextView) root.findViewById(R.id.text_checkin_subtitle);
+        checkinProgressLabel = (TextView) root.findViewById(R.id.text_checkin_progress);
+        checkinMapButton = root.findViewById(R.id.button_view_checkin_map);
+        checkinProgressBar = (android.widget.ProgressBar) root.findViewById(R.id.progress_checkin);
         adminStatsView = (StatsBarView) root.findViewById(R.id.adminStatsView);
         adminSummary = (TextView) root.findViewById(R.id.textAdminSummary);
         btnAdminProducts = root.findViewById(R.id.buttonAdminManageProducts);
@@ -144,6 +159,7 @@ public class UserCenterFragment extends Fragment {
         setupPlaylists();
         setupQuickActions(inflater);
         setupAdminArea();
+        setupCheckins();
 
         return root;
     }
@@ -152,6 +168,10 @@ public class UserCenterFragment extends Fragment {
     public void onResume() {
         super.onResume();
         setupAdminArea();
+        if (checkinAdapter != null) {
+            checkinAdapter.notifyDataSetChanged();
+        }
+        updateCheckinProgress();
     }
 
     private void setupPlaylists() {
@@ -230,6 +250,104 @@ public class UserCenterFragment extends Fragment {
                     }
                 }
             });
+        }
+    }
+
+    private void setupCheckins() {
+        if (checkinList == null || checkinManager == null) {
+            return;
+        }
+
+        checkinLocations = buildCheckinLocations();
+        checkinList.setLayoutManager(new LinearLayoutManager(getContext()));
+        checkinList.setNestedScrollingEnabled(false);
+
+        checkinAdapter = new CheckinLocationAdapter(checkinLocations, checkinManager,
+                new CheckinLocationAdapter.Listener() {
+                    @Override
+                    public void onCheckinClick(CheckinLocation location) {
+                        checkinManager.toggleCompleted(location.getId());
+                        updateCheckinProgress();
+                        if (checkinAdapter != null) {
+                            checkinAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onNavigateClick(CheckinLocation location) {
+                        openLocationOnMap(location.getGeoQuery());
+                    }
+                });
+        checkinList.setAdapter(checkinAdapter);
+
+        if (checkinMapButton != null) {
+            checkinMapButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openLocationOnMap(getString(R.string.checkin_city_map_query));
+                }
+            });
+        }
+
+        updateCheckinProgress();
+    }
+
+    private List<CheckinLocation> buildCheckinLocations() {
+        List<CheckinLocation> locations = new ArrayList<CheckinLocation>();
+        locations.add(new CheckinLocation(
+                "rafles",
+                getString(R.string.checkin_location_stage),
+                getString(R.string.checkin_location_stage_desc),
+                getString(R.string.checkin_location_stage_tips),
+                getString(R.string.checkin_location_stage_query)));
+        locations.add(new CheckinLocation(
+                "river",
+                getString(R.string.checkin_location_river),
+                getString(R.string.checkin_location_river_desc),
+                getString(R.string.checkin_location_river_tips),
+                getString(R.string.checkin_location_river_query)));
+        locations.add(new CheckinLocation(
+                "plaza",
+                getString(R.string.checkin_location_plaza),
+                getString(R.string.checkin_location_plaza_desc),
+                getString(R.string.checkin_location_plaza_tips),
+                getString(R.string.checkin_location_plaza_query)));
+        return locations;
+    }
+
+    private void updateCheckinProgress() {
+        if (checkinLocations == null || checkinProgressBar == null || checkinProgressLabel == null
+                || checkinManager == null) {
+            return;
+        }
+        int total = checkinLocations.size();
+        int completed = checkinManager.getCompletedCount();
+        checkinProgressBar.setMax(total);
+        checkinProgressBar.setProgress(completed);
+        checkinProgressLabel.setText(getString(R.string.checkin_progress_label, completed, total));
+
+        if (checkinSubtitle != null) {
+            checkinSubtitle.setText(completed >= total
+                    ? getString(R.string.checkin_completed_all)
+                    : getString(R.string.user_checkin_subtitle));
+        }
+    }
+
+    private void openLocationOnMap(String query) {
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+        Uri uri = Uri.parse("geo:0,0?q=" + Uri.encode(query));
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.setPackage("com.google.android.apps.maps");
+        if (intent.resolveActivity(context.getPackageManager()) == null) {
+            intent.setPackage(null);
+        }
+        try {
+            startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(context, R.string.checkin_map_error, Toast.LENGTH_SHORT).show();
         }
     }
 

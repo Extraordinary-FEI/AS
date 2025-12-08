@@ -36,6 +36,14 @@
     <color name="homePlaylistColor3">#FFE0B2</color>
     <color name="homePlaylistColor4">#D1C4E9</color>
 
+    <!-- 快捷入口分组色系 -->
+    <color name="quickEntryStage">#CFC8FF</color>
+    <color name="quickEntryMerch">#FFD5E5</color>
+    <color name="quickEntrySupport">#D4ECFF</color>
+    <color name="quickEntryPlaylist">#D6FFEF</color>
+    <color name="quickEntryNews">#F1DFFF</color>
+    <color name="quickEntryProfile">#DBE7FF</color>
+
     <!-- 个人中心细节优化 -->
     <color name="personalBackground">#F3F1FB</color>
     <color name="personalCardStroke">#E6E3F3</color>

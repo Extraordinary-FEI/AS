@@ -38,6 +38,10 @@ public class FavoriteRepository {
     public List<String> getFavoriteSongs() {
         return new ArrayList<String>(getSet(KEY_SONGS));
     }
+
+    public void clearSongs() {
+        preferences.edit().remove(KEY_SONGS).apply();
+    }
     // endregion
 
     // region product favorites
@@ -51,6 +55,10 @@ public class FavoriteRepository {
 
     public List<String> getFavoriteProducts() {
         return new ArrayList<String>(getSet(KEY_PRODUCTS));
+    }
+
+    public void clearProducts() {
+        preferences.edit().remove(KEY_PRODUCTS).apply();
     }
     // endregion
 
@@ -66,7 +74,17 @@ public class FavoriteRepository {
     public List<String> getFavoriteTasks() {
         return new ArrayList<String>(getSet(KEY_TASKS));
     }
+
+    public void clearTasks() {
+        preferences.edit().remove(KEY_TASKS).apply();
+    }
     // endregion
+
+    public void clearAll() {
+        clearSongs();
+        clearProducts();
+        clearTasks();
+    }
 
     private Set<String> getSet(String key) {
         Set<String> stored = preferences.getStringSet(key, null);

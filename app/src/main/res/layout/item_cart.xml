@@ -56,7 +56,7 @@
                 android:layout_height="36dp"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/cart_reduce_quantity"
-                android:src="@android:drawable/ic_media_previous" />
+                android:src="@drawable/ic_arrow_left" />
 
             <TextView
                 android:id="@+id/text_quantity"
@@ -73,7 +73,7 @@
                 android:layout_height="36dp"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/cart_increase_quantity"
-                android:src="@android:drawable/ic_media_next" />
+                android:src="@drawable/ic_arrow_right" />
 
             <ImageButton
                 android:id="@+id/button_delete"

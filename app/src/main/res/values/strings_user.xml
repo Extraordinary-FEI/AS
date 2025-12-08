@@ -111,6 +111,11 @@
     <string name="favorite_empty_songs">还没有收藏歌曲</string>
     <string name="favorite_empty_products">还没有收藏商品</string>
     <string name="favorite_empty_tasks">还没有收藏应援任务</string>
+    <string name="favorite_overview_title">我的收藏总览</string>
+    <string name="favorite_overview_subtitle">常用的歌曲、周边与任务在这里一目了然</string>
+    <string name="favorite_clear_section">清空</string>
+    <string name="favorite_remove">移出收藏</string>
+    <string name="favorite_count_format">%1$d 项</string>
     <string name="user_checkin_title">线下打卡</string>
     <string name="user_checkin_subtitle">前往地标应援点，完成线下任务领取徽章</string>
     <string name="user_checkin_task_route">路线指引：重庆来福士「登月舞台」→ 洪崖洞光影墙 → 解放碑主题展柜</string>
@@ -118,5 +123,25 @@
     <string name="user_checkin_task_time">开放时间：每日 10:00-22:00，志愿者 14:00-20:00 在场协助</string>
     <string name="user_checkin_task_tips">小贴士：记得打开蓝牙提交现场留影，方便记录你的足迹</string>
     <string name="user_checkin_action">查看线下地图</string>
+    <string name="checkin_progress_placeholder">0/3 已完成</string>
+    <string name="checkin_progress_label">%1$d/%2$d 已完成</string>
+    <string name="checkin_completed_all">恭喜集齐徽章，快去兑换纪念品！</string>
+    <string name="checkin_location_stage">来福士·登月舞台</string>
+    <string name="checkin_location_stage_desc">和官方立牌合影，扫描二维码即可盖章</string>
+    <string name="checkin_location_stage_tips">夜间有灯光秀，记得提前排队</string>
+    <string name="checkin_location_stage_query">重庆来福士 登月舞台</string>
+    <string name="checkin_location_river">洪崖洞·光影墙</string>
+    <string name="checkin_location_river_desc">在灯光墙下录 10 秒应援视频即可完成</string>
+    <string name="checkin_location_river_tips">靠近江边信号较弱，建议先下载好素材</string>
+    <string name="checkin_location_river_query">洪崖洞 光影墙</string>
+    <string name="checkin_location_plaza">解放碑·主题展柜</string>
+    <string name="checkin_location_plaza_desc">完成展柜互动小游戏领取纪念章</string>
+    <string name="checkin_location_plaza_tips">店员会帮忙盖章，记得出示会员码</string>
+    <string name="checkin_location_plaza_query">解放碑 主题展柜</string>
+    <string name="checkin_city_map_query">重庆 线下打卡点</string>
+    <string name="checkin_go">去打卡</string>
+    <string name="checkin_completed">已完成</string>
+    <string name="checkin_open_map">导航</string>
+    <string name="checkin_map_error">无法打开地图，请检查是否安装了地图应用</string>
 </resources>
 

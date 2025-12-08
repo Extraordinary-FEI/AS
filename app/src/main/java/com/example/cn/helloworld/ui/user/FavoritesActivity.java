@@ -43,6 +43,21 @@ public class FavoritesActivity extends AppCompatActivity {
     private TextView emptySongs;
     private TextView emptyProducts;
     private TextView emptyTasks;
+    private TextView overviewSubtitle;
+    private TextView countSongs;
+    private TextView countProducts;
+    private TextView countTasks;
+    private TextView clearSongsButton;
+    private TextView clearProductsButton;
+    private TextView clearTasksButton;
+
+    private final List<Song> favoriteSongs = new ArrayList<Song>();
+    private final List<Product> favoriteProducts = new ArrayList<Product>();
+    private final List<HomeModels.SupportTask> favoriteTasks = new ArrayList<HomeModels.SupportTask>();
+
+    private FavoriteSongAdapter songAdapter;
+    private FavoriteProductAdapter productAdapter;
+    private FavoriteTaskAdapter taskAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,10 +84,70 @@ public class FavoritesActivity extends AppCompatActivity {
         emptySongs = (TextView) findViewById(R.id.text_empty_songs);
         emptyProducts = (TextView) findViewById(R.id.text_empty_products);
         emptyTasks = (TextView) findViewById(R.id.text_empty_tasks);
+        overviewSubtitle = (TextView) findViewById(R.id.text_overview_subtitle);
+        countSongs = (TextView) findViewById(R.id.text_count_songs);
+        countProducts = (TextView) findViewById(R.id.text_count_products);
+        countTasks = (TextView) findViewById(R.id.text_count_tasks);
+        clearSongsButton = (TextView) findViewById(R.id.button_clear_songs);
+        clearProductsButton = (TextView) findViewById(R.id.button_clear_products);
+        clearTasksButton = (TextView) findViewById(R.id.button_clear_tasks);
 
         songList.setLayoutManager(new LinearLayoutManager(this));
         productList.setLayoutManager(new LinearLayoutManager(this));
         taskList.setLayoutManager(new LinearLayoutManager(this));
+
+        songAdapter = new FavoriteSongAdapter(favoriteSongs, new FavoriteItemRemover<Song>() {
+            @Override
+            public void onRemove(Song item, int position) {
+                removeSong(item, position);
+            }
+        });
+        productAdapter = new FavoriteProductAdapter(favoriteProducts, new FavoriteItemRemover<Product>() {
+            @Override
+            public void onRemove(Product item, int position) {
+                removeProduct(item, position);
+            }
+        });
+        taskAdapter = new FavoriteTaskAdapter(favoriteTasks, new FavoriteItemRemover<HomeModels.SupportTask>() {
+            @Override
+            public void onRemove(HomeModels.SupportTask item, int position) {
+                removeTask(item, position);
+            }
+        });
+
+        songList.setAdapter(songAdapter);
+        productList.setAdapter(productAdapter);
+        taskList.setAdapter(taskAdapter);
+
+        overviewSubtitle.setText(R.string.favorite_overview_subtitle);
+
+        clearSongsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                favoriteRepository.clearSongs();
+                favoriteSongs.clear();
+                songAdapter.notifyDataSetChanged();
+                updateEmptyStates();
+            }
+        });
+        clearProductsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                favoriteRepository.clearProducts();
+                favoriteProducts.clear();
+                productAdapter.notifyDataSetChanged();
+                updateEmptyStates();
+            }
+        });
+        clearTasksButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                favoriteRepository.clearTasks();
+                favoriteTasks.clear();
+                taskAdapter.notifyDataSetChanged();
+                updateEmptyStates();
+            }
+        });
     }
 
     @Override
@@ -94,42 +169,44 @@ public class FavoritesActivity extends AppCompatActivity {
 
     private void bindSongs() {
         List<String> ids = favoriteRepository.getFavoriteSongs();
-        List<Song> songs = new ArrayList<Song>();
+        favoriteSongs.clear();
         List<Playlist> playlists = playlistRepository.getAllPlaylists();
         for (Playlist playlist : playlists) {
             if (playlist != null && playlist.getSongs() != null) {
                 for (Song song : playlist.getSongs()) {
                     if (song != null && ids.contains(song.getId())) {
-                        songs.add(song);
+                        favoriteSongs.add(song);
                     }
                 }
             }
         }
-        songList.setAdapter(new FavoriteSongAdapter(songs));
-        emptySongs.setVisibility(songs.isEmpty() ? View.VISIBLE : View.GONE);
+        songAdapter.notifyDataSetChanged();
+        emptySongs.setVisibility(favoriteSongs.isEmpty() ? View.VISIBLE : View.GONE);
+        updateCounters();
     }
 
     private void bindProducts() {
         List<String> ids = favoriteRepository.getFavoriteProducts();
-        List<Product> products = new ArrayList<Product>();
+        favoriteProducts.clear();
         List<Product> all = productRepository.getAll();
         for (Product product : all) {
             if (product != null && ids.contains(product.getId())) {
-                products.add(product);
+                favoriteProducts.add(product);
             }
         }
-        productList.setAdapter(new FavoriteProductAdapter(products));
-        emptyProducts.setVisibility(products.isEmpty() ? View.VISIBLE : View.GONE);
+        productAdapter.notifyDataSetChanged();
+        emptyProducts.setVisibility(favoriteProducts.isEmpty() ? View.VISIBLE : View.GONE);
+        updateCounters();
     }
 
     private void bindTasks() {
         List<String> ids = favoriteRepository.getFavoriteTasks();
-        List<HomeModels.SupportTask> tasks = new ArrayList<HomeModels.SupportTask>();
+        favoriteTasks.clear();
         List<com.example.cn.helloworld.data.model.SupportTask> stored = supportTaskRepository.getAll();
         if (stored != null) {
             for (com.example.cn.helloworld.data.model.SupportTask task : stored) {
                 if (task != null && ids.contains(task.getTaskId())) {
-                    tasks.add(new HomeModels.SupportTask(
+                    favoriteTasks.add(new HomeModels.SupportTask(
                             task.getTaskId(),
                             task.getTitle(),
                             getString(R.string.support_task_type_admin),
@@ -148,8 +225,47 @@ public class FavoritesActivity extends AppCompatActivity {
                 }
             }
         }
-        taskList.setAdapter(new FavoriteTaskAdapter(tasks));
-        emptyTasks.setVisibility(tasks.isEmpty() ? View.VISIBLE : View.GONE);
+        taskAdapter.notifyDataSetChanged();
+        emptyTasks.setVisibility(favoriteTasks.isEmpty() ? View.VISIBLE : View.GONE);
+        updateCounters();
+    }
+
+    private void removeSong(Song song, int position) {
+        favoriteRepository.setSongFavorite(song.getId(), false);
+        favoriteSongs.remove(position);
+        songAdapter.notifyItemRemoved(position);
+        updateEmptyStates();
+    }
+
+    private void removeProduct(Product product, int position) {
+        favoriteRepository.setProductFavorite(product.getId(), false);
+        favoriteProducts.remove(position);
+        productAdapter.notifyItemRemoved(position);
+        updateEmptyStates();
+    }
+
+    private void removeTask(HomeModels.SupportTask task, int position) {
+        favoriteRepository.setTaskFavorite(task.getTaskId(), false);
+        favoriteTasks.remove(position);
+        taskAdapter.notifyItemRemoved(position);
+        updateEmptyStates();
+    }
+
+    private void updateEmptyStates() {
+        emptySongs.setVisibility(favoriteSongs.isEmpty() ? View.VISIBLE : View.GONE);
+        emptyProducts.setVisibility(favoriteProducts.isEmpty() ? View.VISIBLE : View.GONE);
+        emptyTasks.setVisibility(favoriteTasks.isEmpty() ? View.VISIBLE : View.GONE);
+        updateCounters();
+    }
+
+    private void updateCounters() {
+        countSongs.setText(getString(R.string.favorite_count_format, favoriteSongs.size()));
+        countProducts.setText(getString(R.string.favorite_count_format, favoriteProducts.size()));
+        countTasks.setText(getString(R.string.favorite_count_format, favoriteTasks.size()));
+        int total = favoriteSongs.size() + favoriteProducts.size() + favoriteTasks.size();
+        overviewSubtitle.setText(getString(R.string.favorite_overview_subtitle)
+                + " · "
+                + getString(R.string.favorite_count_format, total));
     }
 
     private HomeModels.SupportTask.EnrollmentState mapEnrollment(String taskId) {

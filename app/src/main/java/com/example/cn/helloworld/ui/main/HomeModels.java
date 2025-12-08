@@ -16,12 +16,16 @@ public final class HomeModels {
     public static class BannerItem {
         private final String title;
         private final String description;
+        private final String tag;
+        private final String cta;
         private final int imageResId;
 
-        public BannerItem(String title, String description, int imageResId) {
+        public BannerItem(String title, String description, int imageResId, String tag, String cta) {
             this.title = title;
             this.description = description;
             this.imageResId = imageResId;
+            this.tag = tag;
+            this.cta = cta;
         }
 
         public String getTitle() {
@@ -34,6 +38,14 @@ public final class HomeModels {
 
         public int getImageResId() {
             return imageResId;
+        }
+
+        public String getTag() {
+            return tag;
+        }
+
+        public String getCta() {
+            return cta;
         }
     }
 

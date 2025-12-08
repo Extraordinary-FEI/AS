@@ -60,15 +60,59 @@ public class FakeHomeDataSource implements HomeDataSource {
             for (int i = 0; i < storedBanners.size(); i++) {
                 Banner banner = storedBanners.get(i);
                 if (banner != null) {
+                    String title = banner.getTitle();
+                    String tag = deriveBannerTag(title);
+                    String cta = buildBannerCta(tag);
                     bannerItems.add(new HomeModels.BannerItem(
-                            banner.getTitle(),
+                            title,
                             banner.getDescription(),
-                            banner.getImageResId()
+                            banner.getImageResId(),
+                            tag,
+                            cta
                     ));
+                }
+                if (bannerItems.size() >= 5) {
+                    break; // 控制在 3~5 张，视觉更舒展
                 }
             }
         }
         return bannerItems;
+    }
+
+    private String deriveBannerTag(String title) {
+        if (title == null) {
+            return "精彩瞬间";
+        }
+        String normalized = title.trim();
+        if (normalized.contains("巡演")) {
+            return "巡演";
+        }
+        if (normalized.contains("新歌") || normalized.contains("首发")) {
+            return "新品";
+        }
+        if (normalized.contains("公益")) {
+            return "公益";
+        }
+        if (normalized.contains("生日") || normalized.contains("季")) {
+            return "活动";
+        }
+        if (normalized.contains("福利") || normalized.contains("福利站")) {
+            return "福利";
+        }
+        return "现场";
+    }
+
+    private String buildBannerCta(String tag) {
+        if ("巡演".equals(tag) || "活动".equals(tag)) {
+            return "立即参与";
+        }
+        if ("新品".equals(tag)) {
+            return "抢先预览";
+        }
+        if ("公益".equals(tag)) {
+            return "一起加入";
+        }
+        return "查看详情";
     }
 
     @Override

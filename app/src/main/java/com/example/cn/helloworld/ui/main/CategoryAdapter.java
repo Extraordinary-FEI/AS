@@ -1,5 +1,8 @@
 package com.example.cn.helloworld.ui.main;
 
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,11 +79,36 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             }
 
             if (iconContainer != null) {
-                int backgroundRes = isStageReview
-                        ? R.drawable.bg_quick_entry_icon_stage
-                        : R.drawable.bg_quick_entry_icon;
-                iconContainer.setBackgroundResource(backgroundRes);
+                int tint = pickTint(iconContainer, category == null ? null : category.getAction());
+                Drawable bg = DrawableCompat.wrap(iconContainer.getBackground().mutate());
+                DrawableCompat.setTint(bg, tint);
+                iconContainer.setBackground(bg);
             }
+        }
+
+        private int pickTint(View iconContainer, String action) {
+            if (iconContainer == null) {
+                return 0xFFE5E2FF; // fallback
+            }
+            if ("action_stage_review".equals(action)) {
+                return ContextCompat.getColor(iconContainer.getContext(), R.color.quickEntryStage);
+            }
+            if ("action_new_arrival".equals(action)) {
+                return ContextCompat.getColor(iconContainer.getContext(), R.color.quickEntryMerch);
+            }
+            if ("action_calendar".equals(action)) {
+                return ContextCompat.getColor(iconContainer.getContext(), R.color.quickEntrySupport);
+            }
+            if ("action_review_wall".equals(action)) {
+                return ContextCompat.getColor(iconContainer.getContext(), R.color.quickEntryPlaylist);
+            }
+            if ("action_news".equals(action)) {
+                return ContextCompat.getColor(iconContainer.getContext(), R.color.quickEntryNews);
+            }
+            if ("action_profile".equals(action)) {
+                return ContextCompat.getColor(iconContainer.getContext(), R.color.quickEntryProfile);
+            }
+            return ContextCompat.getColor(iconContainer.getContext(), R.color.homeCategoryBackground);
         }
 
         void bind(final HomeModels.HomeCategory category,

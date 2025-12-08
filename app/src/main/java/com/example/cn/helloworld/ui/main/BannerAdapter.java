@@ -39,12 +39,16 @@ public class BannerAdapter extends PagerAdapter {
         ImageView img = (ImageView) item.findViewById(R.id.banner_image);
         TextView title = (TextView) item.findViewById(R.id.banner_title);
         TextView desc = (TextView) item.findViewById(R.id.banner_description);
+        TextView tag = (TextView) item.findViewById(R.id.banner_tag);
+        TextView cta = (TextView) item.findViewById(R.id.banner_cta);
 
         HomeModels.BannerItem banner = banners.get(position);
 
         img.setImageResource(banner.getImageResId());
         title.setText(banner.getTitle());
         desc.setText(banner.getDescription());
+        tag.setText(banner.getTag());
+        cta.setText(banner.getCta());
 
         // ⭐ 高级居中轻缩放
         item.setScaleX(0.92f);

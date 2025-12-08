@@ -1,13 +1,19 @@
 package com.example.cn.helloworld.ui.order;
 
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.CartItem;
@@ -120,6 +126,13 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartVi
                 }
             });
 
+            quantityTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showQuantityDialog(item);
+                }
+            });
+
             selectCheckBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -136,6 +149,48 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartVi
                     deleteItem(getAdapterPosition());
                 }
             });
+        }
+
+        private void showQuantityDialog(final CartItem item) {
+            final EditText input = new EditText(itemView.getContext());
+            input.setInputType(InputType.TYPE_CLASS_NUMBER);
+            input.setHint(R.string.cart_quantity_dialog_hint);
+            input.setText(String.valueOf(item.getQuantity()));
+            input.setSelection(input.getText().length());
+
+            new AlertDialog.Builder(itemView.getContext())
+                    .setTitle(R.string.cart_quantity_dialog_title)
+                    .setView(input)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String text = input.getText().toString().trim();
+                            if (TextUtils.isEmpty(text)) {
+                                Toast.makeText(itemView.getContext(), R.string.cart_quantity_invalid, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            int newQuantity;
+                            try {
+                                newQuantity = Integer.parseInt(text);
+                            } catch (NumberFormatException e) {
+                                newQuantity = -1;
+                            }
+
+                            if (newQuantity <= 0) {
+                                Toast.makeText(itemView.getContext(), R.string.cart_quantity_invalid, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            item.setQuantity(newQuantity);
+                            quantityTextView.setText(String.valueOf(item.getQuantity()));
+                            if (listener != null) {
+                                listener.onQuantityChanged();
+                            }
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show();
         }
     }
 }
