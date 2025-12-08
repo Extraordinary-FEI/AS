@@ -104,6 +104,26 @@
     <string name="settings_privacy_desc">隐藏个人主页访客记录，播放历史仅自己可见</string>
     <string name="settings_saved">已为你保存偏好</string>
 
+    <!-- 应援任务与勋章 -->
+    <string name="user_task_highlight_title">本周应援任务</string>
+    <string name="user_task_highlight_subtitle">完成精选任务解锁专属奖励</string>
+    <string name="user_task_highlight_action">去完成</string>
+    <string name="user_task_chip_daily">每日任务</string>
+    <string name="user_task_chip_weekly">周任务</string>
+    <string name="user_task_chip_support">应援行动</string>
+    <string name="user_task_tips">提示：完成任务可提升等级并获取积分</string>
+
+    <string name="user_medal_wall_title">粉丝勋章墙</string>
+    <string name="user_medal_wall_action">查看全部</string>
+    <string name="user_medal_wall_subtitle">完成成长路径点亮你的专属勋章</string>
+    <string name="user_medal_checkin_title">连续签到达人</string>
+    <string name="user_medal_checkin_desc">累计连续签到 7 天即可领取</string>
+    <string name="user_medal_checkin_progress">4/7 已完成</string>
+    <string name="user_medal_playlist_title">歌单收藏家</string>
+    <string name="user_medal_playlist_desc">收藏 5 个歌单解锁纪念勋章</string>
+    <string name="user_medal_playlist_progress">2/5 已完成</string>
+    <string name="user_medal_wall_hint">更多勋章即将上线，敬请期待</string>
+
     <!-- 收藏与打卡 -->
     <string name="favorite_section_songs">歌曲收藏</string>
     <string name="favorite_section_products">商品收藏</string>
