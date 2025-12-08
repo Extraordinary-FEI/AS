@@ -143,7 +143,7 @@ public class PlaylistFragment extends Fragment {
 
             Holder(View v) {
                 super(v);
-                title = (TextView) v.findViewById(R.id.textSongTitle);
+                title = (TextView) v.findViewById(R.id.text_song_title);
                 artist = (TextView) v.findViewById(R.id.text_song_artist);
             }
         }

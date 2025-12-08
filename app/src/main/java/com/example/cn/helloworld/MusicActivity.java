@@ -9,6 +9,7 @@ import android.net.Uri;                      // ★ 新增
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -69,6 +70,11 @@ public class MusicActivity extends Activity {
             serviceIntent = new Intent(this, MusicService.class);
         }
         startServiceCompat(serviceIntent);
+
+        // 主动请求一次当前播放状态，避免从悬浮窗进入时界面空白
+        Intent requestUpdateIntent = new Intent(this, MusicService.class);
+        requestUpdateIntent.setAction(MusicService.ACTION_REQUEST_UPDATE);
+        startServiceCompat(requestUpdateIntent);
 
         registerUIReceiver();
 
@@ -156,39 +162,45 @@ public class MusicActivity extends Activity {
                     int total = intent.getIntExtra("total", 1);
                     boolean playing = intent.getBooleanExtra("playing", false);
 
-                    // 新增：封面字段
-                    String coverPath = intent.getStringExtra("coverPath");
-                    int coverResId = intent.getIntExtra(
-                            "coverResId",
-                            R.drawable.cover_playlist_placeholder
-                    );
-
                     currentSongId = intent.getStringExtra("songId");
                     isPlaying = playing;
 
-                    // 显示歌曲名
+                    // ---------- 显示歌曲标题 ----------
                     String prefix = playing ? "正在播放：" : "已暂停：";
                     String safeTitle = (title == null ? getString(R.string.app_name) : title);
-                    String subtitle = (artist == null ? "" : " - " + artist);
+                    String safeArtist = (artist == null ? "" : " - " + artist);
 
-                    tvSongName.setText(prefix + safeTitle + subtitle +
+                    tvSongName.setText(prefix + safeTitle + safeArtist +
                             " (" + (index + 1) + "/" + total + ")");
 
-                    // 显示封面：优先使用自定义封面路径，其次使用资源ID
-                    if (coverPath != null && coverPath.length() > 0) {
+                    // ---------- 封面 ----------
+                    String coverPath = intent.getStringExtra("coverImagePath");
+                    String coverUrl = intent.getStringExtra("coverUrl");
+                    int coverResId = intent.getIntExtra("coverResId", 0);
+
+                    if (!TextUtils.isEmpty(coverPath)) {
+                        // 本地上传封面
                         imgCover.setImageURI(Uri.parse(coverPath));
-                    } else {
+                    } else if (!TextUtils.isEmpty(coverUrl)) {
+                        // 网络封面
+                        imgCover.setImageURI(Uri.parse(coverUrl));
+                    } else if (coverResId != 0) {
+                        // drawable 封面
                         imgCover.setImageResource(coverResId);
+                    } else {
+                        // 默认占位图
+                        imgCover.setImageResource(R.drawable.cover_playlist_placeholder);
                     }
 
-                    // 切换按钮图标
+                    // ---------- 播放按钮 ----------
                     btnPlayPause.setImageResource(
                             isPlaying ? R.drawable.pause : R.drawable.play
                     );
 
-                    // 更新收藏图标
+                    // ---------- 收藏图标 ----------
                     updateFavoriteIcon(false);
                 }
+
             }
         };
 

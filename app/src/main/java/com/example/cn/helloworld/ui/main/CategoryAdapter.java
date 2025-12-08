@@ -42,6 +42,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         holder.nameView.setText(category.getName());
         holder.subtitleView.setText(category.getSubtitle());
         holder.iconView.setImageResource(category.getIconResId());
+        holder.decorateStageEntry(category);
         holder.bind(category, clickListener);
     }
 
@@ -54,12 +55,32 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         final TextView nameView;
         final TextView subtitleView;
         final ImageView iconView;
+        final TextView badgeView;
+        final View iconContainer;
 
         CategoryViewHolder(View itemView) {
             super(itemView);
             nameView = (TextView) itemView.findViewById(R.id.categoryName);
             subtitleView = (TextView) itemView.findViewById(R.id.categorySubtitle);
             iconView = (ImageView) itemView.findViewById(R.id.categoryIcon);
+            badgeView = (TextView) itemView.findViewById(R.id.categoryBadge);
+            iconContainer = itemView.findViewById(R.id.categoryIconContainer);
+        }
+
+        void decorateStageEntry(HomeModels.HomeCategory category) {
+            boolean isStageReview = category != null
+                    && "action_stage_review".equals(category.getAction());
+
+            if (badgeView != null) {
+                badgeView.setVisibility(isStageReview ? View.VISIBLE : View.GONE);
+            }
+
+            if (iconContainer != null) {
+                int backgroundRes = isStageReview
+                        ? R.drawable.bg_quick_entry_icon_stage
+                        : R.drawable.bg_quick_entry_icon;
+                iconContainer.setBackgroundResource(backgroundRes);
+            }
         }
 
         void bind(final HomeModels.HomeCategory category,

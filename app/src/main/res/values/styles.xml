@@ -9,13 +9,17 @@
 
         <!-- 全局背景 -->
         <item name="android:windowBackground">@color/homeBackground</item>
+
         <!-- 全局文字颜色 -->
         <item name="android:textColorPrimary">@color/homeTextPrimary</item>
         <item name="android:textColorSecondary">@color/homeTextSecondary</item>
+
+        <!-- Toolbar 样式 -->
+        <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <!-- Toolbar 标题 -->
     <style name="HomeToolbarTitle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
@@ -75,7 +79,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <!-- 截止日期文字 -->
+    <!-- 截止日期 -->
     <style name="HomeTaskDeadline" parent="TextAppearance.AppCompat.Small">
         <item name="android:textColor">@color/homeTaskDeadline</item>
         <item name="android:textSize">12sp</item>
@@ -87,7 +91,7 @@
         <item name="android:textSize">13sp</item>
     </style>
 
-    <!-- 任务状态 Chip -->
+    <!-- 任务状态 CHIP -->
     <style name="HomeTaskStatusChip" parent="TextAppearance.AppCompat.Small">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">12sp</item>
@@ -96,6 +100,12 @@
         <item name="android:paddingTop">4dp</item>
         <item name="android:paddingBottom">4dp</item>
         <item name="android:background">@color/colorAccent</item>
+    </style>
+
+    <!-- 任务描述（你缺少的，编译无法通过的关键） -->
+    <style name="HomeTaskDescription" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/homeTextSecondary</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <!-- 任务详情正文 -->
@@ -121,11 +131,6 @@
     <style name="TaskDetailMetaSecondary" parent="TextAppearance.AppCompat.Small">
         <item name="android:textColor">@color/homeTextSecondary</item>
         <item name="android:textSize">12sp</item>
-    </style>
-    <!-- 任务描述文本（修复 item_task.xml 的编译错误） -->
-    <style name="HomeTaskDescription" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/homeTextSecondary</item>
-        <item name="android:textSize">14sp</item>
     </style>
 
 </resources>

@@ -24,7 +24,25 @@
         android:paddingEnd="12dp"
         android:paddingBottom="16dp">
 
+        <TextView
+            android:id="@+id/categoryBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:background="@drawable/bg_category_badge_stage"
+            android:textColor="@android:color/white"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:text="舞台回顾"
+            tools:visibility="visible" />
+
         <FrameLayout
+            android:id="@+id/categoryIconContainer"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:background="@drawable/bg_quick_entry_icon"

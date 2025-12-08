@@ -546,8 +546,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:textColor="@color/homeTextSecondary"
-                        android:textSize="14sp"
+                        android:letterSpacing="0.02"
+                        android:lineSpacingExtra="2dp"
+                        android:textColor="@color/adminTextSecondary"
+                        android:textSize="15sp"
                         android:text="@string/dashboard_summary" />
                 </LinearLayout>
 
@@ -599,8 +601,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="@string/admin_action_products_desc"
-                            android:textColor="@color/homeTextSecondary"
-                            android:textSize="12sp" />
+                            android:textColor="@color/adminTextSecondary"
+                            android:textSize="13sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -637,8 +639,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="@string/admin_action_playlist_desc"
-                            android:textColor="@color/homeTextSecondary"
-                            android:textSize="12sp" />
+                            android:textColor="@color/adminTextSecondary"
+                            android:textSize="13sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -676,8 +678,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="@string/admin_action_order_desc"
-                            android:textColor="@color/homeTextSecondary"
-                            android:textSize="12sp" />
+                            android:textColor="@color/adminTextSecondary"
+                            android:textSize="13sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -715,8 +717,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="@string/admin_action_support_desc"
-                            android:textColor="@color/homeTextSecondary"
-                            android:textSize="12sp" />
+                            android:textColor="@color/adminTextSecondary"
+                            android:textSize="13sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -754,8 +756,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="@string/admin_action_approval_desc"
-                            android:textColor="@color/homeTextSecondary"
-                            android:textSize="12sp" />
+                            android:textColor="@color/adminTextSecondary"
+                            android:textSize="13sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -792,8 +794,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="@string/admin_action_address_desc"
-                            android:textColor="@color/homeTextSecondary"
-                            android:textSize="12sp" />
+                            android:textColor="@color/adminTextSecondary"
+                            android:textSize="13sp" />
                     </LinearLayout>
                 </GridLayout>
             </LinearLayout>

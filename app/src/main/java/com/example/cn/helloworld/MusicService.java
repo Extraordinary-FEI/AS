@@ -24,6 +24,8 @@ import java.util.List;
 public class MusicService extends Service {
 
     public static final String ACTION_PLAY_SONG = "com.example.cn.helloworld.action.PLAY_SONG";
+    public static final String ACTION_REQUEST_UPDATE =
+            "com.example.cn.helloworld.action.REQUEST_UPDATE";
     public static final String ACTION_UPDATE_UI = "ACTION_UPDATE_UI";
     public static final String ACTION_HIDE_FLOATING_MUSIC =
             "com.example.cn.helloworld.action.HIDE_FLOATING_MUSIC";
@@ -54,11 +56,15 @@ public class MusicService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null && ACTION_PLAY_SONG.equals(intent.getAction())) {
-            handlePlaySongRequest(
-                    intent.getStringExtra(EXTRA_PLAYLIST_ID),
-                    intent.getStringExtra(EXTRA_SONG_ID)
-            );
+        if (intent != null) {
+            if (ACTION_PLAY_SONG.equals(intent.getAction())) {
+                handlePlaySongRequest(
+                        intent.getStringExtra(EXTRA_PLAYLIST_ID),
+                        intent.getStringExtra(EXTRA_SONG_ID)
+                );
+            } else if (ACTION_REQUEST_UPDATE.equals(intent.getAction())) {
+                updateUI();
+            }
         }
         return START_STICKY;
     }

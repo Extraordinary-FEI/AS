@@ -40,6 +40,11 @@
     <color name="personalBackground">#F3F1FB</color>
     <color name="personalCardStroke">#E6E3F3</color>
 
+    <!-- 管理员中心色彩优化 -->
+    <color name="adminPanelStart">#22336A</color>
+    <color name="adminPanelEnd">#2F4BA0</color>
+    <color name="adminTextSecondary">#D8E2FF</color>
+
     <!-- 状态配色 -->
     <color name="taskStatusOngoing">#FF6B8B</color>
     <color name="taskStatusUpcoming">#5BC0EB</color>
