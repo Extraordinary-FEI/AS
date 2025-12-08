@@ -122,5 +122,10 @@
         <item name="android:textColor">@color/homeTextSecondary</item>
         <item name="android:textSize">12sp</item>
     </style>
+    <!-- 任务描述文本（修复 item_task.xml 的编译错误） -->
+    <style name="HomeTaskDescription" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/homeTextSecondary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 
 </resources>
