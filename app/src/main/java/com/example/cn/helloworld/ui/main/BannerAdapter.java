@@ -1,7 +1,13 @@
 package com.example.cn.helloworld.ui.main;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.graphics.Palette;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +18,9 @@ import com.example.cn.helloworld.R;
 import java.util.List;
 
 public class BannerAdapter extends PagerAdapter {
+
+    private static final int FALLBACK_START_COLOR = Color.parseColor("#2D234F");
+    private static final int FALLBACK_END_COLOR = Color.parseColor("#181332");
 
     private final List<HomeModels.BannerItem> banners;
     private final LayoutInflater inflater;
@@ -45,6 +54,7 @@ public class BannerAdapter extends PagerAdapter {
         HomeModels.BannerItem banner = banners.get(position);
 
         img.setImageResource(banner.getImageResId());
+        applyImageBackgroundGradient(item, banner.getImageResId());
         title.setText(banner.getTitle());
         desc.setText(banner.getDescription());
         tag.setText(banner.getTag());
@@ -56,6 +66,45 @@ public class BannerAdapter extends PagerAdapter {
 
         container.addView(item);
         return item;
+    }
+
+    private void applyImageBackgroundGradient(final View item, int imageResId) {
+        setFallbackGradient(item);
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        options.inSampleSize = 4;
+
+        final Bitmap bitmap = BitmapFactory.decodeResource(item.getResources(), imageResId, options);
+        if (bitmap == null) {
+            return;
+        }
+
+        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+            @Override
+            public void onGenerated(Palette palette) {
+                int startColor = palette.getVibrantColor(palette.getLightVibrantColor(FALLBACK_START_COLOR));
+                int endColor = palette.getDarkVibrantColor(palette.getMutedColor(FALLBACK_END_COLOR));
+
+                GradientDrawable gradient = new GradientDrawable(
+                        GradientDrawable.Orientation.LEFT_RIGHT,
+                        new int[]{startColor, endColor});
+                gradient.setCornerRadius(0f);
+                ViewCompat.setBackground(item, gradient);
+
+                if (!bitmap.isRecycled()) {
+                    bitmap.recycle();
+                }
+            }
+        });
+    }
+
+    private void setFallbackGradient(View item) {
+        GradientDrawable gradient = new GradientDrawable(
+                GradientDrawable.Orientation.LEFT_RIGHT,
+                new int[]{FALLBACK_START_COLOR, FALLBACK_END_COLOR});
+        gradient.setCornerRadius(0f);
+        ViewCompat.setBackground(item, gradient);
     }
 
     @Override
