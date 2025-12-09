@@ -117,6 +117,15 @@
                 android:value="com.example.cn.helloworld.ui.admin.AdminDashboardActivity" />
         </activity>
 
+        <activity
+            android:name="com.example.cn.helloworld.ui.admin.AdminUserAddressActivity"
+            android:label="@string/title_admin_manage_addresses"
+            android:parentActivityName="com.example.cn.helloworld.ui.admin.AdminDashboardActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.cn.helloworld.ui.admin.AdminDashboardActivity" />
+        </activity>
+
         <!-- 用户中心 -->
         <activity
             android:name="com.example.cn.helloworld.ui.user.UserProfileActivity"

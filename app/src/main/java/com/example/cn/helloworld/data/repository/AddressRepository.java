@@ -29,33 +29,50 @@ public class AddressRepository {
         Context appContext = context.getApplicationContext();
         this.sharedPreferences = appContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 
+        this.addressesKey = buildAddressKey(appContext, null, null);
+    }
+
+    /**
+     * 面向管理员的重载构造：允许指定要操作的身份信息。
+     * 如果传入的角色或用户身份为空，则会使用安全兜底的 user 前缀。
+     */
+    public AddressRepository(Context context, String roleSuffix, String userIdentity) {
+        Context appContext = context.getApplicationContext();
+        this.sharedPreferences = appContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        this.addressesKey = buildAddressKey(appContext, roleSuffix, userIdentity);
+    }
+
+    private String buildAddressKey(Context appContext, String roleSuffix, String userIdentity) {
+        String resolvedRole = roleSuffix;
+        String resolvedIdentity = userIdentity;
+
         // 安全初始化：防止 SessionManager 崩溃导致整个应用闪退
-        String roleSuffix = "user";
-        String userIdentity = "";
+        String safeRole = "user";
+        String safeIdentity = "";
 
         try {
-            SessionManager sessionManager = new SessionManager(appContext);
-            if (sessionManager.isAdmin()) {
-                roleSuffix = "admin";
+            if (TextUtils.isEmpty(resolvedRole) || TextUtils.isEmpty(resolvedIdentity)) {
+                SessionManager sessionManager = new SessionManager(appContext);
+                safeRole = sessionManager.isAdmin() ? "admin" : "user";
+                safeIdentity = sessionManager.getUserId();
+                if (TextUtils.isEmpty(safeIdentity)) {
+                    safeIdentity = sessionManager.getUsername();
+                }
             } else {
-                roleSuffix = "user";
-            }
-            userIdentity = sessionManager.getUserId();
-            if (TextUtils.isEmpty(userIdentity)) {
-                userIdentity = sessionManager.getUsername();
+                safeRole = resolvedRole;
+                safeIdentity = resolvedIdentity;
             }
         } catch (Exception e) {
             // 捕获任何异常，避免因 SessionManager 问题导致闪退
             e.printStackTrace();
-            roleSuffix = "user";
-            userIdentity = "";
+            safeRole = TextUtils.isEmpty(resolvedRole) ? "user" : resolvedRole;
+            safeIdentity = TextUtils.isEmpty(resolvedIdentity) ? "" : resolvedIdentity;
         }
 
-        if (TextUtils.isEmpty(userIdentity)) {
-            this.addressesKey = KEY_ADDRESSES_PREFIX + roleSuffix;
-        } else {
-            this.addressesKey = KEY_ADDRESSES_PREFIX + roleSuffix + "_" + userIdentity;
+        if (TextUtils.isEmpty(safeIdentity)) {
+            return KEY_ADDRESSES_PREFIX + safeRole;
         }
+        return KEY_ADDRESSES_PREFIX + safeRole + "_" + safeIdentity;
     }
 
     public List<Address> loadAddresses() {

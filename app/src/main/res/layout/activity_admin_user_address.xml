@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/pageBg">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/admin_address_manage_tip"
+        android:textColor="@color/textPrimary"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/input_user_identity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/admin_address_input_hint"
+            android:padding="10dp"
+            android:background="@drawable/bg_input" />
+
+        <Button
+            android:id="@+id/button_load_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="@string/admin_address_load_action"
+            android:background="@drawable/bg_admin_action"
+            android:textColor="@color/colorOnPrimary" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_current_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/admin_address_current_placeholder"
+        android:textColor="@color/textSecondary" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_user_addresses"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        android:layout_weight="1"
+        android:background="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/text_empty_addresses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:text="@string/admin_address_empty"
+        android:textColor="@color/textSecondary"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/button_add_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/admin_address_add_action"
+        android:background="@drawable/bg_admin_action"
+        android:textColor="@color/colorOnPrimary" />
+
+</LinearLayout>
+

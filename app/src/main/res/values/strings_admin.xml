@@ -118,4 +118,18 @@
     <string name="admin_action_support_desc">创建或更新应援任务</string>
     <string name="admin_action_approval_desc">审核队列中的应援任务</string>
     <string name="admin_action_address_desc">统一维护用户收货地址</string>
+
+    <!-- 用户地址管理 -->
+    <string name="title_admin_manage_addresses">用户地址管理</string>
+    <string name="admin_address_manage_tip">管理员可代用户维护收货地址，适用于特殊修改或纠纷处理场景。</string>
+    <string name="admin_address_input_hint">请输入用户ID或用户名</string>
+    <string name="admin_address_load_action">加载地址</string>
+    <string name="admin_address_current_placeholder">当前查看：未选择</string>
+    <string name="admin_address_current_user">当前查看：%1$s</string>
+    <string name="admin_address_empty">暂无地址记录</string>
+    <string name="admin_address_add_action">新增地址</string>
+    <string name="admin_address_need_user">请先选择需要管理的用户</string>
+    <string name="admin_address_need_input">请输入用户 ID 或用户名</string>
+    <string name="admin_address_need_fields">请填写姓名和地址详情</string>
+    <string name="admin_address_delete_confirm">确定删除该用户的地址吗？</string>
 </resources>

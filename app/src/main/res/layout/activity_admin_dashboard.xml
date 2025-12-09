@@ -166,6 +166,16 @@
                         android:textColor="@color/colorOnPrimary" />
 
                     <Button
+                        android:id="@+id/btnManageUserAddresses"
+                        style="@style/Widget.AppCompat.Button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/bg_admin_action"
+                        android:text="@string/title_admin_manage_addresses"
+                        android:textColor="@color/colorOnPrimary" />
+
+                    <Button
                         android:id="@+id/btnManageSupportTasks"
                         style="@style/Widget.AppCompat.Button"
                         android:layout_width="match_parent"

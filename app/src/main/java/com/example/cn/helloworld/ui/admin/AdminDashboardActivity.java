@@ -42,6 +42,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private Button btnPlaylists;
     private Button btnManageBanners;
     private Button btnViewOrders;
+    private Button btnManageUserAddresses;
     private Button btnManageSupportTasks;
     private Button btnTaskApproval;
     private Button btnLogout;
@@ -78,6 +79,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         btnPlaylists = (Button) findViewById(R.id.btnManagePlaylists);
         btnManageBanners = (Button) findViewById(R.id.btnManageBanners);
         btnViewOrders = (Button) findViewById(R.id.btnViewOrders);
+        btnManageUserAddresses = (Button) findViewById(R.id.btnManageUserAddresses);
         btnManageSupportTasks = (Button) findViewById(R.id.btnManageSupportTasks);
         btnTaskApproval = (Button) findViewById(R.id.btnTaskApproval);
         btnLogout = (Button) findViewById(R.id.btnLogout);
@@ -154,6 +156,15 @@ public class AdminDashboardActivity extends AppCompatActivity {
                 openOrderList();
             }
         });
+
+        if (btnManageUserAddresses != null) {
+            btnManageUserAddresses.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(AdminDashboardActivity.this, AdminUserAddressActivity.class));
+                }
+            });
+        }
 
         btnManageSupportTasks.setOnClickListener(new View.OnClickListener() {
             @Override
