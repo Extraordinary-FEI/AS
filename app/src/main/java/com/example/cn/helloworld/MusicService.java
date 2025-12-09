@@ -40,6 +40,9 @@ public class MusicService extends Service {
     private int currentIndex = 0;
     private String currentPlaylistTitle = "";
 
+    /**
+     * Initialize repository, receiver and media player when the service is created.
+     */
     @Override
     public void onCreate() {
         super.onCreate();
@@ -54,6 +57,9 @@ public class MusicService extends Service {
         updateUI();
     }
 
+    /**
+     * Handle incoming control intents to play songs or refresh the UI state.
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
@@ -69,6 +75,9 @@ public class MusicService extends Service {
         return START_STICKY;
     }
 
+    /**
+     * Build an intent used by external components to request playback of a song.
+     */
     public static Intent createPlaySongIntent(Context context, String playlistId, String songId) {
         Intent intent = new Intent(context, MusicService.class);
         intent.setAction(ACTION_PLAY_SONG);
@@ -77,6 +86,9 @@ public class MusicService extends Service {
         return intent;
     }
 
+    /**
+     * Start playback if the player is ready and currently paused.
+     */
     public void playMusic() {
         if (player == null) {
             preparePlayer();
@@ -88,6 +100,9 @@ public class MusicService extends Service {
         }
     }
 
+    /**
+     * Pause playback when music is currently playing.
+     */
     public void pauseMusic() {
         if (player != null && player.isPlaying()) {
             player.pause();
@@ -96,6 +111,9 @@ public class MusicService extends Service {
         }
     }
 
+    /**
+     * Stop playback and release player resources.
+     */
     public void stopMusic() {
         if (player != null) {
             releasePlayer();
@@ -104,18 +122,27 @@ public class MusicService extends Service {
         }
     }
 
+    /**
+     * Advance to the next song in the current list and start playback.
+     */
     public void nextMusic() {
         if (currentSongs.isEmpty()) return;
         currentIndex = (currentIndex + 1) % currentSongs.size();
         switchMusic();
     }
 
+    /**
+     * Return to the previous song and start playback.
+     */
     public void prevMusic() {
         if (currentSongs.isEmpty()) return;
         currentIndex = (currentIndex - 1 + currentSongs.size()) % currentSongs.size();
         switchMusic();
     }
 
+    /**
+     * Recreate the media player for the newly selected song and refresh the UI.
+     */
     private void switchMusic() {
         releasePlayer();
         preparePlayer();
@@ -126,6 +153,9 @@ public class MusicService extends Service {
         }
     }
 
+    /**
+     * Display a foreground notification describing the playback state.
+     */
     private void showNotification(String title, String text) {
         Intent intent = new Intent(this, MusicActivity.class);
         PendingIntent pi = PendingIntent.getActivity(
@@ -174,6 +204,9 @@ public class MusicService extends Service {
         sendBroadcast(uiIntent);
     }
 
+    /**
+     * Clean up receiver and player resources when the service is destroyed.
+     */
     @Override
     public void onDestroy() {
         musicReceiver.unregister(this);
@@ -188,6 +221,9 @@ public class MusicService extends Service {
         return null;
     }
 
+    /**
+     * Use the first available playlist as the default if one exists.
+     */
     private void ensureDefaultPlaylist() {
         List<Playlist> all = playlistRepository.getAllPlaylists();
         if (!all.isEmpty()) {
@@ -195,6 +231,9 @@ public class MusicService extends Service {
         }
     }
 
+    /**
+     * Set the active playlist and reset playback indices.
+     */
     private void setCurrentPlaylist(Playlist playlist) {
         currentPlaylist = playlist;
         currentSongs = playlist.getSongs() == null
@@ -204,6 +243,9 @@ public class MusicService extends Service {
         currentIndex = 0;
     }
 
+    /**
+     * Combine songs from all playlists into one temporary playlist view.
+     */
     private void setAllSongsPlaylist() {
         List<Playlist> all = playlistRepository.getAllPlaylists();
         List<Song> songs = new ArrayList<Song>();
@@ -218,6 +260,10 @@ public class MusicService extends Service {
         currentIndex = 0;
     }
 
+    /**
+     * Prepare a MediaPlayer instance for the currently selected song, supporting
+     * local files, bundled resources, and streaming URLs.
+     */
     private void preparePlayer() {
         Song currentSong = getCurrentSong();
         if (currentSong == null) return;
@@ -275,6 +321,9 @@ public class MusicService extends Service {
         }
     }
 
+    /**
+     * Stop and release the media player if it exists.
+     */
     private void releasePlayer() {
         if (player != null) {
             try {
@@ -285,6 +334,9 @@ public class MusicService extends Service {
         }
     }
 
+    /**
+     * Safely fetch the song at the current index.
+     */
     private Song getCurrentSong() {
         if (currentSongs.isEmpty()) return null;
         if (currentIndex < 0 || currentIndex >= currentSongs.size()) {
@@ -293,6 +345,9 @@ public class MusicService extends Service {
         return currentSongs.get(currentIndex);
     }
 
+    /**
+     * Handle a request to play a specific song or playlist.
+     */
     private void handlePlaySongRequest(String playlistId, String songId) {
         if (!TextUtils.isEmpty(playlistId)) {
             Playlist p = playlistRepository.getById(playlistId);
@@ -313,6 +368,9 @@ public class MusicService extends Service {
         switchMusic();
     }
 
+    /**
+     * Find the index of the song with the provided ID in the current list.
+     */
     private int findSongIndex(String songId) {
         for (int i = 0; i < currentSongs.size(); i++) {
             Song s = currentSongs.get(i);
@@ -323,6 +381,9 @@ public class MusicService extends Service {
         return -1;
     }
 
+    /**
+     * Convenience helper to return the current song title or a default value.
+     */
     private String getCurrentSongTitle() {
         Song s = getCurrentSong();
         return s != null ? s.getTitle() : getString(R.string.app_name);

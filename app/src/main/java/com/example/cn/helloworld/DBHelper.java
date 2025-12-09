@@ -32,10 +32,16 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String C_RATING        = "rating";
     public static final String C_REVIEW_TIME   = "review_created_at";
 
+    /**
+     * Create a helper for managing the local SQLite database.
+     */
     public DBHelper(Context ctx) {
         super(ctx, DB_NAME, null, DB_VERSION);
     }
 
+    /**
+     * Build the initial user and review tables when the database is first created.
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + T_USER + " (" +
@@ -64,6 +70,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 ")");
     }
 
+    /**
+     * Drop existing tables and recreate schema when a version upgrade occurs.
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + T_USER);

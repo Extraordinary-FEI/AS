@@ -41,7 +41,7 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartChan
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cart, container, false);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_cart);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_cart);//展示商品
         totalTextView = (TextView) view.findViewById(R.id.text_total_price);
         checkoutButton = (Button) view.findViewById(R.id.button_checkout);
         manageButton = (Button) view.findViewById(R.id.button_manage_cart);

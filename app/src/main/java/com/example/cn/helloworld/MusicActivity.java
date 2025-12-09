@@ -34,6 +34,9 @@ public class MusicActivity extends Activity {
     private boolean isPlaying = false;
     private BroadcastReceiver uiUpdateReceiver;
 
+    /**
+     * Construct an intent for opening the music player with an optional playlist and song.
+     */
     public static Intent createIntent(Context context, String playlistId, String songId) {
         Intent intent = new Intent(context, MusicActivity.class);
         intent.putExtra(EXTRA_PLAYLIST_ID, playlistId);
@@ -208,6 +211,9 @@ public class MusicActivity extends Activity {
         registerReceiver(uiUpdateReceiver, filter);
     }
 
+    /**
+     * Unregister broadcast listeners to avoid leaks when the activity is destroyed.
+     */
     @Override
     protected void onDestroy() {
         unregisterReceiver(uiUpdateReceiver);
