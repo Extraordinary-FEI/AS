@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
 
@@ -89,10 +90,20 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
             // 封面：优先 Uri，再次使用本地 resId
             String coverUrl = playlist.getCoverUrl();
             Integer coverResId = playlist.getCoverResId();
+            Glide.clear(coverView);
             if (coverUrl != null && coverUrl.length() > 0) {
-                coverView.setImageURI(android.net.Uri.parse(coverUrl));
+                Glide.with(coverView.getContext())
+                        .load(coverUrl)
+                        .centerCrop()
+                        .placeholder(R.drawable.cover_playlist_placeholder)
+                        .error(R.drawable.cover_playlist_placeholder)
+                        .into(coverView);
             } else if (coverResId != null) {
-                coverView.setImageResource(coverResId);
+                Glide.with(coverView.getContext())
+                        .load(coverResId)
+                        .centerCrop()
+                        .placeholder(R.drawable.cover_playlist_placeholder)
+                        .into(coverView);
             } else {
                 coverView.setImageResource(R.drawable.cover_playlist_placeholder);
             }
