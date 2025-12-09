@@ -113,15 +113,30 @@
     <string name="user_task_chip_support">应援行动</string>
     <string name="user_task_tips">提示：完成任务可提升等级并获取积分</string>
 
+    <string name="user_checkin_compact_level">等级进度</string>
+    <string name="user_checkin_compact_level_desc">距离 Lv.8 还差 230 经验</string>
+    <string name="user_checkin_compact_activity">周活跃</string>
+    <string name="user_checkin_compact_activity_desc">连续活跃 5 天</string>
+
     <string name="user_medal_wall_title">粉丝勋章墙</string>
     <string name="user_medal_wall_action">查看全部</string>
     <string name="user_medal_wall_subtitle">完成成长路径点亮你的专属勋章</string>
+    <string name="user_medal_wall_static">静态陈列</string>
+    <string name="user_medal_wall_static_subtitle">常用勋章集中展示，方便预览</string>
     <string name="user_medal_checkin_title">连续签到达人</string>
     <string name="user_medal_checkin_desc">累计连续签到 7 天即可领取</string>
     <string name="user_medal_checkin_progress">4/7 已完成</string>
     <string name="user_medal_playlist_title">歌单收藏家</string>
     <string name="user_medal_playlist_desc">收藏 5 个歌单解锁纪念勋章</string>
     <string name="user_medal_playlist_progress">2/5 已完成</string>
+    <string name="user_medal_supporter_title">应援行动派</string>
+    <string name="user_medal_supporter_desc">报名 1 次官方应援活动</string>
+    <string name="user_medal_shop_title">周边收藏家</string>
+    <string name="user_medal_shop_desc">收藏 3 件你喜欢的周边</string>
+    <string name="user_medal_live_title">直播见证者</string>
+    <string name="user_medal_live_desc">观看 1 场直播并发送弹幕</string>
+    <string name="user_medal_event_title">活动签到官</string>
+    <string name="user_medal_event_desc">参与线下活动签到留念</string>
     <string name="user_medal_wall_hint">更多勋章即将上线，敬请期待</string>
 
     <!-- 收藏与打卡 -->
