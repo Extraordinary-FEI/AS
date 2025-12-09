@@ -3,7 +3,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/personalBackground"
+    android:background="@drawable/bg_personal_gradient"
     android:clipToPadding="false"
     android:fillViewport="true"
     android:paddingTop="16dp"
@@ -21,7 +21,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginTop="4dp"
             card_view:cardBackgroundColor="@android:color/transparent"
-            card_view:cardCornerRadius="18dp"
+            card_view:cardCornerRadius="20dp"
             card_view:cardElevation="0dp">
 
             <FrameLayout
@@ -112,7 +112,7 @@
                             android:id="@+id/btnLogout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/bg_user_action_outline"
+                            android:background="@drawable/bg_personal_button"
                             android:gravity="center"
                             android:paddingStart="16dp"
                             android:paddingEnd="16dp"
@@ -120,6 +120,7 @@
                             android:paddingBottom="8dp"
                             android:textColor="@android:color/white"
                             android:textSize="14sp"
+                            android:textStyle="bold"
                             android:clickable="true"
                             android:focusable="true" />
                     </LinearLayout>
@@ -228,14 +229,16 @@
             android:layout_marginEnd="16dp"
             android:layout_marginTop="20dp"
             card_view:cardBackgroundColor="@color/homeCardBackground"
-            card_view:cardCornerRadius="18dp"
+            card_view:cardCornerRadius="20dp"
             card_view:cardElevation="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_personal_card"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:clipToPadding="false">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -254,14 +257,15 @@
                         android:id="@+id/button_view_checkin_map"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_user_badge"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:paddingTop="6dp"
-                        android:paddingBottom="6dp"
+                        android:background="@drawable/bg_personal_button"
+                        android:paddingLeft="14dp"
+                        android:paddingRight="14dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
                         android:text="@string/user_checkin_action"
                         android:textColor="@android:color/white"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <TextView
@@ -388,9 +392,9 @@
                     android:id="@+id/progress_checkin"
                     style="@android:style/Widget.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="6dp"
-                    android:layout_marginTop="6dp"
-                    android:progressDrawable="@android:drawable/progress_horizontal"
+                    android:layout_height="8dp"
+                    android:layout_marginTop="8dp"
+                    android:progressDrawable="@drawable/bg_personal_progress"
                     android:max="3" />
 
                 <TextView
@@ -418,14 +422,16 @@
             android:layout_marginEnd="16dp"
             android:layout_marginTop="18dp"
             card_view:cardBackgroundColor="@color/homeCardBackground"
-            card_view:cardCornerRadius="18dp"
+            card_view:cardCornerRadius="20dp"
             card_view:cardElevation="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:background="@drawable/bg_personal_card"
+                android:clipToPadding="false">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -680,14 +686,16 @@
             android:layout_marginTop="18dp"
             android:layout_marginBottom="18dp"
             card_view:cardBackgroundColor="@color/homeCardBackground"
-            card_view:cardCornerRadius="18dp"
+            card_view:cardCornerRadius="20dp"
             card_view:cardElevation="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:background="@drawable/bg_personal_card"
+                android:clipToPadding="false">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -746,7 +754,7 @@
             android:layout_marginTop="18dp"
             android:layout_marginBottom="24dp"
             card_view:cardBackgroundColor="@color/homeCardBackground"
-            card_view:cardCornerRadius="18dp"
+            card_view:cardCornerRadius="20dp"
             card_view:cardElevation="8dp"
             android:visibility="gone">
 
@@ -754,7 +762,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:background="@drawable/bg_personal_card"
+                android:clipToPadding="false">
 
                 <TextView
                     style="@style/HomeSectionTitle"

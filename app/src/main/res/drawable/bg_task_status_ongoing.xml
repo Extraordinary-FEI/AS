@@ -2,5 +2,8 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <corners android:radius="50dp" />
-    <solid android:color="@color/taskStatusOngoing" />
+    <gradient
+        android:angle="45"
+        android:startColor="#FF7A9F"
+        android:endColor="#FF567C" />
 </shape>

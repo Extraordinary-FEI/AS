@@ -13,12 +13,6 @@
         android:adjustViewBounds="true"
         android:scaleType="fitCenter" />
 
-    <!-- 统一冷紫调氛围 -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/bg_banner_purple_overlay" />
-
     <!-- 轻柔霓虹滤镜，呼应主题色 -->
     <ImageView
         android:layout_width="match_parent"

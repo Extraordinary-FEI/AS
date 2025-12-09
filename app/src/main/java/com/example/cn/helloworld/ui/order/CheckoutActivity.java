@@ -116,6 +116,8 @@ public class CheckoutActivity extends AppCompatActivity {
             applyAddress(savedAddresses.get(0));
         }
 
+        refreshAddresses();
+
         // 提交订单
         Button submitButton = (Button) findViewById(R.id.button_submit_order);
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +126,12 @@ public class CheckoutActivity extends AppCompatActivity {
                 submitOrder();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshAddresses();
     }
 
     @Override
@@ -158,6 +166,8 @@ public class CheckoutActivity extends AppCompatActivity {
     //  底部弹窗选择地址
     // ================================
     private void showAddressBottomSheet() {
+
+        refreshAddresses();
 
         if (savedAddresses == null || savedAddresses.isEmpty()) {
             Toast.makeText(this, "暂无地址，请先添加", Toast.LENGTH_SHORT).show();
@@ -197,6 +207,19 @@ public class CheckoutActivity extends AppCompatActivity {
         });
 
         dialog.show();
+    }
+
+    private void refreshAddresses() {
+        savedAddresses = addressRepository.loadAddresses();
+        if (savedAddresses == null || savedAddresses.isEmpty()) {
+            addressTextView.setText("请选择收货地址");
+            return;
+        }
+
+        String current = addressTextView.getText().toString();
+        if (TextUtils.isEmpty(current) || current.equals("请选择收货地址")) {
+            applyAddress(savedAddresses.get(0));
+        }
     }
 
     private void applyAddress(Address address) {
