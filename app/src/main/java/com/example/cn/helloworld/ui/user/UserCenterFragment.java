@@ -60,7 +60,6 @@ public class UserCenterFragment extends Fragment {
     private RecyclerView playlistList;
     private View viewAllPlaylistsButton;
     private View playlistCard;
-    private View medalWallCard;
     private RecyclerView quickActionList;
     private View manageQuickActionsButton;
     private View adminCard;
@@ -114,7 +113,6 @@ public class UserCenterFragment extends Fragment {
         playlistList = (RecyclerView) root.findViewById(R.id.playlistList);
         viewAllPlaylistsButton = root.findViewById(R.id.button_view_all_playlists);
         playlistCard = root.findViewById(R.id.card_playlist_section);
-        medalWallCard = root.findViewById(R.id.card_medal_wall);
         quickActionList = (RecyclerView) root.findViewById(R.id.recyclerQuickActions);
         manageQuickActionsButton = root.findViewById(R.id.button_manage_quick_actions);
         adminCard = root.findViewById(R.id.card_admin_center);
@@ -502,9 +500,6 @@ public class UserCenterFragment extends Fragment {
             if (playlistCard != null) {
                 playlistCard.setVisibility(View.VISIBLE);
             }
-            if (medalWallCard != null) {
-                medalWallCard.setVisibility(View.VISIBLE);
-            }
             return;
         }
 
@@ -514,9 +509,6 @@ public class UserCenterFragment extends Fragment {
         }
         if (playlistCard != null) {
             playlistCard.setVisibility(View.GONE);
-        }
-        if (medalWallCard != null) {
-            medalWallCard.setVisibility(View.GONE);
         }
 
         AdminMetrics metrics = adminMetricsRepository.loadMetrics();

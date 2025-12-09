@@ -30,13 +30,15 @@
     <!-- 区块标题 -->
     <style name="HomeSectionTitle" parent="TextAppearance.AppCompat.Title">
         <item name="android:textColor">@color/homeTextPrimary</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <!-- 区块副标题 -->
     <style name="HomeSectionSubtitle" parent="TextAppearance.AppCompat.Small">
         <item name="android:textColor">@color/homeTextSecondary</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingExtra">2dp</item>
     </style>
 
     <!-- Banner 标题 -->

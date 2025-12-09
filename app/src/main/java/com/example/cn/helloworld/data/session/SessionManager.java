@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class SessionManager {
-
+    // 定义 SP 文件名和存储键
     private static final String PREF_NAME = "user_session";
 
     private static final String KEY_USER_ID = "user_id";
@@ -26,7 +26,7 @@ public class SessionManager {
 
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
-
+    // 初始化 SP
     public SessionManager(Context context) {
         prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         editor = prefs.edit();

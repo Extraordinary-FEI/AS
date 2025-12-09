@@ -19,7 +19,7 @@ public class AuthRepository {
 
     public static final String ROLE_ADMIN = UserRole.ADMIN.name();
     public static final String ROLE_USER = UserRole.USER.name();
-
+    //硬编码的管理员账号
     private static final String ADMIN_USERNAME = "admin";
     private static final String ADMIN_PASSWORD = "admin123";
     private static final String ADMIN_CODE = "YYQX2020";

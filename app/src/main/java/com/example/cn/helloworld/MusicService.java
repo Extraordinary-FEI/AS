@@ -179,7 +179,7 @@ public class MusicService extends Service {
     private void updateUI() {
         Song currentSong = getCurrentSong();
 
-        Intent uiIntent = new Intent(ACTION_UPDATE_UI);
+        Intent uiIntent = new Intent(ACTION_UPDATE_UI);//当播放状态（播放/暂停/切歌）发生变化时，MusicService 会创建一个自定义 Intent (MusicService.ACTION_UPDATE_UI)，并使用 sendBroadcast(uiIntent) 发送广播
         uiIntent.putExtra("title",
                 currentSong != null ? currentSong.getTitle() : getString(R.string.app_name));
         uiIntent.putExtra("artist",
