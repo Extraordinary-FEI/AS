@@ -3,9 +3,11 @@ package com.example.cn.helloworld.ui.product;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -41,6 +43,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private String productId;
     private String productName;
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +78,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         updateFavoriteIcon(false);
 
         favoriteButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onClick(View v) {
                 toggleFavorite();
@@ -110,6 +114,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         return "favorite_" + productId;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void toggleFavorite() {
         isFavorite = !isFavorite;
         updateFavoriteIcon(true);
@@ -119,6 +124,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                 Toast.LENGTH_SHORT).show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void updateFavoriteIcon(boolean animate) {
         favoriteButton.setImageResource(isFavorite ? R.drawable.ic_heart_filled_purple
                 : R.drawable.ic_heart_outline_gray);
