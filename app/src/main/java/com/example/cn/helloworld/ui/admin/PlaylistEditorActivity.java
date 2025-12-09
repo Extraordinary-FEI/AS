@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.cn.helloworld.R;
 import com.example.cn.helloworld.data.model.Playlist;
 import com.example.cn.helloworld.data.model.Song;
@@ -138,7 +139,7 @@ public class PlaylistEditorActivity extends AppCompatActivity {
         coverUri = playlist.getCoverUrl();
         if (!TextUtils.isEmpty(coverUri)) {
             try {
-                coverPreview.setImageURI(Uri.parse(coverUri));
+                loadImage(coverPreview, coverUri);
                 coverHint.setText(coverUri);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -187,7 +188,7 @@ public class PlaylistEditorActivity extends AppCompatActivity {
         try {
             if (requestCode == REQUEST_CODE_PICK_COVER) {
                 coverUri = uri.toString();
-                coverPreview.setImageURI(uri);
+                loadImage(coverPreview, coverUri);
                 coverHint.setText(coverUri);
 
             } else if (requestCode == REQUEST_CODE_PICK_AUDIO) {
@@ -197,7 +198,7 @@ public class PlaylistEditorActivity extends AppCompatActivity {
             } else if (requestCode == REQUEST_CODE_PICK_SONG_COVER) {
                 pendingSongCoverPath = uri.toString();
                 if (dialogSongCoverPreview != null)
-                    dialogSongCoverPreview.setImageURI(uri);
+                    loadImage(dialogSongCoverPreview, pendingSongCoverPath);
 
                 if (dialogSongCoverPath != null)
                     dialogSongCoverPath.setText(pendingSongCoverPath);
@@ -264,7 +265,7 @@ public class PlaylistEditorActivity extends AppCompatActivity {
                 streamInput.setText(oldSong.getStreamUrl());
 
             if (!TextUtils.isEmpty(oldSong.getCoverImagePath())) {
-                dialogSongCoverPreview.setImageURI(Uri.parse(oldSong.getCoverImagePath()));
+                loadImage(dialogSongCoverPreview, oldSong.getCoverImagePath());
                 dialogSongCoverPath.setText(oldSong.getCoverImagePath());
             } else if (oldSong.getCoverResId() != 0) {
                 dialogSongCoverPreview.setImageResource(oldSong.getCoverResId());
@@ -398,6 +399,8 @@ public class PlaylistEditorActivity extends AppCompatActivity {
 
                         if (newCoverUrl != null) {
                             coverUri = newCoverUrl;
+                            loadImage(coverPreview, coverUri);
+                            coverHint.setText(coverUri);
                         }
 
 // ⭐ 写入数据库
@@ -469,6 +472,15 @@ public class PlaylistEditorActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void loadImage(@NonNull ImageView view, @NonNull String path) {
+        Glide.with(view.getContext())
+                .load(path)
+                .placeholder(R.drawable.cover_playlist_placeholder)
+                .error(R.drawable.cover_playlist_placeholder)
+                .centerCrop()
+                .into(view);
+    }
+
     // ==================== 动态权限回调 ====================
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -526,8 +538,7 @@ public class PlaylistEditorActivity extends AppCompatActivity {
 
             // 封面显示：自定义 > URL > resId
             if (!TextUtils.isEmpty(s.getCoverImagePath())) {
-                try { h.cover.setImageURI(Uri.parse(s.getCoverImagePath())); }
-                catch (Exception e) { h.cover.setImageResource(R.drawable.cover_playlist_placeholder); }
+                loadImage(h.cover, s.getCoverImagePath());
 
             } else if (s.getCoverResId() != 0) {
                 h.cover.setImageResource(s.getCoverResId());
@@ -579,6 +590,15 @@ public class PlaylistEditorActivity extends AppCompatActivity {
                 edit = (Button) v.findViewById(R.id.buttonEditSong);
                 delete = (Button) v.findViewById(R.id.buttonDeleteSong);
             }
+        }
+
+        private static void loadImage(@NonNull ImageView view, @NonNull String path) {
+            Glide.with(view.getContext())
+                    .load(path)
+                    .placeholder(R.drawable.cover_playlist_placeholder)
+                    .error(R.drawable.cover_playlist_placeholder)
+                    .centerCrop()
+                    .into(view);
         }
 
     }

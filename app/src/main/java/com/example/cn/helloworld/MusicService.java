@@ -158,6 +158,7 @@ public class MusicService extends Service {
         uiIntent.putExtra("total", currentSongs.size());
         uiIntent.putExtra("playing", player != null && player.isPlaying());
         uiIntent.putExtra("songId", currentSong != null ? currentSong.getId() : "");
+        uiIntent.putExtra("coverUrl", currentSong != null ? currentSong.getCoverUrl() : null);
 
         // 封面资源ID（用于没有自定义封面时）
         int coverResId = R.drawable.cover_playlist_placeholder;
@@ -167,7 +168,7 @@ public class MusicService extends Service {
         uiIntent.putExtra("coverResId", coverResId);
 
         // 自定义封面路径（由后台选择的图片）
-        uiIntent.putExtra("coverPath",
+        uiIntent.putExtra("coverImagePath",
                 currentSong != null ? currentSong.getCoverImagePath() : null);
 
         sendBroadcast(uiIntent);
