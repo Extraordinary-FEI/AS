@@ -25,7 +25,7 @@ public class SupportTasksFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_support_tasks, container, false);
 
-        // ⭐ 关键修改：传入 Context
+        // ⭐ 关键修改：传入 Context，确保数据源可正常访问资源
         dataSource = new FakeHomeDataSource(root.getContext());
 
         RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recycler_support_tasks);

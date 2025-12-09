@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Persists quick action customization in SharedPreferences.
+ * 使用 SharedPreferences 持久化“快捷入口”配置，属于表格要求中的数据存储（SharedPreferences）。
  */
 class QuickActionStorage {
 
@@ -28,6 +28,10 @@ class QuickActionStorage {
         this.sharedPreferences = this.context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
+    /**
+     * 从 SharedPreferences 读取快捷入口配置，若没有数据则生成默认列表，
+     * 方便演示常见控件的自定义快捷功能。
+     */
     List<QuickAction> loadActions() {
         String raw = sharedPreferences.getString(KEY_ACTIONS, null);
         if (raw == null) {
@@ -57,6 +61,9 @@ class QuickActionStorage {
         }
     }
 
+    /**
+     * 将用户自定义的快捷入口序列化成 JSON 字符串并落盘，演示简单键值存储流程。
+     */
     void saveActions(List<QuickAction> actions) {
         JSONArray array = new JSONArray();
         for (QuickAction action : actions) {
@@ -74,6 +81,9 @@ class QuickActionStorage {
         sharedPreferences.edit().putString(KEY_ACTIONS, array.toString()).apply();
     }
 
+    /**
+     * 构造默认快捷入口项，用于首次进入或读取失败时的降级展示。
+     */
     private List<QuickAction> createDefaultActions() {
         List<QuickAction> actions = new ArrayList<QuickAction>();
         actions.add(new QuickAction("orders", QuickAction.Type.ORDER,

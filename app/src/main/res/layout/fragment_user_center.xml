@@ -513,7 +513,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="5dp"
             card_view:cardBackgroundColor="@color/homeCardBackground"
             card_view:cardCornerRadius="20dp"
             card_view:cardElevation="8dp">
@@ -522,7 +522,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="12dp"
+                android:padding="8dp"
                 android:background="@drawable/bg_personal_card"
                 android:clipToPadding="false">
 
@@ -543,10 +543,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_user_header_glass"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:paddingTop="6dp"
-                        android:paddingBottom="6dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
                         android:text="@string/user_medal_wall_static"
                         android:textColor="@color/textPrimary"
                         android:textSize="12sp"
@@ -563,7 +563,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="4dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -577,21 +577,21 @@
                             android:layout_weight="1"
                             android:background="@drawable/bg_task_item"
                             android:orientation="vertical"
-                            android:padding="10dp">
+                            android:padding="8dp">
 
                             <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
                                 android:layout_gravity="center_horizontal"
                                 android:background="@drawable/bg_category_icon_circle"
-                                android:padding="10dp"
+                                android:padding="8dp"
                                 android:src="@drawable/ic_category_signed" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:layout_marginTop="6dp"
+                                android:layout_marginTop="4dp"
                                 android:text="@string/user_medal_checkin_title"
                                 android:textColor="@android:color/black"
                                 android:textSize="14sp"
@@ -608,7 +608,7 @@
                         </LinearLayout>
 
                         <Space
-                            android:layout_width="6dp"
+                            android:layout_width="4dp"
                             android:layout_height="match_parent" />
 
                         <LinearLayout
@@ -617,21 +617,21 @@
                             android:layout_weight="1"
                             android:background="@drawable/bg_task_item"
                             android:orientation="vertical"
-                            android:padding="10dp">
+                            android:padding="8dp">
 
                             <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
                                 android:layout_gravity="center_horizontal"
                                 android:background="@drawable/bg_category_icon_circle"
-                                android:padding="10dp"
+                                android:padding="8dp"
                                 android:src="@drawable/ic_category_music" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:layout_marginTop="6dp"
+                                android:layout_marginTop="4dp"
                                 android:text="@string/user_medal_playlist_title"
                                 android:textColor="@android:color/black"
                                 android:textSize="14sp"
@@ -648,7 +648,7 @@
                         </LinearLayout>
 
                         <Space
-                            android:layout_width="8dp"
+                            android:layout_width="5dp"
                             android:layout_height="match_parent" />
 
                         <LinearLayout
@@ -657,21 +657,21 @@
                             android:layout_weight="1"
                             android:background="@drawable/bg_task_item"
                             android:orientation="vertical"
-                            android:padding="12dp">
+                            android:padding="8dp">
 
                             <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
                                 android:layout_gravity="center_horizontal"
                                 android:background="@drawable/bg_category_icon_circle"
-                                android:padding="10dp"
+                                android:padding="8dp"
                                 android:src="@drawable/ic_category_task" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:layout_marginTop="8dp"
+                                android:layout_marginTop="5dp"
                                 android:text="@string/user_medal_supporter_title"
                                 android:textColor="@android:color/black"
                                 android:textSize="14sp"
@@ -690,7 +690,7 @@
 
                     <Space
                         android:layout_width="match_parent"
-                        android:layout_height="6dp" />
+                        android:layout_height="4dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -703,21 +703,21 @@
                             android:layout_weight="1"
                             android:background="@drawable/bg_task_item"
                             android:orientation="vertical"
-                            android:padding="10dp">
+                            android:padding="8dp">
 
                             <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
                                 android:layout_gravity="center_horizontal"
                                 android:background="@drawable/bg_category_icon_circle"
-                                android:padding="10dp"
+                                android:padding="8dp"
                             android:src="@drawable/ic_category_merch" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:layout_marginTop="6dp"
+                                android:layout_marginTop="4dp"
                                 android:text="@string/user_medal_shop_title"
                                 android:textColor="@android:color/black"
                                 android:textSize="14sp"
@@ -734,7 +734,7 @@
                         </LinearLayout>
 
                         <Space
-                            android:layout_width="6dp"
+                            android:layout_width="4dp"
                             android:layout_height="match_parent" />
 
                         <LinearLayout
@@ -743,21 +743,21 @@
                             android:layout_weight="1"
                             android:background="@drawable/bg_task_item"
                             android:orientation="vertical"
-                            android:padding="10dp">
+                            android:padding="8dp">
 
                             <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
                                 android:layout_gravity="center_horizontal"
                                 android:background="@drawable/bg_category_icon_circle"
-                                android:padding="10dp"
+                                android:padding="8dp"
                             android:src="@drawable/ic_category_task" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:layout_marginTop="6dp"
+                                android:layout_marginTop="4dp"
                                 android:text="@string/user_medal_live_title"
                                 android:textColor="@android:color/black"
                                 android:textSize="14sp"
@@ -774,7 +774,7 @@
                         </LinearLayout>
 
                         <Space
-                            android:layout_width="6dp"
+                            android:layout_width="4dp"
                             android:layout_height="match_parent" />
 
                         <LinearLayout
@@ -783,21 +783,21 @@
                             android:layout_weight="1"
                             android:background="@drawable/bg_task_item"
                             android:orientation="vertical"
-                            android:padding="10dp">
+                            android:padding="8dp">
 
                             <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
                                 android:layout_gravity="center_horizontal"
                                 android:background="@drawable/bg_category_icon_circle"
-                                android:padding="10dp"
+                                android:padding="8dp"
                                 android:src="@drawable/ic_category_ticket" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:layout_marginTop="6dp"
+                                android:layout_marginTop="4dp"
                                 android:text="@string/user_medal_event_title"
                                 android:textColor="@android:color/black"
                                 android:textSize="14sp"
@@ -818,7 +818,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="5dp"
                     android:text="@string/user_medal_wall_hint"
                     android:textColor="@color/textSubtle"
                     android:textSize="12sp" />

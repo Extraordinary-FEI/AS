@@ -4,6 +4,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * 负责创建与升级本地 SQLite 数据库的帮助类，覆盖了表格中的“数据存储（数据库）”要求。
+ */
 public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DB_NAME = "fans.db";

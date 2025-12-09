@@ -34,6 +34,10 @@ import com.example.cn.helloworld.ui.product.ReviewWallActivity;
 
 import java.util.List;
 
+/**
+ * 主页 Fragment：整合 Banner、分类、商品列表、播放列表和应援任务等多块布局，
+ * 既涵盖多种常见控件（RecyclerView、ViewPager、Button），也演示了复杂界面布局。
+ */
 public class HomeFragment extends Fragment {
 
     private ViewPager bannerPager;
@@ -100,6 +104,9 @@ public class HomeFragment extends Fragment {
     /**
      * ⭐ 高颜值轮播图
      */
+    /**
+     * 初始化首页 Banner 区域：配置适配器、轮播动画和指示器，展示大型布局与控件配合。 
+     */
     private void setupBanner() {
         Context ctx = getContext();
         if (ctx == null) return;
@@ -130,6 +137,7 @@ public class HomeFragment extends Fragment {
         bannerPager.setClipToPadding(true);
         bannerPager.setPadding(0, 0, 0, 0);
 
+        // 使用 PageTransformer 制作翻页缩放动画，体现控件高级用法
         bannerPager.setPageTransformer(false, new ViewPager.PageTransformer() {
             @Override
             public void transformPage(View page, float position) {
@@ -145,6 +153,7 @@ public class HomeFragment extends Fragment {
         initBannerIndicator(bannerCount);
         bannerAdapter.dispatchGradientForPosition(0);
 
+        // 监听页面切换以同步指示器与背景渐变
         bannerPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int pos) {

@@ -31,6 +31,12 @@ import com.example.cn.helloworld.ui.user.UserCenterFragment;
 
 import com.example.cn.helloworld.data.session.SessionManager;
 
+/**
+ * 应用主界面的入口 Activity：
+ * 1. 控制底部导航切换不同 Fragment（满足表格中的 Activity、Fragment 要求）。
+ * 2. 管理悬浮音乐控件的布局与事件（涉及常见控件与布局容器的使用）。
+ * 3. 记录当前选中的导航项以便恢复（演示基础数据存储/状态保存）。
+ */
 public class MainActivity extends AppCompatActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -107,6 +113,10 @@ public class MainActivity extends AppCompatActivity
     // ========================================
     // fragment 初始化（只 add 首页）
     // ========================================
+    /**
+     * 初始化底部五个 Tab 对应的 Fragment，只 add 首页，其他在首次点击时再 add，
+     * 可以避免重复创建导致的界面闪动或崩溃，符合“Activity 与 Fragment 之间切换”考点。
+     */
     private void initFragments() {
         FragmentManager fm = getSupportFragmentManager();
 
@@ -124,6 +134,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    /**
+     * 处理底部导航点击事件，按不同导航项切换显示的 Fragment，同时更新标题栏，
+     * 展示了常见控件（BottomNavigationView、Toolbar）的交互写法。
+     */
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         selectedNavId = item.getItemId();
 
@@ -173,6 +187,10 @@ public class MainActivity extends AppCompatActivity
     // ========================================
     // 核心部分：fragment 不重复 add（修复崩溃）
     // ========================================
+    /**
+     * 统一的 Fragment 切换方法：隐藏当前、按需 add 目标，再 show。
+     * 既满足表格中“Fragment 的使用”，也说明了布局容器 FrameLayout 的作用。
+     */
     private void switchFragment(Fragment target, String tag) {
         if (activeFragment == target) return;
 

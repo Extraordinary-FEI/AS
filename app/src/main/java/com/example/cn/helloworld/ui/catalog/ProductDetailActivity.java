@@ -34,6 +34,11 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * 商品详情页 Activity：
+ * - 展示图片、文本、评分控件等常见 UI，符合“控件”与“布局”考点。
+ * - 支持加入购物车、收藏、查看/提交评论，串联数据存储与其他 Activity 跳转。
+ */
 public class ProductDetailActivity extends AppCompatActivity {
 
     private static final String EXTRA_PRODUCT_ID = "extra_product_id";

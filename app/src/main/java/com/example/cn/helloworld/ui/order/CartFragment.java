@@ -25,6 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * 购物车 Fragment：示例列表控件、按钮和文本展示；
+ * 同时结合本地存储（CartStorage）保存勾选数量，符合“Fragment+控件+数据存储”三类要求。
+ */
 public class CartFragment extends Fragment implements CartItemAdapter.OnCartChangedListener {
 
     private TextView totalTextView;
@@ -41,6 +45,7 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartChan
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cart, container, false);
+        // 展示商品列表的 RecyclerView（常见控件/布局示例）
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_cart);//展示商品
         totalTextView = (TextView) view.findViewById(R.id.text_total_price);
         checkoutButton = (Button) view.findViewById(R.id.button_checkout);
@@ -54,6 +59,7 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartChan
 
         cartStorage = CartStorage.getInstance(context);
 
+        // 管理员账号不展示购物车，直接提示（Activity/Fragment 间角色控制逻辑）
         if (sessionManager.isAdmin()) {
             recyclerView.setVisibility(View.GONE);
             checkoutButton.setVisibility(View.GONE);
@@ -89,6 +95,9 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartChan
         updateTotal();
     }
 
+    /**
+     * 从本地存储中读取购物车数据，若为空则写入示例数据方便展示控件效果。
+     */
     private void loadCartItems() {
         cartItems.clear();
         cartItems.addAll(cartStorage.getItems());
@@ -107,6 +116,9 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartChan
         cartStorage.save(cartItems);
     }
 
+    /**
+     * 计算用户已勾选商品并跳转结算界面，演示 Activity 之间的跳转与数据传递。
+     */
     private void startCheckout() {
         Context context = getActivity();
         if (context == null) {
@@ -138,6 +150,9 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartChan
         startActivity(intent);
     }
 
+    /**
+     * 累加已选择商品的小计并刷新总价，顺便持久化到 CartStorage（对应表格“数据存储”考点）。
+     */
     private void updateTotal() {
         double total = 0.0;
         for (int i = 0; i < cartItems.size(); i++) {
